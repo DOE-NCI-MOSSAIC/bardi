@@ -1,0 +1,46 @@
+Metadata-Version: 2.1
+Name: gaudi
+Version: 0.2.1
+Summary: A flexible machine learning data pre-processing pipeline framework.
+Author: Oak Ridge National Laboratory
+Classifier: programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Requires-Python: >=3.8.0
+Description-Content-Type: text/markdown
+Requires-Dist: duckdb==0.8.0
+Requires-Dist: gensim>=4.1.2
+Requires-Dist: numpy>=1.21.5
+Requires-Dist: pandas>=1.4.4
+Requires-Dist: polars>=0.19.8
+Requires-Dist: pyarrow>=12.0.1
+Requires-Dist: setuptools>=61.0
+
+
+# GAuDI
+**GAuDI** - Generalized Automatic Data Ingestion pipeline is a data pre-processing toolkit for the NCI project. With GAuDI you are able to swiftly construct personalized data preprocessing pipeline tailored to your needs.
+
+
+
+Installation
+==================
+At this stage GAuDI can be installed via pip into your favorite conda from the wheel file in a shared location:
+
+``pip install /mnt/nci/scratch/packages/gaudi-0.2.0-py3-none-any.whl``
+
+Documentation
+============================
+* [Documentation Link](file:////mnt/nci/scratch/gaudi/docs/build/html/index.html)
+
+Tutorial and Example Scripts
+============================
+
+* [GAuDi Run Scripts Repo](https://ncigitlab01.repd.ornlkdi.org/nci/gaudi-run-scripts)
+* [GAuDI GitLab](https://ncigitlab01.repd.ornlkdi.org/nci/gaudi)
+
+Key Features
+============
+* **Efficiency** - with power of Polars and multithreading, GAuDI ensures rapid transformation of even large datasets.
+* **Modularity** - designed with component-based architecture, users can integrate individual modules based on their specific needs. Each module (normalizer, pre-tokenizer, splitter etc.) operates as individual unit.
+* **Extendibility** - GAuDI's design allows for seamless integration of new modules and methods.
+
+

@@ -1,0 +1,7 @@
+duckdb==0.8.0
+gensim>=4.1.2
+numpy>=1.21.5
+pandas>=1.4.4
+polars>=0.19.8
+pyarrow>=12.0.1
+setuptools>=61.0
