@@ -6,9 +6,9 @@ from typing import List, Tuple, Union
 import polars as pl
 import pyarrow as pa
 
-from gaudi.nlp_engineering.utils.validations import (validate_pyarrow_table,
+from bardi.nlp_engineering.utils.validations import (validate_pyarrow_table,
                                                      validate_str_cols)
-from gaudi.pipeline import Step
+from bardi.pipeline import Step
 
 
 class PreTokenizer(Step):

@@ -2,8 +2,8 @@
 
 from typing import List
 
-from gaudi.nlp_engineering.regex_library import regex_lib
-from gaudi.nlp_engineering.regex_library.regex_set import RegexSet, RegexSubPair
+from bardi.nlp_engineering.regex_library import regex_lib
+from bardi.nlp_engineering.regex_library.regex_set import RegexSet, RegexSubPair
 
 
 class PathologyReportRegexSet(RegexSet):

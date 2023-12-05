@@ -1,4 +1,4 @@
-"""GAuDI Dataset class stores a reference to data and relevant metadata"""
+"""bardi Dataset class stores a reference to data and relevant metadata"""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ import pyarrow.feather as feather
 import pyarrow.parquet as pq
 from pyarrow import orc
 
-from gaudi.data.utils.pyarrow_utils import chunk_pyarrow_table
+from bardi.data.utils.pyarrow_utils import chunk_pyarrow_table
 
 
 class Dataset:
@@ -61,7 +61,7 @@ def from_file(
     *args,
     **kwargs
 ) -> Dataset:
-    """Create a GAuDI Dataset object from a file source
+    """Create a bardi Dataset object from a file source
 
     Accepted file types are: parquet, ipc, arrow, feather, csv, and orc
 
@@ -80,7 +80,7 @@ def from_file(
         environments.
 
     Returns:
-      GAuDI Dataset object with the data attribute referencing the data that
+      bardi Dataset object with the data attribute referencing the data that
       was supplied after conversion to a PyArrow Table.
 
     Raises:
@@ -104,7 +104,7 @@ def from_file(
         # Determine the starting number of rows in the data table
         row_count = table.num_rows
 
-        # Create a GAuDI Dataset object which will reference the data and
+        # Create a bardi Dataset object which will reference the data and
         # additional metadata
         dataset_obj = Dataset()
         dataset_obj.origin_row_count = row_count
@@ -118,7 +118,7 @@ def from_file(
                 data=table, row_count=row_count, min_batches=min_batches
             )
 
-            # Setting the GAuDI Dataset object's data references to the list
+            # Setting the bardi Dataset object's data references to the list
             # of PyArrow Tables
             dataset_obj.data = tables
 
@@ -131,7 +131,7 @@ def from_file(
 
 
 def from_duckdb(path: str, query: str, min_batches: int = None) -> Dataset:
-    """Create a GAuDI Dataset object using data returned from
+    """Create a bardi Dataset object using data returned from
     a custom query on a DuckDB database
 
     Keyword Arguments:
@@ -145,7 +145,7 @@ def from_duckdb(path: str, query: str, min_batches: int = None) -> Dataset:
         Number will probably align with the number of worker nodes.
 
     Returns:
-      GAuDI Dataset object with the data attribute referencing the data that
+      bardi Dataset object with the data attribute referencing the data that
       was supplied after conversion to a PyArrow Table.
     """
 
@@ -155,7 +155,7 @@ def from_duckdb(path: str, query: str, min_batches: int = None) -> Dataset:
     table = conn.execute(query).fetch_arrow_table()
     row_count = table.num_rows
 
-    # Create a GAuDI Dataset object which will reference the data and
+    # Create a bardi Dataset object which will reference the data and
     # additional metadata
     dataset_obj = Dataset()
     dataset_obj.origin_file_path = path
@@ -170,7 +170,7 @@ def from_duckdb(path: str, query: str, min_batches: int = None) -> Dataset:
             data=table, row_count=row_count, min_batches=min_batches
         )
 
-        # Setting the GAuDI Dataset object's data references to the list of
+        # Setting the bardi Dataset object's data references to the list of
         # PyArrow Tables
         dataset_obj.data = tables
 
@@ -183,17 +183,17 @@ def from_duckdb(path: str, query: str, min_batches: int = None) -> Dataset:
 
 
 def from_pandas(df: pd.DataFrame, min_batches: int = None) -> Dataset:
-    """Create a gaudi dataset object from a Pandas DataFrame using the PyArrow
+    """Create a bardi dataset object from a Pandas DataFrame using the PyArrow
     function
 
     Keyword Arguments:
       df : Pandas DataFrame
-        A Pandas DataFrame containing data intended to be passed into a GAuDI
+        A Pandas DataFrame containing data intended to be passed into a bardi
         pipeline
       distributed : bool
         A flag which prompts splitting data into smaller chunks to prepare for
         later distribution to worker nodes.
-        Also used to set a flag in the GAuDI Dataset object to direct future
+        Also used to set a flag in the bardi Dataset object to direct future
         operations to be performed in a distributed manner.
       min_batches : int
         An integer number used to split the data into this amount of smaller
@@ -201,14 +201,14 @@ def from_pandas(df: pd.DataFrame, min_batches: int = None) -> Dataset:
         Number will probably align with the number of worker nodes.
 
     Returns:
-      GAuDI Dataset object with the data attribute referencing the data that
+      bardi Dataset object with the data attribute referencing the data that
       was supplied after conversion to a PyArrow Table.
     """
     # Convert the Pandas DataFrame to a PyArrow Table
     table = pa.Table.from_pandas(df)
     row_count = table.num_rows
 
-    # Create a GAuDI Dataset object which will reference the data and
+    # Create a bardi Dataset object which will reference the data and
     # additional metadata
     dataset_obj = Dataset()
     dataset_obj.origin_format = "pandas"
@@ -221,7 +221,7 @@ def from_pandas(df: pd.DataFrame, min_batches: int = None) -> Dataset:
             data=table, row_count=row_count, min_batches=min_batches
         )
 
-        # Setting the GAuDI Dataset object's data references to the list of
+        # Setting the bardi Dataset object's data references to the list of
         # PyArrow Tables
         dataset_obj.data = tables
 
@@ -234,11 +234,11 @@ def from_pandas(df: pd.DataFrame, min_batches: int = None) -> Dataset:
 
 
 def from_pyarrow(table: pa.Table, min_batches: int = None) -> Dataset:
-    """Create a GAuDI dataset object from an existing PyArrow Table
+    """Create a bardi dataset object from an existing PyArrow Table
 
     Keyword Arguments:
       table : PyArrow Table
-        A PyArrow Table containing data intended to be passed into a GAuDI
+        A PyArrow Table containing data intended to be passed into a bardi
         pipeline
       min_batches : int
         An integer number used to split the data into this amount of smaller
@@ -246,13 +246,13 @@ def from_pyarrow(table: pa.Table, min_batches: int = None) -> Dataset:
         Number will probably align with the number of worker nodes.
 
     Returns:
-      GAuDI Dataset object with the data attribute referencing the data that
+      bardi Dataset object with the data attribute referencing the data that
       was supplied after conversion to a PyArrow Table.
     """
 
     row_count = table.num_rows
 
-    # Create a GAuDI Dataset object which will reference the data and
+    # Create a bardi Dataset object which will reference the data and
     # additional metadata
     dataset_obj = Dataset()
     dataset_obj.origin_format = "pyarrow"
@@ -265,7 +265,7 @@ def from_pyarrow(table: pa.Table, min_batches: int = None) -> Dataset:
             data=table, row_count=row_count, min_batches=min_batches
         )
 
-        # Setting the GAuDI Dataset object's data references to the list of
+        # Setting the bardi Dataset object's data references to the list of
         # PyArrow Tables
         dataset_obj.data = tables
 
@@ -278,7 +278,7 @@ def from_pyarrow(table: pa.Table, min_batches: int = None) -> Dataset:
 
 
 def from_json(json_data: Union[str, dict, List(dict)]) -> Dataset:
-    """Create a GAuDI Dataset object from JSON data
+    """Create a bardi Dataset object from JSON data
 
     Keyword Arguments:
       json_data : str
@@ -286,7 +286,7 @@ def from_json(json_data: Union[str, dict, List(dict)]) -> Dataset:
         Table.
 
     Returns:
-      GAuDI Dataset object with the data attribute referencing the data that
+      bardi Dataset object with the data attribute referencing the data that
       was supplied after conversion to a PyArrow Table.
     """
 
@@ -306,7 +306,7 @@ def from_json(json_data: Union[str, dict, List(dict)]) -> Dataset:
     table = pa.Table.from_pylist(records)
     row_count = table.num_rows
 
-    # Create a GAuDI Dataset object which will reference the data and
+    # Create a bardi Dataset object which will reference the data and
     # additional metadata
     dataset_obj = Dataset()
     dataset_obj.data = table

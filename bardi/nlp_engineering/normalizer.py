@@ -6,10 +6,10 @@ from typing import List, Tuple, Union
 import polars as pl
 import pyarrow as pa
 
-from gaudi.nlp_engineering.regex_library.regex_lib import RegexSubPair
-from gaudi.nlp_engineering.utils.validations import (validate_pyarrow_table,
+from bardi.nlp_engineering.regex_library.regex_lib import RegexSubPair
+from bardi.nlp_engineering.utils.validations import (validate_pyarrow_table,
                                                      validate_str_cols)
-from gaudi.pipeline import DataWriteConfig, Step
+from bardi.pipeline import DataWriteConfig, Step
 
 
 class Normalizer(Step):

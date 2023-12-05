@@ -12,10 +12,10 @@ import pyarrow as pa
 from gensim.utils import RULE_DEFAULT, RULE_DISCARD
 from gensim.models import Word2Vec
 
-from gaudi.data import data_handlers
-from gaudi.nlp_engineering.utils.validations import (validate_pyarrow_table,
+from bardi.data import data_handlers
+from bardi.nlp_engineering.utils.validations import (validate_pyarrow_table,
                                                      validate_list_str_cols)
-from gaudi.pipeline import DataWriteConfig, Step
+from bardi.pipeline import DataWriteConfig, Step
 
 
 class EmbeddingGeneratorArtifactsWriteConfig(TypedDict):

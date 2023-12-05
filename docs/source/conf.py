@@ -17,12 +17,12 @@ sys.path.insert(0, os.path.abspath('../../'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'GAuDI'
+project = 'BARDI'
 copyright = '2023, Dakota and Patrycja (ORNL)'
 author = 'Dakota and Patrycja (ORNL)'
 
 # The full version, including alpha/beta/rc tags
-release = '0.2.0'
+release = '0.2.1'
 
 
 # -- General configuration ---------------------------------------------------

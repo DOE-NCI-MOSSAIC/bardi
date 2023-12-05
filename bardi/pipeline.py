@@ -6,8 +6,8 @@ from typing import List, Literal, Tuple, TypedDict, Union
 
 import pyarrow as pa
 
-from gaudi.data import data_handlers
-from gaudi.data.data_handlers import Dataset
+from bardi.data import data_handlers
+from bardi.data.data_handlers import Dataset
 
 
 class DataWriteConfig(TypedDict):
@@ -138,9 +138,9 @@ class Pipeline:
                                         'debug',
                                         False] = 'pipeline-outputs',
                  data_write_config: DataWriteConfig = None,
-                 data_filename: str = "gaudi_processed_data"):
+                 data_filename: str = "bardi_processed_data"):
 
-        # Ref a GAuDI dataset object that pipeline operates on
+        # Ref a bardi dataset object that pipeline operates on
         self.dataset: Dataset = dataset
 
         # Pipeline configuration
@@ -181,7 +181,7 @@ class Pipeline:
             self.num_steps += 1
         else:
             raise TypeError('Only objects of type Step may be added to '
-                            'a GAuDI pipeline.')
+                            'a bardi pipeline.')
 
     def run_pipeline(self) -> None:
         """Calls the run and write_outputs method for each respective step
@@ -190,9 +190,9 @@ class Pipeline:
         if isinstance(self.dataset, Dataset):
             self.processed_data = self.dataset.data
         else:
-            raise TypeError("Pipeline's Dataset must reference a GAuDI "
-                            "Dataset object. Please utilize GAuDI's data_"
-                            "handlers to create a GAuDI Dataset object from "
+            raise TypeError("Pipeline's Dataset must reference a bardi "
+                            "Dataset object. Please utilize bardi's data_"
+                            "handlers to create a bardi Dataset object from "
                             "your data.")
 
         # For each step of the pipeline, call its run method

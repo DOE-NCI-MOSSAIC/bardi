@@ -7,8 +7,8 @@ import numpy as np
 import polars as pl
 import pyarrow as pa
 
-from gaudi.nlp_engineering.utils.validations import validate_pyarrow_table
-from gaudi.pipeline import DataWriteConfig, Step
+from bardi.nlp_engineering.utils.validations import validate_pyarrow_table
+from bardi.pipeline import DataWriteConfig, Step
 
 MapSplit = NamedTuple(
     "MapSplit", [("unique_record_cols", List[str]),

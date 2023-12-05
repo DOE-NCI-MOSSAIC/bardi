@@ -3,7 +3,7 @@
 from abc import abstractmethod
 from typing import List
 
-from gaudi.nlp_engineering.regex_library.regex_lib import RegexSubPair
+from bardi.nlp_engineering.regex_library.regex_lib import RegexSubPair
 
 
 class RegexSet:

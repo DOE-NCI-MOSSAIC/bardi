@@ -10,12 +10,12 @@ import numpy as np
 import polars as pl
 import pyarrow as pa
 
-from gaudi.data.utils.pyarrow_utils import chunk_pyarrow_table
-from gaudi.nlp_engineering.utils.validations import (
+from bardi.data.utils.pyarrow_utils import chunk_pyarrow_table
+from bardi.nlp_engineering.utils.validations import (
     validate_list_str_cols,
     validate_pyarrow_table,
 )
-from gaudi.pipeline import DataWriteConfig, Step
+from bardi.pipeline import DataWriteConfig, Step
 
 
 class PostProcessor(Step):
