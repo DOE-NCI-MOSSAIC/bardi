@@ -4,7 +4,7 @@ from pyarrow import Table, large_list, large_string, list_, string
 
 
 def validate_pyarrow_table(data: Table) -> None:
-    """Confirm the data table is a PyArrow Table
+    """Confirm the data table passed is a PyArrow Table
 
     Keyword Arguments:
         data: PyArrow Table
@@ -22,15 +22,12 @@ def validate_pyarrow_table(data: Table) -> None:
 
 
 def validate_str_cols(fields: Union[List[str], str], data: Table) -> None:
-    """Confirm the columns specified for the method are string columns
+    """Confirm the columns specified in the supplied data table are string columns
 
     Keyword Arguments:
         fields: Union[List[str], str]
             The field or fields that will be used in the method to
             be validated as string types
-
-    Returns:
-        None
 
     Raises:
         TypeError if the columns supplied in the 'fields' keyword argument
@@ -61,15 +58,12 @@ def validate_str_cols(fields: Union[List[str], str], data: Table) -> None:
 
 
 def validate_list_str_cols(fields: Union[List[str], str], data: Table) -> None:
-    """Confirm the columns specified for the method are list[string] columns
+    """Confirm the columns specified in the supplied data table are list[string] columns
 
     Keyword Arguments:
         fields: Union[List[str], str]
             The field or fields that will be used in the method to
             be validated as string types
-
-    Returns:
-        None
 
     Raises:
         TypeError if the columns supplied in the 'fields' keyword argument

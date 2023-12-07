@@ -1,21 +1,6 @@
-"""Library of regular expression substitution pairs"""
+"""Library of pre-defined regular expression substitution pairs"""
 
-from typing import TypedDict
-
-
-class RegexSubPair(TypedDict):
-    """Dictionary used for regular expression string substitutions
-
-    Attributes:
-        regex_str: regular expression pattern
-        sub_str: replacement value for matched string
-
-    Example:
-        {"regex_str": "\s",
-         "sub_str": "WHITESPACE"}
-    """
-    regex_str: str
-    sub_str: str
+from bardi.nlp_engineering.regex_library.regex_set import RegexSubPair
 
 
 # 0
@@ -79,7 +64,10 @@ def get_special_punct_regex() -> RegexSubPair:
     " wt-1, ck-7 (focal) negative; [sth] ab|cd" -->
     " wt-1  ck-7  focal  negative   sth  ab cd"
     """
-    regex_sub_pair = {"regex_str": r'[\\\_,\(\);\[\]#{}\*"\'\~\?!\|\^`]', "sub_str": " "}
+    regex_sub_pair = {
+        "regex_str": r'[\\\_,\(\);\[\]#{}\*"\'\~\?!\|\^`]',
+        "sub_str": " ",
+    }
     return regex_sub_pair
 
 
@@ -145,7 +133,10 @@ def get_leading_digit_punctuation_regex() -> RegexSubPair:
         " 13-unremarkable 1-e 22-years "
         "  13 unremarkable   1 e   22 years  "
     """
-    regex_sub_pair = {"regex_str": r"(\b\d{1,})([\-\.:])([a-z]+)", "sub_str": r" \1 \3 "}
+    regex_sub_pair = {
+        "regex_str": r"(\b\d{1,})([\-\.:])([a-z]+)",
+        "sub_str": r" \1 \3 ",
+    }
     return regex_sub_pair
 
 
@@ -192,7 +183,10 @@ def get_words_with_punct_spacing_regex() -> RegexSubPair:
         "this-that her-2 tiff-1k description:gleason " -->
         "this that her-2 tiff-1k description gleason "
     """
-    regex_sub_pair = {"regex_str": r"([a-z0-9]{2,})([\-:\.])([a-z]{2,})", "sub_str": r"\1 \3"}
+    regex_sub_pair = {
+        "regex_str": r"([a-z0-9]{2,})([\-:\.])([a-z]{2,})",
+        "sub_str": r"\1 \3",
+    }
     return regex_sub_pair
 
 
@@ -296,7 +290,10 @@ def get_literals_floats_spacing_regex() -> RegexSubPair:
         " r18.0admission diagnosis: bi n13.30admission "
         " r18.0 admission diagnosis: bi n13.30 admission "
     """
-    regex_sub_pair = {"regex_str": r"([a-z]{1,2})(\d+\.\d+)([a-z]+)", "sub_str": r"\1\2 \3"}
+    regex_sub_pair = {
+        "regex_str": r"([a-z]{1,2})(\d+\.\d+)([a-z]+)",
+        "sub_str": r"\1\2 \3",
+    }
     return regex_sub_pair
 
 
@@ -428,7 +425,10 @@ def get_dimensions_regex() -> RegexSubPair:
         " 3.5 x 2.5 x 9.0 cm and 33 x 6.5 cm" -->
         "  DIMENSIONTOKEN  cm and  DIMENSIONTOKEN  cm"
     """
-    regex_list = [r"\d+\.*\d*\s*x\s*\d+\.*\d*\s*x\s*\d+\.*\d*", r"\d+\.*\d*\s*x\s*\d+\.*\d*"]
+    regex_list = [
+        r"\d+\.*\d*\s*x\s*\d+\.*\d*\s*x\s*\d+\.*\d*",
+        r"\d+\.*\d*\s*x\s*\d+\.*\d*",
+    ]
     consolidated_regex = f"{'|'.join(regex_list)}"
     regex_sub_pair = {"regex_str": consolidated_regex, "sub_str": " DIMENSIONTOKEN "}
     return regex_sub_pair
@@ -548,7 +548,10 @@ def get_duration_regex() -> RegexSubPair:
         " 32d0909091"
         " DURATIONTOKEN "
     """
-    regex_sub_pair = {"regex_str": r" \d{1,2}d\d{6,9}[.\s]*", "sub_str": " DURATIONTOKEN "}
+    regex_sub_pair = {
+        "regex_str": r" \d{1,2}d\d{6,9}[.\s]*",
+        "sub_str": " DURATIONTOKEN ",
+    }
     return regex_sub_pair
 
 
@@ -564,7 +567,10 @@ def get_letter_num_seq_regex() -> RegexSubPair:
         " c001234567"
         " LETTERDIGITSTOKEN "
     """
-    regex_sub_pair = {"regex_str": r"\b[a-z]\d{6,10}[.\s]*", "sub_str": " LETTERDIGITSTOKEN "}
+    regex_sub_pair = {
+        "regex_str": r"\b[a-z]\d{6,10}[.\s]*",
+        "sub_str": " LETTERDIGITSTOKEN ",
+    }
     return regex_sub_pair
 
 

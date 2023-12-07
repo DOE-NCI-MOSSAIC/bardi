@@ -1,4 +1,4 @@
-"""Split text columns into lists of tokens"""
+"""Split text columns into lists of tokens using simple patterns"""
 
 from abc import abstractmethod
 from typing import List, Tuple, Union
@@ -26,12 +26,6 @@ class PreTokenizer(Step):
             a specific pattern of characters used to divide a string
             into smaller segments or tokens.
             By default, the split is done on a single space character.
-
-    Methods:
-        run
-        get_parameters
-        set_write_config
-        write_outputs
     """
     def __init__(self,
                  fields: Union[str, List[str]],

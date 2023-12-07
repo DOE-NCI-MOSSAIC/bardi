@@ -1,0 +1,7 @@
+.DS_Store
+.venv/
+.vscode/
+__pycache__/
+bardi.egg-info/
+tests/test_data/*
+dist/

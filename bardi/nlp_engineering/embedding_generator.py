@@ -73,7 +73,6 @@ class EmbeddingGenerator(Step):
         run
         get_parameters
         set_write_config
-        write_outputs
     """
     def __init__(self,
                  fields: Union[str, List[str]],

@@ -1,4 +1,4 @@
-"""Curated set of regular expressions specific to cleaning text from pathology reports"""
+"""Curated set of regular expressions for cleaning text from pathology reports"""
 
 from typing import List
 
@@ -42,7 +42,6 @@ class PathologyReportRegexSet(RegexSet):
         remove_duration_time: bool = True,  # 30
         remove_letter_num_seq: bool = True,
     ):
-
         # === List of regex sub pairs ===
         self.regex_set: List[RegexSubPair] = []
 
@@ -87,7 +86,9 @@ class PathologyReportRegexSet(RegexSet):
 
         #  7
         if handle_leading_digit_punct:
-            self.regex_sub_leading_digit_punct = regex_lib.get_leading_digit_punctuation_regex()
+            self.regex_sub_leading_digit_punct = (
+                regex_lib.get_leading_digit_punctuation_regex()
+            )
             self.regex_set.append(self.regex_sub_leading_digit_punct)
 
         #  8
@@ -134,7 +135,9 @@ class PathologyReportRegexSet(RegexSet):
 
         #  16
         if handle_literals_floats_spacing:
-            self.regex_sub_literals_floats_spacing = regex_lib.get_literals_floats_spacing_regex()
+            self.regex_sub_literals_floats_spacing = (
+                regex_lib.get_literals_floats_spacing_regex()
+            )
             self.regex_set.append(self.regex_sub_literals_floats_spacing)
 
         #  17
@@ -144,7 +147,9 @@ class PathologyReportRegexSet(RegexSet):
 
         #  18
         if handle_digits_words_spacing:
-            self.regex_sub_digits_words_spacing = regex_lib.get_digits_words_spacing_regex()
+            self.regex_sub_digits_words_spacing = (
+                regex_lib.get_digits_words_spacing_regex()
+            )
             self.regex_set.append(self.regex_sub_digits_words_spacing)
 
         #  19 remove phone numbers
@@ -179,7 +184,9 @@ class PathologyReportRegexSet(RegexSet):
 
         #  25
         if remove_decimal_seg_numbers:
-            self.regex_sub_decimal_seg_numbers = regex_lib.get_decimal_segmented_numbers_regex()
+            self.regex_sub_decimal_seg_numbers = (
+                regex_lib.get_decimal_segmented_numbers_regex()
+            )
             self.regex_set.append(self.regex_sub_decimal_seg_numbers)
 
         #  26
@@ -215,6 +222,3 @@ class PathologyReportRegexSet(RegexSet):
         #  LAST condense spacing - not configurable, always executes
         self.regex_sub_spaces = regex_lib.get_spaces_regex()
         self.regex_set.append(self.regex_sub_spaces)
-
-    def get_regex_set(self):
-        return self.regex_set

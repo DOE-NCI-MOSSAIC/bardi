@@ -6,17 +6,17 @@ from duckdb import connect
 from pandas import DataFrame
 from pyarrow import Table, table, array
 
-from gaudi.data import data_handlers
+from bardi.data import data_handlers
 
 
 class TestDataHandlers(unittest.TestCase):
-    """Tests the functionality of the functions in gaudi.data.data_handlers
-    that create GAuDI Dataset objects from various sources"""
+    """Tests the functionality of the functions in bardi.data.data_handlers
+    that create bardi Dataset objects from various sources"""
 
     def test_dataset_from_file(self):
         """Set of tests to ensure that the data_handlers.from_file
         function is correctly loading data and creating
-        GAuDI Dataset objects"""
+        bardi Dataset objects"""
 
         # ======== Set-up ========
         repo_path = Path().resolve()
@@ -33,10 +33,10 @@ class TestDataHandlers(unittest.TestCase):
         p_dataset_obj = data_handlers.from_file(source=parquet_path,
                                                 format='parquet')
 
-        # GAuDI Dataset object was created and returned?
+        # bardi Dataset object was created and returned?
         self.assertTrue(isinstance(p_dataset_obj, data_handlers.Dataset),
                         ('Object created and/or returned by the function'
-                         ' was not a GAuDI Dataset object'))
+                         ' was not a bardi Dataset object'))
         # Data is an Arrow Table?
         self.assertTrue(isinstance(p_dataset_obj.data, Table),
                         ('The data referenced in the object is not'
@@ -59,7 +59,7 @@ class TestDataHandlers(unittest.TestCase):
         # Format of source recorded correctly?
         self.assertEqual(p_dataset_obj.origin_format, "parquet",
                          ('Origin format incorrectly recorded'
-                          ' in the GAuDI Dataset object'))
+                          ' in the bardi Dataset object'))
         # Data source path recorded correctly?
         self.assertEqual(p_dataset_obj.origin_file_path, parquet_path,
                          ('Origin file path recorded does'
@@ -70,11 +70,11 @@ class TestDataHandlers(unittest.TestCase):
                                                         format='parquet',
                                                         min_batches=2)
 
-        # GAuDI Dataset object was created and returned?
+        # bardi Dataset object was created and returned?
         self.assertTrue(isinstance(p_chunked_dataset_obj,
                                    data_handlers.Dataset),
                         ('Object created and/or returned by the function'
-                         ' (with batches) was not a GAuDI Dataset object'))
+                         ' (with batches) was not a bardi Dataset object'))
         # Data is a List of Arrow Tables?
         self.assertTrue(isinstance(p_chunked_dataset_obj.data, list),
                         ('The data attribute in the object'
@@ -101,7 +101,7 @@ class TestDataHandlers(unittest.TestCase):
         # Format of source recorded correctly?
         self.assertEqual(p_chunked_dataset_obj.origin_format, "parquet",
                          ('Origin format incorrectly recorded in'
-                          ' the GAuDI Dataset object'))
+                          ' the bardi Dataset object'))
         # Data source path recorded correctly?
         self.assertEqual(p_dataset_obj.origin_file_path, parquet_path,
                          ('Origin file path recorded'
@@ -115,10 +115,10 @@ class TestDataHandlers(unittest.TestCase):
         # Non-Chunked Dataset Test
         c_dataset_obj = data_handlers.from_file(source=csv_path, format='csv')
 
-        # GAuDI Dataset object was created and returned?
+        # bardi Dataset object was created and returned?
         self.assertTrue(isinstance(c_dataset_obj, data_handlers.Dataset),
                         ('Object created and/or returned by the function'
-                         ' was not a GAuDI Dataset object'))
+                         ' was not a bardi Dataset object'))
         # Data is an Arrow Table?
         self.assertTrue(isinstance(c_dataset_obj.data, Table),
                         ('The data referenced in the object'
@@ -140,7 +140,7 @@ class TestDataHandlers(unittest.TestCase):
         # Format of source recorded correctly?
         self.assertEqual(c_dataset_obj.origin_format, "csv",
                          ('Origin format incorrectly recorded'
-                          ' in the GAuDI Dataset object'))
+                          ' in the bardi Dataset object'))
         # Data source path recorded correctly?
         self.assertEqual(c_dataset_obj.origin_file_path, csv_path,
                          ('Origin file path recorded does not match'
@@ -151,12 +151,12 @@ class TestDataHandlers(unittest.TestCase):
                                                         format='csv',
                                                         min_batches=2)
 
-        # GAuDI Dataset object was created and returned?
+        # bardi Dataset object was created and returned?
         self.assertTrue(isinstance(c_chunked_dataset_obj,
                                    data_handlers.Dataset),
                         ('Object created and/or returned by'
                          ' the function (with batches) was'
-                         ' not a GAuDI Dataset object'))
+                         ' not a bardi Dataset object'))
         # Data is a List of Arrow Tables?
         self.assertTrue(isinstance(c_chunked_dataset_obj.data, list),
                         ('The data attribute in the object'
@@ -183,7 +183,7 @@ class TestDataHandlers(unittest.TestCase):
         # Format of source recorded correctly?
         self.assertEqual(c_chunked_dataset_obj.origin_format, "csv",
                          ('Origin format incorrectly recorded'
-                          ' in the GAuDI Dataset object'))
+                          ' in the bardi Dataset object'))
         # Data source path recorded correctly?
         self.assertEqual(c_dataset_obj.origin_file_path, csv_path,
                          ('Origin file path recorded does not match'
@@ -192,7 +192,7 @@ class TestDataHandlers(unittest.TestCase):
     def test_dataset_from_duckdb(self):
         """Set of tests to ensure that the data_handlers.from_duckdb
         function is correctly querying and creating
-        GAuDI Dataset objects"""
+        bardi Dataset objects"""
 
         # ======== Set-up ========
         # Connect to the test database file
@@ -233,10 +233,10 @@ class TestDataHandlers(unittest.TestCase):
         dataset_obj = data_handlers.from_duckdb(path=test_db_path,
                                                 query=test_query)
 
-        # GAuDI Dataset object was created and returned?
+        # bardi Dataset object was created and returned?
         self.assertTrue(isinstance(dataset_obj, data_handlers.Dataset),
                         ('Object created and/or returned by the function'
-                         ' was not a GAuDI Dataset object'))
+                         ' was not a bardi Dataset object'))
         # Data is an Arrow Table?
         self.assertTrue(isinstance(dataset_obj.data, Table),
                         ('The data referenced in the object'
@@ -257,7 +257,7 @@ class TestDataHandlers(unittest.TestCase):
         # Format of source recorded correctly?
         self.assertEqual(dataset_obj.origin_format, "duckdb",
                          ('Origin format incorrectly recorded in'
-                          ' the GAuDI Dataset object'))
+                          ' the bardi Dataset object'))
         # Recorded query matches the test query?
         self.assertEqual(dataset_obj.origin_query, test_query,
                          ('Origin query recorded incorrectly in the Dataset'
@@ -268,10 +268,10 @@ class TestDataHandlers(unittest.TestCase):
                                                         query=test_query,
                                                         min_batches=2)
 
-        # GAuDI Dataset object was created and returned?
+        # bardi Dataset object was created and returned?
         self.assertTrue(isinstance(chunked_dataset_obj, data_handlers.Dataset),
                         ('Object created and/or returned by the function'
-                         ' (with batches) was not a GAuDI Dataset object'))
+                         ' (with batches) was not a bardi Dataset object'))
         # Data is a List of Arrow Tables?
         self.assertTrue(isinstance(chunked_dataset_obj.data, list),
                         ('The data attribute in the object'
@@ -299,7 +299,7 @@ class TestDataHandlers(unittest.TestCase):
         # Format of source recorded correctly?
         self.assertEqual(dataset_obj.origin_format, "duckdb",
                          ('Origin format incorrectly recorded'
-                          ' in the GAuDI Dataset object'))
+                          ' in the bardi Dataset object'))
         # Recorded query matches the test query?
         self.assertEqual(dataset_obj.origin_query, test_query,
                          ('Origin query recorded incorrectly in the Dataset'
@@ -307,7 +307,7 @@ class TestDataHandlers(unittest.TestCase):
 
     def test_dataset_from_pandas(self):
         """Set of tests to ensure that the data_handlers.from_pandas
-        function is correctly creating GAuDI Dataset objects"""
+        function is correctly creating bardi Dataset objects"""
 
         # Create a test Pandas DataFrame
         d = {'col1': [1, 2, 3, 4], 'col2': ['str1', 'str2', 'str3', 'str4']}
@@ -316,7 +316,7 @@ class TestDataHandlers(unittest.TestCase):
         # ======== Non-Chunked Dataset Tests ========
         dataset_obj = data_handlers.from_pandas(df)
 
-        # GAuDI Dataset object was created and returned
+        # bardi Dataset object was created and returned
         self.assertTrue(isinstance(dataset_obj, data_handlers.Dataset),
                         ('Object created and/or returned'
                          ' by the function was incorrect'))
@@ -340,12 +340,12 @@ class TestDataHandlers(unittest.TestCase):
         # Format of source recorded correctly
         self.assertEqual(dataset_obj.origin_format, "pandas",
                          ('Origin format incorrectly recorded'
-                          ' in the GAuDI Dataset object'))
+                          ' in the bardi Dataset object'))
 
         # ======== Chunked Dataset Tests ========
         chunked_dataset_obj = data_handlers.from_pandas(df, min_batches=2)
 
-        # GAuDI Dataset object was created and returned
+        # bardi Dataset object was created and returned
         self.assertTrue(isinstance(chunked_dataset_obj, data_handlers.Dataset),
                         ('Object created and/or returned by the function'
                          ' (with batches) was incorrect'))
@@ -375,11 +375,11 @@ class TestDataHandlers(unittest.TestCase):
         # Format of source recorded correctly
         self.assertEqual(dataset_obj.origin_format, "pandas",
                          ('Origin format incorrectly recorded'
-                          ' in the GAuDI Dataset object'))
+                          ' in the bardi Dataset object'))
 
     def test_dataset_from_pyarrow(self):
         """Set of tests to ensure that the data_handlers.from_pyarrow
-        function is correctly creating a GAuDI Dataset object"""
+        function is correctly creating a bardi Dataset object"""
 
         # Create a test PyArrow Table
         col1 = array([1, 2, 3, 4])
@@ -390,7 +390,7 @@ class TestDataHandlers(unittest.TestCase):
         # ======== Non-Chunked Dataset Tests ========
         dataset_obj = data_handlers.from_pyarrow(test_table)
 
-        # GAuDI Dataset object was created and returned
+        # bardi Dataset object was created and returned
         self.assertTrue(isinstance(dataset_obj, data_handlers.Dataset),
                         ('Object created and/or returned'
                          ' by the function was incorrect'))
@@ -416,13 +416,13 @@ class TestDataHandlers(unittest.TestCase):
         # Format of source recorded correctly
         self.assertEqual(dataset_obj.origin_format, "pyarrow",
                          ('Origin format incorrectly recorded'
-                          ' in the GAuDI Dataset object'))
+                          ' in the bardi Dataset object'))
 
         # ======== Chunked Dataset Tests ========
         chunked_dataset_obj = data_handlers.from_pyarrow(test_table,
                                                          min_batches=2)
 
-        # GAuDI Dataset object was created and returned
+        # bardi Dataset object was created and returned
         self.assertTrue(isinstance(chunked_dataset_obj,
                                    data_handlers.Dataset),
                         ('Object created and/or returned by the function'
@@ -454,11 +454,11 @@ class TestDataHandlers(unittest.TestCase):
         # Format of source recorded correctly
         self.assertEqual(dataset_obj.origin_format, "pyarrow",
                          ('Origin format incorrectly recorded'
-                          ' in the GAuDI Dataset object'))
+                          ' in the bardi Dataset object'))
 
     def test_dataset_from_json(self):
         """Set of tests to ensure that the data_handlers.from_json
-        function is correctly creating a GAuDI Dataset object"""
+        function is correctly creating a bardi Dataset object"""
 
         # Create a test JSON object
         d = {'col1': 1, 'col2': 'str1'}
@@ -466,7 +466,7 @@ class TestDataHandlers(unittest.TestCase):
 
         dataset_obj = data_handlers.from_json(json_obj)
 
-        # GAuDI Dataset object was created and returned
+        # bardi Dataset object was created and returned
         self.assertTrue(isinstance(dataset_obj, data_handlers.Dataset),
                         ('Object created and/or returned'
                          ' by the function was incorrect'))
@@ -490,7 +490,7 @@ class TestDataHandlers(unittest.TestCase):
         # Format of source recorded correctly
         self.assertEqual(dataset_obj.origin_format, "json",
                          ('Origin format incorrectly recorded'
-                          ' in the GAuDI Dataset object'))
+                          ' in the bardi Dataset object'))
 
 
 if __name__ == "__main__":
