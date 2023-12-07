@@ -207,6 +207,220 @@ Embedding Matrix:
    2.93711794e-03  4.90082072e-03]]
 ```
 
+## Collecting metadata
+
+Nothing we have implemented in this pipeline is particularly revolutionary in and of itself. We provide a handful of abstractions for dealing with text in an ML workflow, but a key objective is to provide these features within a reproducible framework. Everything we did above is automatically recorded by the pipeline so that the operations can be tracked and reproduced. Let's observe this behavior below.
+
+```python
+# reviewing the collected metadata
+metadata = pipeline.get_parameters()
+
+print(metadata)
+```
+
+Result:
+```python
+{
+    "dataset": {
+        "<class 'bardi.data.data_handlers.Dataset'>": {
+            "date": "2023-12-07 15:22:58.219665",
+            "data": ["patient_id_number", "text", "dark_side_dx"],
+            "origin_query": "None",
+            "origin_format": "pandas",
+            "origin_row_count": 3,
+        }
+    },
+    "steps": {
+        "<class 'bardi.nlp_engineering.normalizer.CPUNormalizer'>": {
+            "fields": ["text"],
+            "_data_write_config": {
+                "data_format": "parquet",
+                "data_format_args": {"compression": "snappy", "use_dictionary": False},
+            },
+            "lowercase": True,
+            "regex_set": [
+                {"regex_str": "(\\\\x[0-9A-Fa-f]{2,})|\\\\[stepr]", "sub_str": " "},
+                {"regex_str": "[\\r\\n\\t]|\\s{2,}", "sub_str": " "},
+                {
+                    "regex_str": "\\b(http[s]*:\\/\\/)[^\\s]+|\\b(www\\.)[^\\s]+",
+                    "sub_str": " URLTOKEN ",
+                },
+                {
+                    "regex_str": "[\\\\\\_,\\(\\);\\[\\]#{}\\*\"\\'\\~\\?!\\|\\^`]",
+                    "sub_str": " ",
+                },
+                {"regex_str": "[\\-\\.:\\/\\_]{2,}", "sub_str": " "},
+                {"regex_str": "<(.*?)>", "sub_str": " $1 "},
+                {"regex_str": "%", "sub_str": " percent "},
+                {"regex_str": "(\\b\\d{1,})([\\-\\.:])([a-z]+)", "sub_str": " $1 $3 "},
+                {"regex_str": "(\\s[\\.:\\-\\\\])([^\\s]+)", "sub_str": " $2 "},
+                {"regex_str": "([^\\s]+)([\\.:\\-\\\\]\\s)", "sub_str": " $1 "},
+                {
+                    "regex_str": "([a-z0-9]{2,})([\\-:\\.])([a-z]{2,})",
+                    "sub_str": "$1 $3",
+                },
+                {"regex_str": "([><=+%\\/&:])", "sub_str": " $1 "},
+                {"regex_str": "(\\d+[.\\d]*)([x])", "sub_str": "$1 $2 "},
+                {"regex_str": "(\\d+)[-]*([cpamt][mlhc])", "sub_str": "$1 $2 "},
+                {
+                    "regex_str": "(\\d{1,2}[a-z])(-)(\\d{1,2}[a-z])|([a-z]\\d{1,2})(-)([a-z]\\d{1,2})",
+                    "sub_str": "$1 $2 $3 ",
+                },
+                {
+                    "regex_str": "( [\\d+]*[\\.:]*\\d+\\s*)(-)(\\s*[\\d+]*[\\.:]*\\d+)",
+                    "sub_str": "$1 $2 $3",
+                },
+                {
+                    "regex_str": "([a-z]{1,2})(\\d+\\.\\d+)([a-z]+)",
+                    "sub_str": "$1$2 $3",
+                },
+                {"regex_str": "(\\b[a-z]+)(\\s+)([s]\\s)", "sub_str": "$1$3"},
+                {"regex_str": "(\\s\\d{1,})([a-z]{2,}\\s)", "sub_str": "$1 $2"},
+                {
+                    "regex_str": "\\(*\\d{3}\\)*[-, ]*\\d{3}[-, ]*\\d{4}",
+                    "sub_str": " PHONENUMTOKEN ",
+                },
+                {
+                    "regex_str": "\\d{1,2}\\s*[\\/,-\\.]\\s*\\d{1,2}\\s*[\\/,-\\.]\\s*\\d{2,4}\\s*[at\\s\\-]*[\\d{1,2}\\s*[:\\s*\\d{1,2}]+]*(?:\\s*[pa][m])*|\\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\\s*\\d{1,2}\\s*\\d{2,4}|\\b\\d{1,2}\\s*(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\\s*\\d{2,4}|\\d{1,2}-(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)-\\d{2}\\s*\\d{1,2}[:\\d{1,2}]+(?:\\s*[pa][m])",
+                    "sub_str": " DATETOKEN ",
+                },
+                {
+                    "regex_str": "(\\d{1,2}\\s*([:.]\\s*\\d{2}){1,2}\\s*[ap]\\.*[m]\\.*)|\\d{2}\\s*[ap]\\.*[m]\\.*|[0-2][0-9]:[0-5][1-9]",
+                    "sub_str": " TIMETOKEN ",
+                },
+                {
+                    "regex_str": "\\d+\\s([0-9a-z.]+[\\s,]+){1,6}[a-z]{2}[./\\s+]*\\d{5}(-\\d{4})*",
+                    "sub_str": " ADDRESSTOKEN ",
+                },
+                {
+                    "regex_str": "\\d+\\.*\\d*\\s*x\\s*\\d+\\.*\\d*\\s*x\\s*\\d+\\.*\\d*|\\d+\\.*\\d*\\s*x\\s*\\d+\\.*\\d*",
+                    "sub_str": " DIMENSIONTOKEN ",
+                },
+                {
+                    "regex_str": "[a-z]{1,3}[-]*\\d{2}[-]\\d{3,}[-]*",
+                    "sub_str": " SPECIMENTOKEN ",
+                },
+                {
+                    "regex_str": "\\d+[\\.\\-]\\d+([\\.\\-]\\d+)+",
+                    "sub_str": " DECIMALSEGMENTEDNUMBERTOKEN ",
+                },
+                {"regex_str": "\\s\\d{3,}\\s", "sub_str": " DIGITSEQUENCETOKEN "},
+                {"regex_str": "\\s\\d{2,}\\.\\d{1,}", "sub_str": " LARGEFLOATTOKEN "},
+                {"regex_str": "\\s(\\d+)(\\.)(\\d)(\\d+)*\\s", "sub_str": " $1$2$3 "},
+                {
+                    "regex_str": "\\s\\d{1,2}[\\-]*[a-z]{1,2}\\s|\\b[a-z][\\-]*\\d{1}\\s|\\s[a-z]\\d{1,2}-\\d{1,2}\\s",
+                    "sub_str": " CASSETTETOKEN ",
+                },
+                {
+                    "regex_str": " \\d{1,2}d\\d{6,9}[.\\s]*",
+                    "sub_str": " DURATIONTOKEN ",
+                },
+                {
+                    "regex_str": "\\b[a-z]\\d{6,10}[.\\s]*",
+                    "sub_str": " LETTERDIGITSTOKEN ",
+                },
+                {"regex_str": "\\s{2,}|\\\\n", "sub_str": " "},
+            ],
+        },
+        "<class 'bardi.nlp_engineering.pre_tokenizer.CPUPreTokenizer'>": {
+            "fields": ["text"],
+            "split_pattern": " ",
+            "_data_write_config": {
+                "data_format": "parquet",
+                "data_format_args": {"compression": "snappy", "use_dictionary": False},
+            },
+        },
+        "<class 'bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator'>": {
+            "fields": ["text"],
+            "cores": 10,
+            "min_word_count": 2,
+            "window": 5,
+            "vector_size": 300,
+            "sample": 6e-05,
+            "min_alpha": 0.007,
+            "negative": 20,
+            "epochs": 30,
+            "seed": 42,
+            "vocab_exclude_list": [],
+            "_data_write_config": {
+                "data_format": "parquet",
+                "data_format_args": {"compression": "snappy", "use_dictionary": False},
+            },
+            "_artifacts_write_config": {
+                "vocab_format": "json",
+                "vocab_format_args": {},
+                "embedding_matrix_format": "npy",
+                "embedding_matrix_format_args": {},
+            },
+            "w2v_model": "<class 'gensim.models.word2vec.Word2Vec'>",
+            "vocab_size": 46,
+        },
+        "<class 'bardi.nlp_engineering.post_processor.CPUPostProcessor'>": {
+            "fields": ["text"],
+            "field_rename": "X",
+            "_data_write_config": {
+                "data_format": "parquet",
+                "data_format_args": {"compression": "snappy", "use_dictionary": False},
+            },
+            "unk_id": 45,
+        },
+        "<class 'bardi.nlp_engineering.label_processor.CPULabelProcessor'>": {
+            "fields": ["dark_side_dx"],
+            "method": "unique",
+            "id_to_label": {"dark_side_dx": {"0": "negative", "1": "positive"}},
+            "_data_write_config": {
+                "data_format": "parquet",
+                "data_format_args": {"compression": "snappy", "use_dictionary": False},
+            },
+            "_artifacts_write_config": {
+                "id_to_label_format": "json",
+                "id_to_label_format_args": {},
+            },
+        },
+        "<class 'bardi.nlp_engineering.splitter.CPUSplitter'>": {
+            "split_type": "new",
+            "split_proportions": {"train": 0.33, "test": 0.33, "val": 0.33},
+            "num_splits": 3,
+            "unique_record_cols": ["patient_id_number"],
+            "group_cols": ["patient_id_number"],
+            "label_cols": "dark_side_dx",
+            "random_seed": 42,
+            "_data_write_config": {
+                "data_format": "parquet",
+                "data_format_args": {"compression": "snappy", "use_dictionary": False},
+            },
+        },
+    },
+    "performance": {
+        "<class 'bardi.nlp_engineering.normalizer.CPUNormalizer'>": {
+            "time": "0:00:00.034428",
+            "memory (MB)": "0.013305",
+        },
+        "<class 'bardi.nlp_engineering.pre_tokenizer.CPUPreTokenizer'>": {
+            "time": "0:00:00.008829",
+            "memory (MB)": "0.003406",
+        },
+        "<class 'bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator'>": {
+            "time": "0:00:00.073698",
+            "memory (MB)": "0.528565",
+        },
+        "<class 'bardi.nlp_engineering.post_processor.CPUPostProcessor'>": {
+            "time": "0:00:00.021407",
+            "memory (MB)": "0.036099",
+        },
+        "<class 'bardi.nlp_engineering.label_processor.CPULabelProcessor'>": {
+            "time": "0:00:00.002001",
+            "memory (MB)": "0.008668",
+        },
+        "<class 'bardi.nlp_engineering.splitter.CPUSplitter'>": {
+            "time": "0:00:00.003008",
+            "memory (MB)": "0.009278",
+        },
+        "<class 'bardi.pipeline.Pipeline'>": "0:00:00.143449",
+    },
+}
+```
+
 ## Full tutorial script
 
 ```python
@@ -291,6 +505,11 @@ print(final_data)
 print(vocab)
 print(label_map)
 print(word_embeddings)
+
+# reviewing the collected metadata
+metadata = pipeline.get_parameters()
+
+print(metadata)
 ```
 
 Key Features
