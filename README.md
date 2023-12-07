@@ -4,18 +4,25 @@ bardi (Batch-processing Abstraction for Raw Data Integration) is a framework for
 
 Our initial release version is written for efficient and reproducible pre-processing of data on a single node utilizing the CPU for computation. Future development goals aim to provide the same functionality while utilizing different hardware such as, distributed computation across multiple nodes, computation on a Spark cluster, and computation utilizing available GPUs.
 
+Key Features
+============
+* **Abstraction** - common data pre-processing steps are abstracted into modular steps
+* **Efficiency** - data is held in Apache Arrow's columnar memory model and computation is implemented with Polars, taking advantage of multithreading utilizing available CPU cores
+* **Modularity** - designed with component-based architecture, users can integrate individual modules based on their specific needs. Each module can operate as an individual unit just as well as within a pipeline
+* **Extensibility** - bardi's design allows for straightforward extension of capabilities to create new custom steps that haven't been created yet
+
 Installation
-==================
+============
 
 ``pip install bardi``
 
 Documentation
-============================
+=============
 
 * Coming Soon
 
-Tutorial and Example Scripts
-============================
+Tutorial
+========
 
 ## Preparing a sample set of data
 
@@ -511,9 +518,3 @@ metadata = pipeline.get_parameters()
 
 print(metadata)
 ```
-
-Key Features
-============
-* **Efficiency** - with power of Polars and multithreading, bardi ensures rapid transformation of even large datasets.
-* **Modularity** - designed with component-based architecture, users can integrate individual modules based on their specific needs. Each module (normalizer, pre-tokenizer, splitter etc.) operates as individual unit.
-* **Extendibility** - bardi's design allows for seamless integration of new modules and methods.
