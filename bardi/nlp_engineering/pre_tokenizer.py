@@ -6,30 +6,23 @@ from typing import List, Tuple, Union
 import polars as pl
 import pyarrow as pa
 
-from bardi.nlp_engineering.utils.validations import (validate_pyarrow_table,
-                                                     validate_str_cols)
+from bardi.nlp_engineering.utils.validations import (
+    validate_pyarrow_table,
+    validate_str_cols,
+)
 from bardi.pipeline import Step
 
 
 class PreTokenizer(Step):
-    """The pre tokenizer breaks down text into smaller units
-    before futher tokenization is applied.
+    """The pre-tokenizer breaks down text into smaller units
+    before further tokenization is applied.
 
     Avoid the direct instantiation of the PreTokenizer class
     and instead instantiate one of the child classes depending
     on hardware configuration.
-
-    Attributes:
-        fields : Union[str, List[str]],
-            the name of the column containing text
-        split_pattern : str
-            a specific pattern of characters used to divide a string
-            into smaller segments or tokens.
-            By default, the split is done on a single space character.
     """
-    def __init__(self,
-                 fields: Union[str, List[str]],
-                 split_pattern: str = " "):
+
+    def __init__(self, fields: Union[str, List[str]], split_pattern: str = " "):
         """instantiate a pre tokenizer object"""
         if isinstance(fields, str):
             self.fields = [fields]
@@ -44,26 +37,41 @@ class PreTokenizer(Step):
 
 
 class CPUPreTokenizer(PreTokenizer):
-    """Implementation of the PreTokenizer for CPU computation
+    """The pre tokenizer breaks down text into smaller units
+    before further tokenization is applied.
 
-    Inherited Attributes:
-        fields : str or List[str]
-        split_pattern : str
+    Implementation of the PreTokenizer for CPU computation
 
     Attributes:
-        None
+        fields : Union[str, List[str]],
+            the name of the column(s) containing text
+        split_pattern : str
+            a specific pattern of characters used to divide a string
+            into smaller segments or tokens.
+            By default, the split is done on a single space character.
 
     Methods:
-        run
-        get_parameters
-        set_write_config
-        write_outputs
+        run : run the step's primary function
+        get_parameters : get a dictionary representation of the step object
+        set_write_config : Alter the default file writing configuration
+        write_outputs : Write output data to a file
     """
+
     def __init__(self, *args, **kwargs):
+        """
+        Keyword Arguments:
+            fields : Union[str, List[str]],
+                the name of the column(s) containing text
+            split_pattern : str
+                a specific pattern of characters used to divide a string
+                into smaller segments or tokens.
+                By default, the split is done on a single space character.
+        """
         super().__init__(*args, **kwargs)
 
-    def run(self, data: pa.Table,
-            artifacts: dict = None) -> Tuple[pa.Table, Union[dict, None]]:
+    def run(
+        self, data: pa.Table, artifacts: dict = None
+    ) -> Tuple[pa.Table, Union[dict, None]]:
         """Runs a CPU-based pre-tokenizer method based on the configuration
         used to create the object of the CPUPreTokenizer class
 
@@ -87,15 +95,17 @@ class CPUPreTokenizer(PreTokenizer):
         validate_str_cols(fields=self.fields, data=data)
 
         # Split text fields into lists of tokens
-        df = (pl.from_arrow(data)
-              .with_columns(
-                  [(pl.col(field)
-                      .str.split(by=self.split_pattern)
-                      .list.eval(pl.element().filter(pl.element() != ''))
-                      .alias(field))
-                   for field in self.fields]
-                  )
-              )
+        df = pl.from_arrow(data).with_columns(
+            [
+                (
+                    pl.col(field)
+                    .str.split(by=self.split_pattern)
+                    .list.eval(pl.element().filter(pl.element() != ""))
+                    .alias(field)
+                )
+                for field in self.fields
+            ]
+        )
 
         data = df.to_arrow()
 

@@ -55,11 +55,7 @@ class Dataset:
 
 
 def from_file(
-    source: Union[str, List[str]],
-    format: str,
-    min_batches: int = None,
-    *args,
-    **kwargs
+    source: Union[str, List[str]], format: str, min_batches: int = None, *args, **kwargs
 ) -> Dataset:
     """Create a bardi Dataset object from a file source
 
@@ -300,8 +296,10 @@ def from_json(json_data: Union[str, dict, List(dict)]) -> Dataset:
     elif isinstance(json_data, list):
         records = json_data
     else:
-        raise TypeError('json data must be provided as a serialized json str, '
-                        'a deserialized dictionary, or a list of dictionaries.')
+        raise TypeError(
+            "json data must be provided as a serialized json str, "
+            "a deserialized dictionary, or a list of dictionaries."
+        )
 
     table = pa.Table.from_pylist(records)
     row_count = table.num_rows
@@ -320,28 +318,33 @@ def from_json(json_data: Union[str, dict, List(dict)]) -> Dataset:
 
 
 def to_pandas(table: pa.Table) -> pd.DataFrame:
-    """docstring"""
+    """Return data as a pandas DataFrame"""
     df = table.to_pandas()
     return df
 
 
 def to_polars(table: pa.Table) -> pl.DataFrame:
-    """docstring"""
-    pass
+    """Return data as a polars DataFrame"""
+    df = pl.from_arrow(table)
+    return df
 
 
-def to_json(table: pa.Table) -> dict:
-    """docstring"""
-    pass
+def write_file(data: pa.Table, path: str, format: str, *args, **kwargs) -> None:
+    """Write data to a file
 
-
-def write_file(data: pa.Table, path: str, format: str,
-               *args, **kwargs) -> None:
-    """docstring"""
+    Keyword Arguments:
+        data : PyArrow Table
+        path : str
+            path in filesystem where data is to be written
+        format : str
+            filetype in ["parquet", "feather", "csv",
+                         "orc", "json", "npy"]
+        Additional arguments can be passed for specific file types.
+        Reference PyArrow documentation for addition arguments.
+    """
 
     format = format.lower()
-    accepted_formats = ["parquet", "arrow", "feather", "csv",
-                        "orc", "json", "npy"]
+    accepted_formats = ["parquet", "feather", "csv", "orc", "json", "npy"]
 
     if format not in accepted_formats:
         raise ValueError(
@@ -352,8 +355,6 @@ def write_file(data: pa.Table, path: str, format: str,
             orc.write_table(data, path, *args, **kwargs)
         elif format == "parquet":
             pq.write_table(data, path, *args, **kwargs)
-        elif format == "arrow":
-            pass
         elif format == "feather":
             feather.write_feather(data, path, *args, **kwargs)
         elif format == "csv":

@@ -13,6 +13,13 @@ from bardi.pipeline import DataWriteConfig, Step
 
 
 class Normalizer(Step):
+    """Normalizer cleans and standardizes text input using regular expression
+    substitutions. Lowercasing is also applied if desired.
+
+    Avoid the direct instantiation of the PreTokenizer class
+    and instead instantiate one of the child classes depending
+    on hardware configuration.
+    """
     def __init__(self,
                  fields: Union[str, List[str]],
                  regex_set: List[RegexSubPair],
@@ -36,16 +43,37 @@ class Normalizer(Step):
 
 
 class CPUNormalizer(Normalizer):
-    """Normalizer specific for CPU computation. Inherits variables,
-    attributes, and methods from the Normalizer parent class.
+    """Normalizer cleans and standardizes text input using regular expression
+    substitutions. Lowercasing is also applied if desired.
+
+    Normalizer specific for CPU computation.
 
     Attributes:
-            Inherited from the Normalizer class
+        fields : Union[str, List[str]]
+            the name of the column(s) containing text to be normalized
+        regex_set : List[RegexSubPair]
+            a list of dicionaries with keys, 'regex_str' and 'sub_str' used to
+            perform regular expression substitutions of the text
+        lowercase : bool
+            whether or not the text will be lowercased
 
     Methods:
-        run
+        run : run the step's primary function
+        get_parameters : get a dictionary representation of the step object
+        set_write_config : Alter the default file writing configuration
+        write_outputs : Write output data to a file
     """
     def __init__(self, *args, **kwargs):
+        """
+        Keyword Arguments:
+            fields : Union[str, List[str]]
+                the name of the column(s) containing text to be normalized
+            regex_set : List[RegexSubPair]
+                a list of dicionaries with keys, 'regex_str' and 'sub_str' used to
+                perform regular expression substitutions of the text
+            lowercase : bool
+                whether or not the text will be lowercased
+        """
         super().__init__(*args, **kwargs)
         # Rust uses a different syntax for regex match groups
         # than standard (uses '$' instead of backslash)

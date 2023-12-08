@@ -24,27 +24,6 @@ class PostProcessor(Step):
     Avoid the direct instantiation of the PostProcessor class
     and instead instantiate one of the child classes depending
     on hardware configuration
-
-    Attributes:
-        fields : Union[str, List[str]],
-            the name of the column containing a list of tokens
-            that will be mapped to integers using a vocab
-        field_rename : str
-            optional ability to rename the supplied field with
-            the field_rename value
-        id_to_token : dict
-            optional vocabulary in the form of {id: token} that
-            will be used to map the tokens to integers. This
-            is optional for the construction of the object, and
-            can alternatively be provided in the run method.
-            This flexibility handles the use of a pre-existing
-            vocab versus creating a vocab during a pipeline run.
-
-    Methods:
-        run
-        get_parameters
-        set_write_config
-        write_outputs
     """
 
     def __init__(
@@ -67,15 +46,12 @@ class PostProcessor(Step):
         if id_to_token:
             # the actual application of the mapping requires
             # flipping the keys and values to have {token: id}
-            self.mapping = {token: int(id) for id, token
-                            in id_to_token.items()}
+            self.mapping = {token: int(id) for id, token in id_to_token.items()}
 
         self.concat_fields = concat_fields
         self._data_write_config: DataWriteConfig = {
             "data_format": "parquet",
-            "data_format_args": {
-                "compression": "snappy",
-                "use_dictionary": False},
+            "data_format_args": {"compression": "snappy", "use_dictionary": False},
         }  # Default write config
 
     @abstractmethod
@@ -85,22 +61,54 @@ class PostProcessor(Step):
 
 
 class CPUPostProcessor(PostProcessor):
-    """Implementation of the PostProcessor for CPU computation
+    """The post processor maps a vocab to a list of tokens
 
-    Inherited Attributes:
-        field : str
-        field_rename : str
-        id_to_token : dict
+    Implementation of the PostProcessor for CPU computation
 
     Attributes:
-        None
+        fields : Union[str, List[str]],
+            the name of the column containing a list of tokens
+            that will be mapped to integers using a vocab
+        field_rename : str
+            optional ability to rename the supplied field with
+            the field_rename value
+        id_to_token : dict
+            optional vocabulary in the form of {id: token} that
+            will be used to map the tokens to integers. This
+            is optional for the construction of the object, and
+            can alternatively be provided in the run method.
+            This flexibility handles the use of a pre-existing
+            vocab versus creating a vocab during a pipeline run.
+        concat_fields : bool
+            indicate if you would like for fields to be concatenated
+            into a single column or left as separate columns
 
     Methods:
-        run
-        get_parameters
+        run : run the step's primary function
+        get_parameters : get a dictionary representation of the step object
+        set_write_config : Alter the default file writing configuration
+        write_outputs : Write output data to a file
     """
 
     def __init__(self, *args, **kwargs):
+        """
+        Keyword Arguments:
+            fields : Union[str, List[str]],
+                the name of the column containing a list of tokens
+                that will be mapped to integers using a vocab
+            field_rename : str
+                optional ability to rename the supplied field with
+                the field_rename value
+            id_to_token : dict
+                optional vocabulary in the form of {id: token} that
+                will be used to map the tokens to integers. This
+                is optional for the construction of the object, and
+                can alternatively be provided in the run method.
+                This flexibility handles the use of a pre-existing
+                vocab versus creating a vocab during a pipeline run.
+            concat_fields : bool
+                indicate if you would like for fields to be concatenated
+                into a single column or left as separate columns"""
         super().__init__(*args, **kwargs)
 
     def run(
@@ -206,9 +214,7 @@ class CPUPostProcessor(PostProcessor):
                     .explode(field)
                     .with_columns(
                         pl.col(field).map_dict(
-                            self.mapping,
-                            default=self.unk_id,
-                            return_dtype=pl.Int64()
+                            self.mapping, default=self.unk_id, return_dtype=pl.Int64()
                         )
                     )
                     .group_by("unique_id", maintain_order=True)

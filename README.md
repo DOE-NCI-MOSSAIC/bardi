@@ -148,12 +148,6 @@ Again, a pretty straight-forward step.
 pipeline.add_step(nlp_engineering.CPULabelProcessor(fields=['dark_side_dx']))
 ```
 
-## Adding a Splitter to our pipeline
-
-The current implementation of splitter is relatively limited in functionality. But has a few complications that need to be understood to get it to work correctly (or at all).
-
-Also, the splitter isn't going to work well with 3 samples.
-
 ## Running the pipeline
 
 Now that we have added all of the steps, let's actually run the pipeline.
@@ -179,11 +173,11 @@ word_embeddings = pipeline.artifacts['embedding_matrix']
 
 Data:
 
-| patient_id_number | X | dark_side_dx | split |
-|---| --- | --- | --- |
-| 1 | [39, 33, 45, 44, 45, 45, 23, 45, 45, 45, 2, 22... | 1 | val |
-| 2 | [33, 45, 30, 45, 31, 45, 41, 39, 12, 35, 34, 7... | 0 | val |
-| 3 | [39, 24, 45, 20, 2, 22, 5, 1, 45, 13, 18, 45, ... | 1 | val |
+| patient_id_number | X | dark_side_dx |
+|---| --- | --- |
+| 1 | [39, 33, 45, 44, 45, 45, 23, 45, 45, 45, 2, 22... | 1 |
+| 2 | [33, 45, 30, 45, 31, 45, 41, 39, 12, 35, 34, 7... | 0 |
+| 3 | [39, 24, 45, 20, 2, 22, 5, 1, 45, 13, 18, 45, ... | 1 |
 
 
 Vocab:

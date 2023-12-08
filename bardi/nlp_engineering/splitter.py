@@ -11,10 +11,25 @@ from bardi.nlp_engineering.utils.validations import validate_pyarrow_table
 from bardi.pipeline import DataWriteConfig, Step
 
 MapSplit = NamedTuple(
-    "MapSplit", [("unique_record_cols", List[str]),
-                 ("split_mapping", Dict[str, str])
-                 ]
+    "MapSplit", [("unique_record_cols", List[str]), ("split_mapping", Dict[str, str])]
 )
+MapSplit.__doc__ = (
+    "Specify the requirements for splitting data exactly in line with "
+    "an existing data split"
+)
+MapSplit.unique_record_cols.__doc__ = (
+    "List of column names of which the combination forms a unique identifier in the "
+    "dataset. This can be a single column name if that creates a unique identifier, "
+    "but oftentimes in datasets a combination of fields are required. "
+    "Note: This set of columns MUST create a unique record or the program will crash. "
+)
+MapSplit.split_mapping.__doc__ = (
+    "A dictionary mapping where the keys are the hash of the concatenated values from "
+    "unique_record_cols, or represented by the following pseudocode, "
+    "hash(concat(*unique_record_cols)). The values are thecorresponding split value "
+    "(train, test, val)."
+)
+
 NewSplit = NamedTuple(
     "NewSplit",
     [
@@ -25,32 +40,39 @@ NewSplit = NamedTuple(
         ("random_seed", int),
     ],
 )
+NewSplit.__doc__ = (
+    "Specify the requirements for splitting data with a new split from scratch."
+)
+NewSplit.split_proportions.__doc__ = (
+    "Mapping of split names to split proportions. "
+    "i.e. {'train': 0.75, 'test': 0.15, 'val': 0.15} "
+    "Note: values must add to 1.0."
+)
+NewSplit.unique_record_cols.__doc__ = (
+    "List of column names of which the combination forms a unique identifier in the "
+    "dataset. This can be a single column name if that creates a unique identifier, "
+    "but oftentimes in datasets a combination of fields are required. "
+    "Note: This set of columns MUST create a unique record or the program will crash. "
+)
+NewSplit.group_cols.__doc__ = (
+    "List of column names that form a 'group' that you would like to keep in discrete "
+    "splits. E.x., if you had multiple medical notes for a single patient, "
+    "you may desire that all notes for a single patient end up in the same split "
+    "to prevent potential information leakage. In this case you would provide "
+    "something like a patient_id."
+)
+NewSplit.label_cols.__doc__ = (
+    "List of column names containing labels. Efforts are made to balance label "
+    "distribution across splits, but this is not guaranteed."
+)
+NewSplit.random_seed.__doc__ = (
+    "Required for reproducibility. If you have no preference, try on 42 for size."
+)
 
 
 class Splitter(Step):
-    """The splitter adds a 'split' column to the data assigning
-    each record to a particular split for downstream model training.
-
-    Two split types are available - creating a new random split
-    from scratch and assigning previously created split. This
-    second option is helpful when running comparisons with
-    other methods of data processing ensuring that splits are
-    exactly the same.
-
-    Attributes:
-        split_type : str
-        unique_record_cols : List[str]
-        split_mapping : dict[str, str]
-        split_proportions : dict[str, float]
-        num_splits : int
-        group_cols : List[str]
-        label_cols : List[str]
-        random_seed: int
-
-    Methods:
-        run
-        get_parameters
-    """
+    """Parent class to hardware specific child classes.
+    Do not instantiate this parent class directly."""
 
     def __init__(
         self,
@@ -78,8 +100,7 @@ class Splitter(Step):
             self.random_seed = split_method.random_seed
         self._data_write_config: DataWriteConfig = {
             "data_format": "parquet",
-            "data_format_args": {"compression": "snappy",
-                                 "use_dictionary": False},
+            "data_format_args": {"compression": "snappy", "use_dictionary": False},
         }  # Default write config
 
     @abstractmethod
@@ -89,9 +110,16 @@ class Splitter(Step):
 
 
 class CPUSplitter(Splitter):
-    """Implementation of the Splitter for CPU computation
+    """The splitter adds a 'split' column to the data assigning
+    each record to a particular split for downstream model training.
 
-    Inherited Attributes:
+    Two split types are available - creating a new random split
+    from scratch and assigning previously created splits. This
+    second option is helpful when running comparisons with
+    other methods of data processing ensuring that splits are
+    exactly the same.
+
+    Attributes:
         split_type : str
         unique_record_cols : List[str]
         split_mapping : dict[str, str]
@@ -99,23 +127,28 @@ class CPUSplitter(Splitter):
         num_splits : int
         group_cols : List[str]
         label_cols : List[str]
-        random_seed : int
-
-    Attributes:
-        None
+        random_seed: int
 
     Methods:
-        run
-        get_parameters
-        set_write_config
-        write_outputs
+        run : run the step's primary function
+        get_parameters : get a dictionary representation of the step object
+        set_write_config : Alter the default file writing configuration
+        write_outputs : Write output data to a file
     """
 
     def __init__(self, *args, **kwargs):
+        """Create an object of the Splitter class to be run on a single-node CPU.
+
+        Keyword Arguments:
+            split_method : Union[MapSplit, NewSplit]
+                A named tuple of either MapSplit type or NewSplit
+                type. Each contains a different set of values
+                used to create the splitter depending upon split type.
+                Import these from bardi.nlp_engineering.splitter.
+        """
         super().__init__(*args, **kwargs)
 
-    def run(self, data: pa.Table,
-            artifacts: dict = None) -> Tuple[pa.Table, dict]:
+    def run(self, data: pa.Table, artifacts: dict = None) -> Tuple[pa.Table, dict]:
         """Runs a splitter using CPU computation based on the configuration
         used to create the object of the CPUSplitter class
 
@@ -175,8 +208,7 @@ class CPUSplitter(Splitter):
             # split does not yet exist
 
             # Get the set of distinct groups from the overall data
-            distinct_groups = (df.select([*self.group_cols])
-                                 .unique(maintain_order=True))
+            distinct_groups = df.select([*self.group_cols]).unique(maintain_order=True)
             group_count = distinct_groups.height
             # Generate a permutation of indices of distinct groups.
             np.random.seed(self.random_seed)
@@ -205,7 +237,7 @@ class CPUSplitter(Splitter):
             split_labels[permuted_indices[end:]] = i
             split_labels = pl.Series(split_labels)
 
-            # Add split lables as a column to distince groups
+            # Add split labels as a column to distince groups
             # mapped to assigned value back to the name of
             # the split
             splits = distinct_groups.with_columns(

@@ -50,7 +50,7 @@ class Step(metaclass=ABCMeta):
         """
         pass
 
-    def set_write_config(self, data_config: DataWriteConfig):
+    def set_write_config(self, data_config: DataWriteConfig) -> None:
         """Default implementation of the set_write_config method.
 
         Provide a method to customize the write configuration
@@ -80,7 +80,7 @@ class Step(metaclass=ABCMeta):
         write_path: str,
         data: Union[pa.Table, None],
         data_filename: Union[str, None] = None,
-    ):
+    ) -> None:
         """Default implementation of the write_data method.
 
         Reuse existing write patterns that exist in the data handlers.
@@ -130,6 +130,24 @@ class Pipeline:
         data_write_config: DataWriteConfig = None,
         data_filename: str = "bardi_processed_data",
     ):
+        """Create a pipeline for organizing data pre-processing steps
+
+        Keyword Arguments:
+            dataset : bardi Dataset
+                A bardi dataset object with data to pre-process
+            write_path : str
+                Directory in file system to write outputs to
+            write_outputs : Literal["pipeline-outputs", "debug", False]
+                Configuration for which outputs to write.
+                pipeline-outputs will write all artifacts and final data
+                debug will write all artifacts and data from each step
+                False will not write any files
+            data_write_config : DataWriteConfig
+                Supply a custom write configuration specifying filetypes.
+                Default will save data as parquet files
+            data_filename : str
+                Supply a filename for the final output data
+        """
         # Reference a bardi dataset object that the pipeline will operate on
         self.dataset: Dataset = dataset
 
