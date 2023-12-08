@@ -224,7 +224,7 @@ Result:
 {
     "dataset": {
         "<class 'bardi.data.data_handlers.Dataset'>": {
-            "date": "2023-12-07 15:22:58.219665",
+            "date": "2023-12-08 16:10:59.173578",
             "data": ["patient_id_number", "text", "dark_side_dx"],
             "origin_query": "None",
             "origin_format": "pandas",
@@ -368,7 +368,6 @@ Result:
         "<class 'bardi.nlp_engineering.label_processor.CPULabelProcessor'>": {
             "fields": ["dark_side_dx"],
             "method": "unique",
-            "id_to_label": {"dark_side_dx": {"0": "negative", "1": "positive"}},
             "_data_write_config": {
                 "data_format": "parquet",
                 "data_format_args": {"compression": "snappy", "use_dictionary": False},
@@ -378,46 +377,29 @@ Result:
                 "id_to_label_format_args": {},
             },
         },
-        "<class 'bardi.nlp_engineering.splitter.CPUSplitter'>": {
-            "split_type": "new",
-            "split_proportions": {"train": 0.33, "test": 0.33, "val": 0.33},
-            "num_splits": 3,
-            "unique_record_cols": ["patient_id_number"],
-            "group_cols": ["patient_id_number"],
-            "label_cols": "dark_side_dx",
-            "random_seed": 42,
-            "_data_write_config": {
-                "data_format": "parquet",
-                "data_format_args": {"compression": "snappy", "use_dictionary": False},
-            },
-        },
     },
     "performance": {
         "<class 'bardi.nlp_engineering.normalizer.CPUNormalizer'>": {
-            "time": "0:00:00.034428",
+            "time": "0:00:00.008010",
             "memory (MB)": "0.013305",
         },
         "<class 'bardi.nlp_engineering.pre_tokenizer.CPUPreTokenizer'>": {
-            "time": "0:00:00.008829",
+            "time": "0:00:00.000863",
             "memory (MB)": "0.003406",
         },
         "<class 'bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator'>": {
-            "time": "0:00:00.073698",
-            "memory (MB)": "0.528565",
+            "time": "0:00:00.074747",
+            "memory (MB)": "0.531624",
         },
         "<class 'bardi.nlp_engineering.post_processor.CPUPostProcessor'>": {
-            "time": "0:00:00.021407",
-            "memory (MB)": "0.036099",
+            "time": "0:00:00.003835",
+            "memory (MB)": "0.03622",
         },
         "<class 'bardi.nlp_engineering.label_processor.CPULabelProcessor'>": {
-            "time": "0:00:00.002001",
-            "memory (MB)": "0.008668",
+            "time": "0:00:00.001360",
+            "memory (MB)": "0.008777",
         },
-        "<class 'bardi.nlp_engineering.splitter.CPUSplitter'>": {
-            "time": "0:00:00.003008",
-            "memory (MB)": "0.009278",
-        },
-        "<class 'bardi.pipeline.Pipeline'>": "0:00:00.143449",
+        "<class 'bardi.pipeline.Pipeline'>": "0:00:00.088891",
     },
 }
 ```
@@ -478,18 +460,6 @@ pipeline.add_step(nlp_engineering.CPUPostProcessor(fields=['text']))
 
 # adding the label processor step to the pipeline
 pipeline.add_step(nlp_engineering.CPULabelProcessor(fields=['dark_side_dx']))
-
-pipeline.add_step(nlp_engineering.CPUSplitter(split_method=NewSplit(
-    split_proportions={
-        'train': 0.33,
-        'test': 0.33,
-        'val': 0.33
-    },
-    unique_record_cols=['patient_id_number'],
-    group_cols=['patient_id_number'],
-    label_cols='dark_side_dx',
-    random_seed=42
-)))
 
 # run the pipeline
 pipeline.run_pipeline()
