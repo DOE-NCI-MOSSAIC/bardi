@@ -6,8 +6,8 @@ from pathlib import Path
 
 import polars as pl
 
-from gaudi.nlp_engineering.normalizer import CPUNormalizer
-from gaudi.nlp_engineering.regex_library.pathology_report import PathologyReportRegexSet
+from bardi.nlp_engineering.normalizer import CPUNormalizer
+from bardi.nlp_engineering.regex_library.pathology_report import PathologyReportRegexSet
 
 
 class TestNormalizer(unittest.TestCase):

@@ -5,11 +5,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from gaudi.data import data_handlers
-from gaudi.nlp_engineering import (CPUEmbeddingGenerator, CPULabelProcessor,
+from bardi.data import data_handlers
+from bardi.nlp_engineering import (CPUEmbeddingGenerator, CPULabelProcessor,
                                    CPUNormalizer, CPUPostProcessor,
                                    CPUPreTokenizer, CPUSplitter, NewSplit)
-from gaudi.pipeline import Pipeline
+from bardi.pipeline import Pipeline
 
 
 class TestPipeline(unittest.TestCase):
@@ -149,7 +149,7 @@ class TestPipeline(unittest.TestCase):
         expected_files = ['id_to_token.json',
                           'id_to_label.json',
                           'embedding_matrix.npy',
-                          'gaudi_processed_data.parquet']
+                          'bardi_processed_data.parquet']
         self.assertTrue(
             set(expected_files).issubset(set(test_data_contents))
         )

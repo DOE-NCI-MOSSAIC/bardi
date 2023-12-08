@@ -7,11 +7,11 @@ from pathlib import Path
 import polars as pl
 import pyarrow as pa
 
-from gaudi.nlp_engineering.post_processor import CPUPostProcessor
+from bardi.nlp_engineering.post_processor import CPUPostProcessor
 
 
 class TestPostProcessor(unittest.TestCase):
-    """Tests the functionality of the functions in gaudi.nlp_engineering
+    """Tests the functionality of the functions in bardi.nlp_engineering
     PostProcessor class. """
 
     def setUp(self):

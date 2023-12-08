@@ -2,10 +2,8 @@
 import random
 import string
 
-
 import pandas as pd
 import numpy as np
-
 
 np.random.seed(42)
 
@@ -53,7 +51,6 @@ def create_mock_data(num_rows):
 
 
 def main():
-
     num_rows = 127
     output_file_path = "pipeline_test_df.pkl"
     data = create_mock_data(num_rows)

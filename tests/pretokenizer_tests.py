@@ -6,11 +6,11 @@ from pathlib import Path
 
 import polars as pl
 
-from gaudi.nlp_engineering.pre_tokenizer import CPUPreTokenizer
+from bardi.nlp_engineering.pre_tokenizer import CPUPreTokenizer
 
 
 class TestPreTokenizer(unittest.TestCase):
-    """Tests the functionality of the functions in gaudi.nlp_engineering
+    """Tests the functionality of the functions in bardi.nlp_engineering
     PreTokenizer class. """
 
     def setUp(self):

@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from gaudi.nlp_engineering.regex_library import regex_lib
+from bardi.nlp_engineering.regex_library import regex_lib
 
 
 class TestRegexMultipleExpreesions(unittest.TestCase):

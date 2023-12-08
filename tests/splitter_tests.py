@@ -7,12 +7,12 @@ from pathlib import Path
 import pandas as pd
 import pyarrow as pa
 
-from gaudi.data.data_handlers import from_pandas
-from gaudi.nlp_engineering.splitter import CPUSplitter, NewSplit
+from bardi.data.data_handlers import from_pandas
+from bardi.nlp_engineering.splitter import CPUSplitter, NewSplit
 
 
 class TestSplitter(unittest.TestCase):
-    """Tests the functionality of the functions in gaudi.nlp_engineering
+    """Tests the functionality of the functions in bardi.nlp_engineering
     Splitter class. The Splitter has two options MapSplit, NewSplit """
 
     def setUp(self):
@@ -21,7 +21,7 @@ class TestSplitter(unittest.TestCase):
                           f'split_test_df.pkl')
         self.data_df = pd.read_pickle(self.data_path)
 
-        # Create a gaudi dataset object from a Pandas DataFrame
+        # Create a bardi dataset object from a Pandas DataFrame
         self.data = from_pandas(df=self.data_df)
 
         self.splitter = CPUSplitter(NewSplit(

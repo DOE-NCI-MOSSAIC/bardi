@@ -6,11 +6,11 @@ from pathlib import Path
 
 import polars as pl
 
-from gaudi.nlp_engineering.label_processor import CPULabelProcessor
+from bardi.nlp_engineering.label_processor import CPULabelProcessor
 
 
 class TestLabelProcessor(unittest.TestCase):
-    """Tests the functionality of the functions in gaudi.nlp_engineering
+    """Tests the functionality of the functions in bardi.nlp_engineering
     LabelProcessor class. """
 
     def setUp(self):

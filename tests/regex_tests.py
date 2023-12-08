@@ -2,11 +2,11 @@ import re
 import unittest
 from unittest import TestCase
 
-from gaudi.nlp_engineering.regex_library import regex_lib
+from bardi.nlp_engineering.regex_library import regex_lib
 
 
 class TestRegexExpressions(TestCase):
-    """Tests the correctness of the functions in gaudi's  regex library"""
+    """Tests the correctness of the functions in bardi's  regex library"""
 
     # 0
     def test_escape_code_regex(self):
