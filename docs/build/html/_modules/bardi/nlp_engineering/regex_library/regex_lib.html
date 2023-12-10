@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bardi.nlp_engineering.regex_library.regex_lib &mdash; bardi 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=e259d695"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            bardi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">bardi</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">bardi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">bardi.nlp_engineering.regex_library.regex_lib</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for bardi.nlp_engineering.regex_library.regex_lib</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Library of pre-defined regular expression substitution pairs&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">bardi.nlp_engineering.regex_library.regex_set</span> <span class="kn">import</span> <span class="n">RegexSubPair</span>
+
+
+<span class="c1"># 0</span>
+<div class="viewcode-block" id="get_escape_code_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_escape_code_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_escape_code_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches escape codes such as \\x0d, \\x0a, etc.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">    &#39;Codes\\x0d\\x0a\\x0d \\r30 &#39;--&gt; &#39;Codes      30 &#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;(</span><span class="se">\\</span><span class="s2">x[0-9A-Fa-f]{2,})|</span><span class="se">\\</span><span class="s2">[stepr]&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 1</span>
+<div class="viewcode-block" id="get_whitespace_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_whitespace_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_whitespace_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches any new line, carriage return tab and multiple</span>
+<span class="sd">    spaces and replaces it with a single space.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">    &quot;INVASIVE:\nNegative    IN SITU:\nN/A  IN \tThe result \r&quot; --&gt;</span>
+<span class="sd">    &quot;INVASIVE: Negative IN SITU: N/A IN The result &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;[\r\n\t]|\s{2,}&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 2</span>
+<div class="viewcode-block" id="get_urls_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_urls_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_urls_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches a url and replaces it</span>
+<span class="sd">    with a URLTOKEN.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">    &quot;Source: https://www.merck.com/keytruda_pi.pdf &quot;--&gt;</span>
+<span class="sd">    &quot;Source: URLTOKEN &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\b(http[s]*:\/\/)[^\s]+|\b(www\.)[^\s]+&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; URLTOKEN &quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 3</span>
+<div class="viewcode-block" id="get_special_punct_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_special_punct_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_special_punct_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches a set of chosen punctuation symbols \\_,();[]#{}*&quot;&#39;~?!|^</span>
+<span class="sd">    and replaces them with a single space.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">    &quot; wt-1, ck-7 (focal) negative; [sth] ab|cd&quot; --&gt;</span>
+<span class="sd">    &quot; wt-1  ck-7  focal  negative   sth  ab cd&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;[</span><span class="se">\\</span><span class="s1">\_,\(\);\[\]#</span><span class="si">{}</span><span class="s1">\*&quot;</span><span class="se">\&#39;</span><span class="s1">\~\?!\|\^`]&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 4</span>
+<div class="viewcode-block" id="get_multiple_punct_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_multiple_punct_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_multiple_punct_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches multiple occurences of symbols like -, .</span>
+<span class="sd">    and _ replaces them with a single space.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot;-----this is report ___ signature&quot; --&gt;</span>
+<span class="sd">        &quot; this is report   signature&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;[\-\.:\/\_]{2,}&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 5</span>
+<div class="viewcode-block" id="get_angle_brackets_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_angle_brackets_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_angle_brackets_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches a content between matching angle brackets,</span>
+<span class="sd">    keeps the content only, removes the brackets.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">    &quot;&lt;This should be fixed&gt; But not this &gt;90&quot; --&gt;</span>
+<span class="sd">    &quot; This should be fixed  But not this &gt;90&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;&lt;(.*?)&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot; \1 &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 6</span>
+<div class="viewcode-block" id="get_percent_sign_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_percent_sign_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_percent_sign_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches the % sign and replaces</span>
+<span class="sd">    it with a word &#39;percent&#39;.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot;strong intensity &gt;95%&quot; --&gt;</span>
+<span class="sd">        &quot;strong intensity &gt;95 percent &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;%&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; percent &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 7</span>
+<div class="viewcode-block" id="get_leading_digit_punctuation_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_leading_digit_punctuation_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_leading_digit_punctuation_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches numeric digits at the start of a word,</span>
+<span class="sd">    followed by punctuation and additional characters.</span>
+<span class="sd">    Proceeds to eliminate the punctuation and inserts</span>
+<span class="sd">    a space between the digits an the word.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot; 13-unremarkable 1-e 22-years &quot;</span>
+<span class="sd">        &quot;  13 unremarkable   1 e   22 years  &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;(\b\d{1,})([\-\.:])([a-z]+)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot; \1 \3 &quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 8</span>
+<div class="viewcode-block" id="get_leading_punctuation_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_leading_punctuation_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_leading_punctuation_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches leading punctuation and removes it.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot; -3a -anterior -result- :cassette &quot;</span>
+<span class="sd">        &quot; 3a  anterior  result-  cassette  &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;(\s[\.:\-</span><span class="se">\\</span><span class="s2">])([^\s]+)&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot; \2 &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 9</span>
+<div class="viewcode-block" id="get_trailing_punctuation_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_trailing_punctuation_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_trailing_punctuation_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches trailing punctuation and removes it.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot; -3a -anterior -result- :cassette &quot; --&gt;</span>
+<span class="sd">        &quot; -3a -anterior  -result :cassette &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;([^\s]+)([\.:\-</span><span class="se">\\</span><span class="s2">]\s)&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot; \1 &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 10</span>
+<div class="viewcode-block" id="get_words_with_punct_spacing_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_words_with_punct_spacing_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_words_with_punct_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches words with hyphen, colon or period and splits them.</span>
+<span class="sd">    Requires the words to be at least two characters in length</span>
+<span class="sd">    to avoid splitting words like ph.d.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot;this-that her-2 tiff-1k description:gleason &quot; --&gt;</span>
+<span class="sd">        &quot;this that her-2 tiff-1k description gleason &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;([a-z0-9]{2,})([\-:\.])([a-z]{2,})&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\1 \3&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 11</span>
+<div class="viewcode-block" id="get_math_spacing_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_math_spacing_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_math_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches &quot;math operators symbols&quot; like &gt;&lt;=%:</span>
+<span class="sd">    and adds spaces aroud them.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot;This is &gt;95% 3+3=8  6/7&quot;</span>
+<span class="sd">        &quot;This is  &gt; 95 %  3 + 3 = 8  6 / 7&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;([&gt;&lt;=+%\/&amp;:])&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot; \1 &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 12</span>
+<div class="viewcode-block" id="get_dimension_spacing_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_dimension_spacing_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_dimension_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches digits and x and adds spaces between them.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot;measuring 1.3x0.7x0.1 cm&quot;</span>
+<span class="sd">        &quot;measuring 1.3 x 0.7 x 0.1 cm&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;(\d+[.\d]*)([x])&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\1 \2 &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 13</span>
+<div class="viewcode-block" id="get_measure_spacing_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_measure_spacing_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_measure_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches measurements in mm, cm and ml provides</span>
+<span class="sd">    proper spacing between the digits and measure.</span>
+<span class="sd">    Also provides specing between 11th -&gt; 11 th.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot;10mm histologic type 2 x 3cm. this is 3.0-cm &quot; --&gt;</span>
+<span class="sd">        &quot;10 mm  histologic type 2 x 3 cm . this is 3.0 cm  &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;(\d+)[-]*([cpamt][mlhc])&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\1 \2 &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 14</span>
+<div class="viewcode-block" id="get_cassettes_spacing_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_cassettes_spacing_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_cassettes_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches patterns like 5e-6f</span>
+<span class="sd">    and adds spaces around them.</span>
+<span class="sd">    E.g.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Examples:</span>
+<span class="sd">        &quot; 3e-3f&quot; --&gt;</span>
+<span class="sd">        &quot; 3e - 3f &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;(\d{1,2}[a-z])(-)(\d{1,2}[a-z])|([a-z]\d{1,2})(-)([a-z]\d{1,2})&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\1 \2 \3 &quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 15</span>
+<div class="viewcode-block" id="get_dash_digits_spacing_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_dash_digits_spacing_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_dash_digits_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches dashes around digits and adds</span>
+<span class="sd">    spaces around the dashes.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Examples:</span>
+<span class="sd">        &quot;right 1:30-2:30 1.5-2.0 cm 0.9 cm for the 7-6&quot;</span>
+<span class="sd">        &quot;right 1:30 - 2:30 1.5 - 2.0 cm 0.9 cm for the 7 - 6&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;( [\d+]*[\.:]*\d+\s*)(-)(\s*[\d+]*[\.:]*\d+)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\1 \2 \3&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 16</span>
+<div class="viewcode-block" id="get_literals_floats_spacing_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_literals_floats_spacing_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_literals_floats_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches character followed by a float and a word.</span>
+<span class="sd">    This is a common formating problem.</span>
+<span class="sd">    e.g. r18.0admission -&gt;  r18.0 admission</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Examples:</span>
+<span class="sd">        &quot; r18.0admission diagnosis: bi n13.30admission &quot;</span>
+<span class="sd">        &quot; r18.0 admission diagnosis: bi n13.30 admission &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;([a-z]{1,2})(\d+\.\d+)([a-z]+)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\1\2 \3&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 17</span>
+<div class="viewcode-block" id="get_fix_pluralization_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_fix_pluralization_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_fix_pluralization_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches s character after a word</span>
+<span class="sd">    and attaches it back to the word. This restores</span>
+<span class="sd">    plural nouns demages by removed punctuation.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot; specimen s code s &quot;</span>
+<span class="sd">        &quot; specimens codes &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;(\b[a-z]+)(\s+)([s]\s)&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\1\3&quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 18</span>
+<div class="viewcode-block" id="get_digits_words_spacing_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_digits_words_spacing_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_digits_words_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches digits that are attached to the</span>
+<span class="sd">    beginning of a word.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot; 9837648admission &quot; --&gt;</span>
+<span class="sd">         9837648 admission &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;(\s\d{1,})([a-z]{2,}\s)&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\1 \2&quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 19</span>
+<div class="viewcode-block" id="get_phone_number_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_phone_number_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_phone_number_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches any phone number that consists</span>
+<span class="sd">    of 10 digits with delimeters.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot;Ph: (123) 456 7890. It is (123)4567890. --&gt;</span>
+<span class="sd">        &quot;Ph:  PHONENUMTOKEN . It is  PHONENUMTOKEN .&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\(*\d</span><span class="si">{3}</span><span class="s2">\)*[-, ]*\d</span><span class="si">{3}</span><span class="s2">[-, ]*\d</span><span class="si">{4}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; PHONENUMTOKEN &quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 20</span>
+<div class="viewcode-block" id="get_dates_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_dates_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_dates_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches dates of specified formats.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot;co: 03/09/2021 1015 completed: 03/10/21 at 3:34.&quot;</span>
+<span class="sd">        &quot;co:  DATETOKEN completed:  DATETOKEN .&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_list</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="sa">r</span><span class="s2">&quot;\d{1,2}\s*[\/,-\.]\s*\d{1,2}\s*[\/,-\.]\s*\d{2,4}\s*[at\s\-]*[\d{1,2}\s*[:\s*\d{1,2}]+]*(?:\s*[pa][m])*&quot;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s2">&quot;\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\s*\d{1,2}\s*\d{2,4}&quot;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s2">&quot;\b\d{1,2}\s*(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\s*\d{2,4}&quot;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s2">&quot;\d{1,2}-(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)-\d</span><span class="si">{2}</span><span class="s2">\s*\d{1,2}[:\d{1,2}]+(?:\s*[pa][m])&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">consolidated_regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">regex_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="n">consolidated_regex</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; DATETOKEN &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 21</span>
+<div class="viewcode-block" id="get_time_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_time_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_time_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches time of format 11:20 am</span>
+<span class="sd">    or 1.30pm or 9:52:07AM.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot;at 11:12 pm or 11.12am &quot; --&gt;</span>
+<span class="sd">        &quot;at  TIMETOKEN  or  TIMETOKEN  &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_list</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="sa">r</span><span class="s2">&quot;(\d{1,2}\s*([:.]\s*\d</span><span class="si">{2}</span><span class="s2">){1,2}\s*[ap]\.*[m]\.*)&quot;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s2">&quot;\d</span><span class="si">{2}</span><span class="s2">\s*[ap]\.*[m]\.*&quot;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s2">&quot;[0-2][0-9]:[0-5][1-9]&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">consolidated_regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">regex_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="n">consolidated_regex</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; TIMETOKEN &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 22</span>
+<div class="viewcode-block" id="get_address_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_address_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_address_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches any address of format</span>
+<span class="sd">    num (street name) in 1 to 6 words 2-letter state</span>
+<span class="sd">    and short or long zip code.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot; 1034 north 500 west provo ut 84604-3337 &quot; --&gt;</span>
+<span class="sd">        &quot;  ADDRESSTOKEN  &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\d+\s([0-9a-z.]+[\s,]+){1,6}[a-z]</span><span class="si">{2}</span><span class="s2">[./\s+]*\d</span><span class="si">{5}</span><span class="s2">(-\d</span><span class="si">{4}</span><span class="s2">)*&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; ADDRESSTOKEN &quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 23</span>
+<div class="viewcode-block" id="get_dimensions_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_dimensions_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_dimensions_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches 2D or 3D dimension measurements</span>
+<span class="sd">    and adds spaces around them.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot; 3.5 x 2.5 x 9.0 cm and 33 x 6.5 cm&quot; --&gt;</span>
+<span class="sd">        &quot;  DIMENSIONTOKEN  cm and  DIMENSIONTOKEN  cm&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_list</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="sa">r</span><span class="s2">&quot;\d+\.*\d*\s*x\s*\d+\.*\d*\s*x\s*\d+\.*\d*&quot;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s2">&quot;\d+\.*\d*\s*x\s*\d+\.*\d*&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">consolidated_regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">regex_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="n">consolidated_regex</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; DIMENSIONTOKEN &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 24</span>
+<div class="viewcode-block" id="get_specimen_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_specimen_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_specimen_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches marking of a pathology speciman.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot; for s-21-009345 sh-22-0011300 &quot;</span>
+<span class="sd">        &quot;expected_output&quot;: &quot; for  SPECIMENTOKEN   SPECIMENTOKEN  &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;[a-z]{1,3}[-]*\d</span><span class="si">{2}</span><span class="s2">[-]\d{3,}[-]*&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; SPECIMENTOKEN &quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 25</span>
+<div class="viewcode-block" id="get_decimal_segmented_numbers_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_decimal_segmented_numbers_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_decimal_segmented_numbers_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches combinations of digits and periods or dashes.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot; 1.78.9.87 &quot;</span>
+<span class="sd">        &quot;  DECIMALSEGMENTEDNUMBERTOKEN  &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\d+[\.\-]\d+([\.\-]\d+)+&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; DECIMALSEGMENTEDNUMBERTOKEN &quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 26</span>
+<div class="viewcode-block" id="get_large_digits_seq_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_large_digits_seq_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_large_digits_seq_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches large sequences of digits and replaces it.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot; 456123456 &quot;</span>
+<span class="sd">        &quot; DIGITSEQUENCETOKEN &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\s\d{3,}\s&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; DIGITSEQUENCETOKEN &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 27</span>
+<div class="viewcode-block" id="get_large_float_seq_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_large_float_seq_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_large_float_seq_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches large floats and replace them.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot; 456 123456.783 &quot;</span>
+<span class="sd">        &quot; 456 LARGEFLOATTOKEN  &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\s\d{2,}\.\d{1,}&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; LARGEFLOATTOKEN &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 28</span>
+<div class="viewcode-block" id="get_trunc_decimals_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_trunc_decimals_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_trunc_decimals_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches floats and keeps only first decimal.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot; 1.78  9.87 - 8.99 &quot;</span>
+<span class="sd">        &quot; 1.7  9.8 - 8.9 &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\s(\d+)(\.)(\d)(\d+)*\s&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot; \1\2\3 &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 29</span>
+<div class="viewcode-block" id="get_cassette_name_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_cassette_name_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_cassette_name_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches cassettes markings of</span>
+<span class="sd">    the specified format:</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot; block:  1-e &quot;</span>
+<span class="sd">        &quot; block:  CASSETTETOKEN &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_list</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="sa">r</span><span class="s2">&quot;\s\d{1,2}[\-]*[a-z]{1,2}\s&quot;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s2">&quot;\b[a-z][\-]*\d</span><span class="si">{1}</span><span class="s2">\s&quot;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s2">&quot;\s[a-z]\d{1,2}-\d{1,2}\s&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">consolidated_regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">regex_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="n">consolidated_regex</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; CASSETTETOKEN &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 30</span>
+<div class="viewcode-block" id="get_duration_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_duration_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_duration_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches duration specimen was treated:</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot; 32d0909091&quot;</span>
+<span class="sd">        &quot; DURATIONTOKEN &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot; \d{1,2}d\d{6,9}[.\s]*&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; DURATIONTOKEN &quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1"># 31</span>
+<div class="viewcode-block" id="get_letter_num_seq_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_letter_num_seq_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_letter_num_seq_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches a character followed directly</span>
+<span class="sd">    by 6 to 10 digits:</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot; c001234567&quot;</span>
+<span class="sd">        &quot; LETTERDIGITSTOKEN &quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\b[a-z]\d{6,10}[.\s]*&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; LETTERDIGITSTOKEN &quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+
+
+<span class="c1">#   LAST REGEX that removed additional spaces</span>
+<div class="viewcode-block" id="get_spaces_regex">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_spaces_regex">[docs]</a>
+<span class="k">def</span> <span class="nf">get_spaces_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches additional spaces (artifact of applying</span>
+<span class="sd">    other regex), matches not needed periods that can be removed.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RegexSubPair - (regex pattern, replacement string)</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &quot;located around lower arm specimen   date&quot;</span>
+<span class="sd">        &quot;located around lower arm specimen date&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex_sub_pair</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\s{2,}|</span><span class="se">\\</span><span class="s2">n&quot;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">regex_sub_pair</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Dakota and Patrycja (ORNL).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
