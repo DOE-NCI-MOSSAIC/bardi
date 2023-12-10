@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bardi.nlp_engineering.embedding_generator &mdash; bardi 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=e259d695"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            bardi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../bardi.html">bardi package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../bardi.data.html">bardi.data package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../bardi.nlp_engineering.html">bardi.nlp_engineering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">bardi</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">bardi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">bardi.nlp_engineering.embedding_generator</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for bardi.nlp_engineering.embedding_generator</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Train a Word2Vec model and create a vocab and word embeddings&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">cpu_count</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isfile</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">polars</span> <span class="k">as</span> <span class="nn">pl</span>
+<span class="kn">import</span> <span class="nn">pyarrow</span> <span class="k">as</span> <span class="nn">pa</span>
+<span class="kn">from</span> <span class="nn">gensim.utils</span> <span class="kn">import</span> <span class="n">RULE_DEFAULT</span><span class="p">,</span> <span class="n">RULE_DISCARD</span>
+<span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">Word2Vec</span>
+
+<span class="kn">from</span> <span class="nn">bardi.data</span> <span class="kn">import</span> <span class="n">data_handlers</span>
+<span class="kn">from</span> <span class="nn">bardi.nlp_engineering.utils.validations</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">validate_pyarrow_table</span><span class="p">,</span>
+    <span class="n">validate_list_str_cols</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bardi.pipeline</span> <span class="kn">import</span> <span class="n">DataWriteConfig</span><span class="p">,</span> <span class="n">Step</span>
+
+
+<div class="viewcode-block" id="EmbeddingGeneratorArtifactsWriteConfig">
+<a class="viewcode-back" href="../../../bardi.nlp_engineering.html#bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig">[docs]</a>
+<span class="k">class</span> <span class="nc">EmbeddingGeneratorArtifactsWriteConfig</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Indicates the keys and data types expected in an</span>
+<span class="sd">    artifacts write config dict for the embedding generator</span>
+<span class="sd">    if overwriting the default configuration.&quot;&quot;&quot;</span>
+
+    <span class="n">vocab_format</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">vocab_format_args</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="n">embedding_matrix_format</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">embedding_matrix_format_args</span><span class="p">:</span> <span class="nb">dict</span></div>
+
+
+
+<div class="viewcode-block" id="EmbeddingGenerator">
+<a class="viewcode-back" href="../../../bardi.nlp_engineering.html#bardi.nlp_engineering.embedding_generator.EmbeddingGenerator">[docs]</a>
+<span class="k">class</span> <span class="nc">EmbeddingGenerator</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The embedding generator provides interface to create</span>
+<span class="sd">    word embeddings or vector representations of words (tokens).</span>
+
+<span class="sd">    The embedding generator uses Word2Vec model from Gensim library.</span>
+
+<span class="sd">    Avoid the direct instantiation of the PreTokenizer class</span>
+<span class="sd">    and instead instantiate one of the child classes depending</span>
+<span class="sd">    on hardware configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">fields</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+        <span class="n">load_saved_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">checkpoint_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cores</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">cpu_count</span><span class="p">(),</span>
+        <span class="n">min_word_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">vector_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+        <span class="n">sample</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6e-5</span><span class="p">,</span>
+        <span class="n">min_alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.007</span><span class="p">,</span>
+        <span class="n">negative</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+        <span class="n">vocab_exclude_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;instantiate an embedding generator object&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">fields</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_saved_model</span> <span class="o">=</span> <span class="n">load_saved_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">checkpoint_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">cores</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_word_count</span> <span class="o">=</span> <span class="n">min_word_count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vector_size</span> <span class="o">=</span> <span class="n">vector_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample</span> <span class="o">=</span> <span class="n">sample</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_alpha</span> <span class="o">=</span> <span class="n">min_alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">negative</span> <span class="o">=</span> <span class="n">negative</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epochs</span> <span class="o">=</span> <span class="n">epochs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab_exclude_list</span> <span class="o">=</span> <span class="n">vocab_exclude_list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_write_config</span><span class="p">:</span> <span class="n">DataWriteConfig</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;data_format&quot;</span><span class="p">:</span> <span class="s2">&quot;parquet&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_format_args&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;compression&quot;</span><span class="p">:</span> <span class="s2">&quot;snappy&quot;</span><span class="p">,</span> <span class="s2">&quot;use_dictionary&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_artifacts_write_config</span><span class="p">:</span> <span class="n">EmbeddingGeneratorArtifactsWriteConfig</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;vocab_format&quot;</span><span class="p">:</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;vocab_format_args&quot;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="s2">&quot;embedding_matrix_format&quot;</span><span class="p">:</span> <span class="s2">&quot;npy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;embedding_matrix_format_args&quot;</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="EmbeddingGenerator.set_write_config">
+<a class="viewcode-back" href="../../../bardi.nlp_engineering.html#bardi.nlp_engineering.embedding_generator.EmbeddingGenerator.set_write_config">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_write_config</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_config</span><span class="p">:</span> <span class="n">DataWriteConfig</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">artifacts_config</span><span class="p">:</span> <span class="n">EmbeddingGeneratorArtifactsWriteConfig</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Overwrite the default file writing configurations&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">data_config</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_write_config</span> <span class="o">=</span> <span class="n">data_config</span>
+        <span class="k">if</span> <span class="n">artifacts_config</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_artifacts_write_config</span> <span class="o">=</span> <span class="n">artifacts_config</span></div>
+
+
+<div class="viewcode-block" id="EmbeddingGenerator.run">
+<a class="viewcode-back" href="../../../bardi.nlp_engineering.html#bardi.nlp_engineering.embedding_generator.EmbeddingGenerator.run">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;to be implemented in child class&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CPUEmbeddingGenerator">
+<a class="viewcode-back" href="../../../bardi.nlp_engineering.html#bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator">[docs]</a>
+<span class="k">class</span> <span class="nc">CPUEmbeddingGenerator</span><span class="p">(</span><span class="n">EmbeddingGenerator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The embedding generator provides interface to create</span>
+<span class="sd">    word embeddings or vector representations of words (tokens).</span>
+
+<span class="sd">    The embedding generator uses Word2Vec model from Gensim library.</span>
+
+<span class="sd">    EmbeddingGenerator specific for CPU computation.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        fields : Union[str, List[str]]</span>
+<span class="sd">            the name of the column(s) containing text to be considered</span>
+<span class="sd">            in the vocab and used in Word2Vec</span>
+<span class="sd">        load_saved_model : bool</span>
+<span class="sd">            if True, use pre-trained word2vec model.</span>
+<span class="sd">        checkpoint_path : str</span>
+<span class="sd">            path to word2vec model checkpoint.</span>
+<span class="sd">        cores : int</span>
+<span class="sd">            numbers of cores to run word2vec model on.</span>
+<span class="sd">        min_word_count : int</span>
+<span class="sd">            ignores all words with total frequency lower than this.</span>
+<span class="sd">        window : int</span>
+<span class="sd">            maximum distance between the current and predicted word.</span>
+<span class="sd">        vector_size : int</span>
+<span class="sd">            output embedding size.</span>
+<span class="sd">        sample : float</span>
+<span class="sd">            the threshold for configuring which high-frequency</span>
+<span class="sd">            words are randomly ownsamples, use range (0, 1e-5).</span>
+<span class="sd">        min_alpha : float</span>
+<span class="sd">            learning rate will linearly drop to min_alpha</span>
+<span class="sd">            as training progresses.</span>
+<span class="sd">        negative : int</span>
+<span class="sd">            if &gt; 0, negative sampling will be used.</span>
+<span class="sd">        epochs : int</span>
+<span class="sd">            total number of iterations of all training data in</span>
+<span class="sd">            the training of the word2vec model</span>
+<span class="sd">        seed : int</span>
+<span class="sd">            seed for random number generetor, for deterministic</span>
+<span class="sd">            run you need thread = 1 (aka cpu core)</span>
+<span class="sd">            and PYTHONHASHSEED</span>
+<span class="sd">        vocab_exclude_list : List[str]</span>
+<span class="sd">            provide a list of tokens that may be present in the</span>
+<span class="sd">            text that you would like to exclude from the vocab and</span>
+<span class="sd">            from Word2Vec</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        run : run the step&#39;s primary function</span>
+<span class="sd">        get_parameters : get a dictionary representation of the step object</span>
+<span class="sd">        set_write_config : alter the default file writing configuration</span>
+<span class="sd">        write_outputs : Write output data to a file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an object of the CPUEmbeddingGenerator Classs</span>
+
+<span class="sd">        Keyword Arguments:</span>
+<span class="sd">            fields : Union[str, List[str]]</span>
+<span class="sd">                the name of the column(s) containing text to be considered</span>
+<span class="sd">                in the vocab and used in Word2Vec</span>
+<span class="sd">            load_saved_model : bool</span>
+<span class="sd">                if True, use pre-trained word2vec model.</span>
+<span class="sd">            checkpoint_path : str</span>
+<span class="sd">                path to word2vec model checkpoint.</span>
+<span class="sd">            cores : int</span>
+<span class="sd">                numbers of cores to run word2vec model on.</span>
+<span class="sd">            min_word_count : int</span>
+<span class="sd">                ignores all words with total frequency lower than this.</span>
+<span class="sd">            window : int</span>
+<span class="sd">                maximum distance between the current and predicted word.</span>
+<span class="sd">            vector_size : int</span>
+<span class="sd">                output embedding size.</span>
+<span class="sd">            sample : float</span>
+<span class="sd">                the threshold for configuring which high-frequency</span>
+<span class="sd">                words are randomly ownsamples, use range (0, 1e-5).</span>
+<span class="sd">            min_alpha : float</span>
+<span class="sd">                learning rate will linearly drop to min_alpha</span>
+<span class="sd">                as training progresses.</span>
+<span class="sd">            negative : int</span>
+<span class="sd">                if &gt; 0, negative sampling will be used.</span>
+<span class="sd">            epochs : int</span>
+<span class="sd">                total number of iterations of all training data in</span>
+<span class="sd">                the training of the word2vec model</span>
+<span class="sd">            seed : int</span>
+<span class="sd">                seed for random number generetor, for deterministic</span>
+<span class="sd">                run you need thread = 1 (aka cpu core)</span>
+<span class="sd">                and PYTHONHASHSEED</span>
+<span class="sd">            vocab_exclude_list : List[str]</span>
+<span class="sd">                provide a list of tokens that may be present in the</span>
+<span class="sd">                text that you would like to exclude from the vocab and</span>
+<span class="sd">                from Word2Vec</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">w2v_model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embedding_matrix</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_to_token</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="CPUEmbeddingGenerator.run">
+<a class="viewcode-back" href="../../../bardi.nlp_engineering.html#bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">,</span> <span class="n">artifacts</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs a CPU-based embedding generator method based on the</span>
+<span class="sd">        configuration used to create the object of the CPUEmbeddingGenerator</span>
+<span class="sd">        class</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            data : pyarrow.Table</span>
+<span class="sd">                a pyarrow Table containing at least one list column containing</span>
+<span class="sd">                text</span>
+<span class="sd">            artifacts : dict</span>
+<span class="sd">                artifacts are not consumed in this run method, but must be</span>
+<span class="sd">                received to operate correctly in the pipeline run method</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[pyarrow.Table, dict]</span>
+<span class="sd">                The first position is a pyarrow.Table of pre-tokenized data</span>
+<span class="sd">                The second position is a dictionary of artifacts. The dict will</span>
+<span class="sd">                contain keys for &quot;embedding_matrix&quot; and &quot;id_to_token&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Perform validations</span>
+        <span class="n">validate_pyarrow_table</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">validate_list_str_cols</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="c1"># Use the Polars library to convert a text column into a list of lists</span>
+        <span class="c1"># [each list here is a set of tokens]. The list of lists is called</span>
+        <span class="c1"># df_words_lists. If there are multiple text columns, the df_words_list</span>
+        <span class="c1"># is extended with contents of rows of the additional columns.</span>
+        <span class="n">text_data</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">from_arrow</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">))</span>
+        <span class="n">df_words_lists</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+            <span class="n">df_words_lists</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">text_data</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">drop_nulls</span><span class="p">()</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_saved_model</span> <span class="ow">and</span> <span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">w2v_model</span> <span class="o">=</span> <span class="n">Word2Vec</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Configure Word2Vec</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">w2v_model</span> <span class="o">=</span> <span class="n">Word2Vec</span><span class="p">(</span>
+                <span class="n">min_count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_word_count</span><span class="p">,</span>
+                <span class="n">window</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span>
+                <span class="n">vector_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vector_size</span><span class="p">,</span>
+                <span class="n">sample</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample</span><span class="p">,</span>
+                <span class="n">min_alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_alpha</span><span class="p">,</span>
+                <span class="n">negative</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">negative</span><span class="p">,</span>
+                <span class="n">workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cores</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Word2Vec vocabulary trim rule</span>
+            <span class="k">def</span> <span class="nf">vocab_trim_rule</span><span class="p">(</span><span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">min_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="n">min_count</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">RULE_DISCARD</span>
+                <span class="k">elif</span> <span class="n">word</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab_exclude_list</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">RULE_DISCARD</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">RULE_DEFAULT</span>
+
+            <span class="c1"># Train Word2Vec Model</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">w2v_model</span><span class="o">.</span><span class="n">build_vocab</span><span class="p">(</span><span class="n">df_words_lists</span><span class="p">,</span> <span class="n">trim_rule</span><span class="o">=</span><span class="n">vocab_trim_rule</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">w2v_model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+                <span class="n">df_words_lists</span><span class="p">,</span>
+                <span class="n">total_examples</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">w2v_model</span><span class="o">.</span><span class="n">corpus_count</span><span class="p">,</span>
+                <span class="n">epochs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epochs</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="c1"># If a checkpoint path was set, the word2vec model will be saved</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">w2v_model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="p">)</span>
+
+        <span class="c1"># Sort the vocabulary</span>
+        <span class="n">sorted_tokens</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w2v_model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">index_to_key</span><span class="p">)</span>
+        <span class="n">sorted_embeddings</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">sorted_tokens</span><span class="p">:</span>
+            <span class="n">sorted_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">w2v_model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">w2v_model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">key_to_index</span><span class="p">[</span><span class="n">token</span><span class="p">]]</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Mapping between an index in the embedding matrix and a token</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_to_token</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">token_id</span><span class="p">:</span> <span class="n">token</span>
+            <span class="k">for</span> <span class="n">token_id</span><span class="p">,</span> <span class="n">token</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s2">&quot;&lt;pad&gt;&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">sorted_tokens</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;&lt;unk&gt;&quot;</span><span class="p">])</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Create embedding matrix with embeddings for &lt;pad&gt; and &lt;unk&gt; tokens</span>
+        <span class="n">pad_token_emb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_size</span><span class="p">))</span>
+        <span class="n">unkn_token_emb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_size</span><span class="p">))</span> <span class="o">*</span> <span class="mf">0.01</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embedding_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pad_token_emb</span><span class="p">,</span> <span class="n">sorted_embeddings</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">unkn_token_emb</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Set up the artifacts dict to return</span>
+        <span class="n">produced_artifacts</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;embedding_matrix&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding_matrix</span><span class="p">,</span>
+            <span class="s2">&quot;id_to_token&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_to_token</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">produced_artifacts</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CPUEmbeddingGenerator.write_artifacts">
+<a class="viewcode-back" href="../../../bardi.nlp_engineering.html#bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator.write_artifacts">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_artifacts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">write_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">artifacts</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write the oartifactsproduced by the embedding_generator</span>
+
+<span class="sd">        Keyword Arguments:</span>
+<span class="sd">            write_path : str</span>
+<span class="sd">                Path is a directory where files will be written</span>
+<span class="sd">            artifacts : Union[dict, None]</span>
+<span class="sd">                Artifacts is a dictionary of artifacts produced in this step.</span>
+<span class="sd">                Expected keys are: &quot;id_to_token&quot; and &quot;embedding_matrix&quot;</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">id_to_token</span> <span class="o">=</span> <span class="n">artifacts</span><span class="p">[</span><span class="s2">&quot;id_to_token&quot;</span><span class="p">]</span>
+        <span class="c1"># Add the filename with the appropriate filetype to the write path</span>
+        <span class="n">id_to_token_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">write_path</span><span class="p">,</span>
+            <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;id_to_token&quot;</span> <span class="sa">f</span><span class="s1">&#39;.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_artifacts_write_config</span><span class="p">[</span><span class="s2">&quot;vocab_format&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="c1"># Call the data handler write_file function</span>
+        <span class="n">data_handlers</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">id_to_token</span><span class="p">,</span>
+            <span class="n">path</span><span class="o">=</span><span class="n">id_to_token_path</span><span class="p">,</span>
+            <span class="nb">format</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_artifacts_write_config</span><span class="p">[</span><span class="s2">&quot;vocab_format&quot;</span><span class="p">],</span>
+            <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_artifacts_write_config</span><span class="p">[</span><span class="s2">&quot;vocab_format_args&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="n">embedding_matrix</span> <span class="o">=</span> <span class="n">artifacts</span><span class="p">[</span><span class="s2">&quot;embedding_matrix&quot;</span><span class="p">]</span>
+        <span class="c1"># Add the filename with the appropriate filetype to the write path</span>
+        <span class="n">embedding_matrix_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">write_path</span><span class="p">,</span>
+            <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;embedding_matrix&quot;</span>
+                <span class="sa">f</span><span class="s1">&#39;.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_artifacts_write_config</span><span class="p">[</span><span class="s2">&quot;embedding_matrix_format&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="c1"># Call the data handler write_file function</span>
+        <span class="n">data_handlers</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">embedding_matrix</span><span class="p">,</span>
+            <span class="n">path</span><span class="o">=</span><span class="n">embedding_matrix_path</span><span class="p">,</span>
+            <span class="nb">format</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_artifacts_write_config</span><span class="p">[</span><span class="s2">&quot;embedding_matrix_format&quot;</span><span class="p">],</span>
+            <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_artifacts_write_config</span><span class="p">[</span><span class="s2">&quot;embedding_matrix_format_args&quot;</span><span class="p">],</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CPUEmbeddingGenerator.get_parameters">
+<a class="viewcode-back" href="../../../bardi.nlp_engineering.html#bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator.get_parameters">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrive the embedding generetor object configuration</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            a dictionary representation</span>
+<span class="sd">            of the embedding generetor object&#39;s attributes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">params</span><span class="p">[</span><span class="s2">&quot;vocab_size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;id_to_token&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;id_to_token&quot;</span><span class="p">)</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;embedding_matrix&quot;</span><span class="p">)</span>
+        <span class="n">params</span><span class="p">[</span><span class="s2">&quot;w2v_model&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w2v_model</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">params</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Dakota Murdoch and Patrycja Krawczuk (ORNL).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

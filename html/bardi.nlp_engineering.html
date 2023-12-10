@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bardi.nlp_engineering package &mdash; bardi 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=e259d695"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="bardi.nlp_engineering.regex_library package" href="bardi.nlp_engineering.regex_library.html" />
+    <link rel="prev" title="bardi.data.utils package" href="bardi.data.utils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bardi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="bardi.html">bardi package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.data.html">bardi.data package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">bardi.nlp_engineering package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html">bardi.nlp_engineering.regex_library package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.utils.html">bardi.nlp_engineering.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bardi.nlp_engineering.embedding_generator">bardi.nlp_engineering.embedding_generator module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator"><code class="docutils literal notranslate"><span class="pre">CPUEmbeddingGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator.get_parameters"><code class="docutils literal notranslate"><span class="pre">CPUEmbeddingGenerator.get_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator.run"><code class="docutils literal notranslate"><span class="pre">CPUEmbeddingGenerator.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator.write_artifacts"><code class="docutils literal notranslate"><span class="pre">CPUEmbeddingGenerator.write_artifacts()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGenerator"><code class="docutils literal notranslate"><span class="pre">EmbeddingGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGenerator.run"><code class="docutils literal notranslate"><span class="pre">EmbeddingGenerator.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGenerator.set_write_config"><code class="docutils literal notranslate"><span class="pre">EmbeddingGenerator.set_write_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig"><code class="docutils literal notranslate"><span class="pre">EmbeddingGeneratorArtifactsWriteConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig.embedding_matrix_format"><code class="docutils literal notranslate"><span class="pre">EmbeddingGeneratorArtifactsWriteConfig.embedding_matrix_format</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig.embedding_matrix_format_args"><code class="docutils literal notranslate"><span class="pre">EmbeddingGeneratorArtifactsWriteConfig.embedding_matrix_format_args</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig.vocab_format"><code class="docutils literal notranslate"><span class="pre">EmbeddingGeneratorArtifactsWriteConfig.vocab_format</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig.vocab_format_args"><code class="docutils literal notranslate"><span class="pre">EmbeddingGeneratorArtifactsWriteConfig.vocab_format_args</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bardi.nlp_engineering.label_processor">bardi.nlp_engineering.label_processor module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.label_processor.CPULabelProcessor"><code class="docutils literal notranslate"><span class="pre">CPULabelProcessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.label_processor.CPULabelProcessor.get_parameters"><code class="docutils literal notranslate"><span class="pre">CPULabelProcessor.get_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.label_processor.CPULabelProcessor.run"><code class="docutils literal notranslate"><span class="pre">CPULabelProcessor.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.label_processor.CPULabelProcessor.write_artifacts"><code class="docutils literal notranslate"><span class="pre">CPULabelProcessor.write_artifacts()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.label_processor.LabelProcessor"><code class="docutils literal notranslate"><span class="pre">LabelProcessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.label_processor.LabelProcessor.run"><code class="docutils literal notranslate"><span class="pre">LabelProcessor.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.label_processor.LabelProcessor.set_write_config"><code class="docutils literal notranslate"><span class="pre">LabelProcessor.set_write_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.label_processor.LabelProcessorArtifactsWriteConfig"><code class="docutils literal notranslate"><span class="pre">LabelProcessorArtifactsWriteConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.label_processor.LabelProcessorArtifactsWriteConfig.id_to_label_args"><code class="docutils literal notranslate"><span class="pre">LabelProcessorArtifactsWriteConfig.id_to_label_args</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.label_processor.LabelProcessorArtifactsWriteConfig.id_to_label_format"><code class="docutils literal notranslate"><span class="pre">LabelProcessorArtifactsWriteConfig.id_to_label_format</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bardi.nlp_engineering.normalizer">bardi.nlp_engineering.normalizer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.normalizer.CPUNormalizer"><code class="docutils literal notranslate"><span class="pre">CPUNormalizer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.normalizer.CPUNormalizer.run"><code class="docutils literal notranslate"><span class="pre">CPUNormalizer.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.normalizer.Normalizer"><code class="docutils literal notranslate"><span class="pre">Normalizer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.normalizer.Normalizer.run"><code class="docutils literal notranslate"><span class="pre">Normalizer.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bardi.nlp_engineering.post_processor">bardi.nlp_engineering.post_processor module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.post_processor.CPUPostProcessor"><code class="docutils literal notranslate"><span class="pre">CPUPostProcessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.post_processor.CPUPostProcessor.get_parameters"><code class="docutils literal notranslate"><span class="pre">CPUPostProcessor.get_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.post_processor.CPUPostProcessor.run"><code class="docutils literal notranslate"><span class="pre">CPUPostProcessor.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.post_processor.PostProcessor"><code class="docutils literal notranslate"><span class="pre">PostProcessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.post_processor.PostProcessor.run"><code class="docutils literal notranslate"><span class="pre">PostProcessor.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bardi.nlp_engineering.pre_tokenizer">bardi.nlp_engineering.pre_tokenizer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.pre_tokenizer.CPUPreTokenizer"><code class="docutils literal notranslate"><span class="pre">CPUPreTokenizer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.pre_tokenizer.CPUPreTokenizer.run"><code class="docutils literal notranslate"><span class="pre">CPUPreTokenizer.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.pre_tokenizer.PreTokenizer"><code class="docutils literal notranslate"><span class="pre">PreTokenizer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.pre_tokenizer.PreTokenizer.run"><code class="docutils literal notranslate"><span class="pre">PreTokenizer.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bardi.nlp_engineering.splitter">bardi.nlp_engineering.splitter module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.splitter.CPUSplitter"><code class="docutils literal notranslate"><span class="pre">CPUSplitter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.splitter.CPUSplitter.run"><code class="docutils literal notranslate"><span class="pre">CPUSplitter.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.splitter.MapSplit"><code class="docutils literal notranslate"><span class="pre">MapSplit</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.splitter.MapSplit.split_mapping"><code class="docutils literal notranslate"><span class="pre">MapSplit.split_mapping</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.splitter.MapSplit.unique_record_cols"><code class="docutils literal notranslate"><span class="pre">MapSplit.unique_record_cols</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.splitter.NewSplit"><code class="docutils literal notranslate"><span class="pre">NewSplit</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.splitter.NewSplit.group_cols"><code class="docutils literal notranslate"><span class="pre">NewSplit.group_cols</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.splitter.NewSplit.label_cols"><code class="docutils literal notranslate"><span class="pre">NewSplit.label_cols</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.splitter.NewSplit.random_seed"><code class="docutils literal notranslate"><span class="pre">NewSplit.random_seed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.splitter.NewSplit.split_proportions"><code class="docutils literal notranslate"><span class="pre">NewSplit.split_proportions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.splitter.NewSplit.unique_record_cols"><code class="docutils literal notranslate"><span class="pre">NewSplit.unique_record_cols</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.nlp_engineering.splitter.Splitter"><code class="docutils literal notranslate"><span class="pre">Splitter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.nlp_engineering.splitter.Splitter.run"><code class="docutils literal notranslate"><span class="pre">Splitter.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bardi.nlp_engineering">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="example.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">bardi</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bardi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="bardi.html">bardi package</a></li>
+      <li class="breadcrumb-item active">bardi.nlp_engineering package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/bardi.nlp_engineering.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="bardi-nlp-engineering-package">
+<h1>bardi.nlp_engineering package<a class="headerlink" href="#bardi-nlp-engineering-package" title="Link to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html">bardi.nlp_engineering.regex_library package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#module-bardi.nlp_engineering.regex_library.pathology_report">bardi.nlp_engineering.regex_library.pathology_report module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet"><code class="docutils literal notranslate"><span class="pre">PathologyReportRegexSet</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#module-bardi.nlp_engineering.regex_library.regex_lib">bardi.nlp_engineering.regex_library.regex_lib module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_address_regex"><code class="docutils literal notranslate"><span class="pre">get_address_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_angle_brackets_regex"><code class="docutils literal notranslate"><span class="pre">get_angle_brackets_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_cassette_name_regex"><code class="docutils literal notranslate"><span class="pre">get_cassette_name_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_cassettes_spacing_regex"><code class="docutils literal notranslate"><span class="pre">get_cassettes_spacing_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_dash_digits_spacing_regex"><code class="docutils literal notranslate"><span class="pre">get_dash_digits_spacing_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_dates_regex"><code class="docutils literal notranslate"><span class="pre">get_dates_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_decimal_segmented_numbers_regex"><code class="docutils literal notranslate"><span class="pre">get_decimal_segmented_numbers_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_digits_words_spacing_regex"><code class="docutils literal notranslate"><span class="pre">get_digits_words_spacing_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_dimension_spacing_regex"><code class="docutils literal notranslate"><span class="pre">get_dimension_spacing_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_dimensions_regex"><code class="docutils literal notranslate"><span class="pre">get_dimensions_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_duration_regex"><code class="docutils literal notranslate"><span class="pre">get_duration_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_escape_code_regex"><code class="docutils literal notranslate"><span class="pre">get_escape_code_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_fix_pluralization_regex"><code class="docutils literal notranslate"><span class="pre">get_fix_pluralization_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_large_digits_seq_regex"><code class="docutils literal notranslate"><span class="pre">get_large_digits_seq_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_large_float_seq_regex"><code class="docutils literal notranslate"><span class="pre">get_large_float_seq_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_leading_digit_punctuation_regex"><code class="docutils literal notranslate"><span class="pre">get_leading_digit_punctuation_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_leading_punctuation_regex"><code class="docutils literal notranslate"><span class="pre">get_leading_punctuation_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_letter_num_seq_regex"><code class="docutils literal notranslate"><span class="pre">get_letter_num_seq_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_literals_floats_spacing_regex"><code class="docutils literal notranslate"><span class="pre">get_literals_floats_spacing_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_math_spacing_regex"><code class="docutils literal notranslate"><span class="pre">get_math_spacing_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_measure_spacing_regex"><code class="docutils literal notranslate"><span class="pre">get_measure_spacing_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_multiple_punct_regex"><code class="docutils literal notranslate"><span class="pre">get_multiple_punct_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_percent_sign_regex"><code class="docutils literal notranslate"><span class="pre">get_percent_sign_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_phone_number_regex"><code class="docutils literal notranslate"><span class="pre">get_phone_number_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_spaces_regex"><code class="docutils literal notranslate"><span class="pre">get_spaces_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_special_punct_regex"><code class="docutils literal notranslate"><span class="pre">get_special_punct_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_specimen_regex"><code class="docutils literal notranslate"><span class="pre">get_specimen_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_time_regex"><code class="docutils literal notranslate"><span class="pre">get_time_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_trailing_punctuation_regex"><code class="docutils literal notranslate"><span class="pre">get_trailing_punctuation_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_trunc_decimals_regex"><code class="docutils literal notranslate"><span class="pre">get_trunc_decimals_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_urls_regex"><code class="docutils literal notranslate"><span class="pre">get_urls_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_whitespace_regex"><code class="docutils literal notranslate"><span class="pre">get_whitespace_regex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_words_with_punct_spacing_regex"><code class="docutils literal notranslate"><span class="pre">get_words_with_punct_spacing_regex()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#module-bardi.nlp_engineering.regex_library.regex_set">bardi.nlp_engineering.regex_library.regex_set module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_set.RegexSet"><code class="docutils literal notranslate"><span class="pre">RegexSet</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_set.RegexSet.get_regex_set"><code class="docutils literal notranslate"><span class="pre">RegexSet.get_regex_set()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><code class="docutils literal notranslate"><span class="pre">RegexSubPair</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair.regex_str"><code class="docutils literal notranslate"><span class="pre">RegexSubPair.regex_str</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair.sub_str"><code class="docutils literal notranslate"><span class="pre">RegexSubPair.sub_str</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#module-bardi.nlp_engineering.regex_library">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.nlp_engineering.utils.html">bardi.nlp_engineering.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bardi.nlp_engineering.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bardi.nlp_engineering.utils.html#module-bardi.nlp_engineering.utils.validations">bardi.nlp_engineering.utils.validations module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.utils.html#bardi.nlp_engineering.utils.validations.validate_list_str_cols"><code class="docutils literal notranslate"><span class="pre">validate_list_str_cols()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.utils.html#bardi.nlp_engineering.utils.validations.validate_pyarrow_table"><code class="docutils literal notranslate"><span class="pre">validate_pyarrow_table()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.utils.html#bardi.nlp_engineering.utils.validations.validate_str_cols"><code class="docutils literal notranslate"><span class="pre">validate_str_cols()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bardi.nlp_engineering.utils.html#module-bardi.nlp_engineering.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-bardi.nlp_engineering.embedding_generator">
+<span id="bardi-nlp-engineering-embedding-generator-module"></span><h2>bardi.nlp_engineering.embedding_generator module<a class="headerlink" href="#module-bardi.nlp_engineering.embedding_generator" title="Link to this heading"></a></h2>
+<p>Train a Word2Vec model and create a vocab and word embeddings</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.embedding_generator.</span></span><span class="sig-name descname"><span class="pre">CPUEmbeddingGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/embedding_generator.html#CPUEmbeddingGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGenerator" title="bardi.nlp_engineering.embedding_generator.EmbeddingGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">EmbeddingGenerator</span></code></a></p>
+<p>The embedding generator provides interface to create
+word embeddings or vector representations of words (tokens).</p>
+<p>The embedding generator uses Word2Vec model from Gensim library.</p>
+<p>EmbeddingGenerator specific for CPU computation.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><dl class="simple">
+<dt>fields<span class="classifier">Union[str, List[str]]</span></dt><dd><p>the name of the column(s) containing text to be considered
+in the vocab and used in Word2Vec</p>
+</dd>
+<dt>load_saved_model<span class="classifier">bool</span></dt><dd><p>if True, use pre-trained word2vec model.</p>
+</dd>
+<dt>checkpoint_path<span class="classifier">str</span></dt><dd><p>path to word2vec model checkpoint.</p>
+</dd>
+<dt>cores<span class="classifier">int</span></dt><dd><p>numbers of cores to run word2vec model on.</p>
+</dd>
+<dt>min_word_count<span class="classifier">int</span></dt><dd><p>ignores all words with total frequency lower than this.</p>
+</dd>
+<dt>window<span class="classifier">int</span></dt><dd><p>maximum distance between the current and predicted word.</p>
+</dd>
+<dt>vector_size<span class="classifier">int</span></dt><dd><p>output embedding size.</p>
+</dd>
+<dt>sample<span class="classifier">float</span></dt><dd><p>the threshold for configuring which high-frequency
+words are randomly ownsamples, use range (0, 1e-5).</p>
+</dd>
+<dt>min_alpha<span class="classifier">float</span></dt><dd><p>learning rate will linearly drop to min_alpha
+as training progresses.</p>
+</dd>
+<dt>negative<span class="classifier">int</span></dt><dd><p>if &gt; 0, negative sampling will be used.</p>
+</dd>
+<dt>epochs<span class="classifier">int</span></dt><dd><p>total number of iterations of all training data in
+the training of the word2vec model</p>
+</dd>
+<dt>seed<span class="classifier">int</span></dt><dd><p>seed for random number generetor, for deterministic
+run you need thread = 1 (aka cpu core)
+and PYTHONHASHSEED</p>
+</dd>
+<dt>vocab_exclude_list<span class="classifier">List[str]</span></dt><dd><p>provide a list of tokens that may be present in the
+text that you would like to exclude from the vocab and
+from Word2Vec</p>
+</dd>
+</dl>
+</dd>
+<dt>Methods:</dt><dd><p>run : run the step’s primary function
+get_parameters : get a dictionary representation of the step object
+set_write_config : alter the default file writing configuration
+write_outputs : Write output data to a file</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator.get_parameters">
+<span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/embedding_generator.html#CPUEmbeddingGenerator.get_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator.get_parameters" title="Link to this definition"></a></dt>
+<dd><p>Retrive the embedding generetor object configuration</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>a dictionary representation
+of the embedding generetor object’s attributes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artifacts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Table</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/embedding_generator.html#CPUEmbeddingGenerator.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator.run" title="Link to this definition"></a></dt>
+<dd><p>Runs a CPU-based embedding generator method based on the
+configuration used to create the object of the CPUEmbeddingGenerator
+class</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><dl class="simple">
+<dt>data<span class="classifier">pyarrow.Table</span></dt><dd><p>a pyarrow Table containing at least one list column containing
+text</p>
+</dd>
+<dt>artifacts<span class="classifier">dict</span></dt><dd><p>artifacts are not consumed in this run method, but must be
+received to operate correctly in the pipeline run method</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>Tuple[pyarrow.Table, dict]</dt><dd><p>The first position is a pyarrow.Table of pre-tokenized data
+The second position is a dictionary of artifacts. The dict will
+contain keys for “embedding_matrix” and “id_to_token”.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator.write_artifacts">
+<span class="sig-name descname"><span class="pre">write_artifacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">write_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artifacts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/embedding_generator.html#CPUEmbeddingGenerator.write_artifacts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator.write_artifacts" title="Link to this definition"></a></dt>
+<dd><p>Write the oartifactsproduced by the embedding_generator</p>
+<dl class="simple">
+<dt>Keyword Arguments:</dt><dd><dl class="simple">
+<dt>write_path<span class="classifier">str</span></dt><dd><p>Path is a directory where files will be written</p>
+</dd>
+<dt>artifacts<span class="classifier">Union[dict, None]</span></dt><dd><p>Artifacts is a dictionary of artifacts produced in this step.
+Expected keys are: “id_to_token” and “embedding_matrix”</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.embedding_generator.EmbeddingGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.embedding_generator.</span></span><span class="sig-name descname"><span class="pre">EmbeddingGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_saved_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkpoint_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_word_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vector_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.007</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">negative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab_exclude_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/embedding_generator.html#EmbeddingGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="bardi.html#bardi.pipeline.Step" title="bardi.pipeline.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">Step</span></code></a></p>
+<p>The embedding generator provides interface to create
+word embeddings or vector representations of words (tokens).</p>
+<p>The embedding generator uses Word2Vec model from Gensim library.</p>
+<p>Avoid the direct instantiation of the PreTokenizer class
+and instead instantiate one of the child classes depending
+on hardware configuration.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.embedding_generator.EmbeddingGenerator.run">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/embedding_generator.html#EmbeddingGenerator.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGenerator.run" title="Link to this definition"></a></dt>
+<dd><p>to be implemented in child class</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.embedding_generator.EmbeddingGenerator.set_write_config">
+<span class="sig-name descname"><span class="pre">set_write_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="bardi.html#bardi.pipeline.DataWriteConfig" title="bardi.pipeline.DataWriteConfig"><span class="pre">DataWriteConfig</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artifacts_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig" title="bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig"><span class="pre">EmbeddingGeneratorArtifactsWriteConfig</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/embedding_generator.html#EmbeddingGenerator.set_write_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGenerator.set_write_config" title="Link to this definition"></a></dt>
+<dd><p>Overwrite the default file writing configurations</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.embedding_generator.</span></span><span class="sig-name descname"><span class="pre">EmbeddingGeneratorArtifactsWriteConfig</span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/embedding_generator.html#EmbeddingGeneratorArtifactsWriteConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<p>Indicates the keys and data types expected in an
+artifacts write config dict for the embedding generator
+if overwriting the default configuration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig.embedding_matrix_format">
+<span class="sig-name descname"><span class="pre">embedding_matrix_format</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig.embedding_matrix_format" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig.embedding_matrix_format_args">
+<span class="sig-name descname"><span class="pre">embedding_matrix_format_args</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig.embedding_matrix_format_args" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig.vocab_format">
+<span class="sig-name descname"><span class="pre">vocab_format</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig.vocab_format" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig.vocab_format_args">
+<span class="sig-name descname"><span class="pre">vocab_format_args</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig.vocab_format_args" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-bardi.nlp_engineering.label_processor">
+<span id="bardi-nlp-engineering-label-processor-module"></span><h2>bardi.nlp_engineering.label_processor module<a class="headerlink" href="#module-bardi.nlp_engineering.label_processor" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.label_processor.CPULabelProcessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.label_processor.</span></span><span class="sig-name descname"><span class="pre">CPULabelProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/label_processor.html#CPULabelProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.label_processor.CPULabelProcessor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bardi.nlp_engineering.label_processor.LabelProcessor" title="bardi.nlp_engineering.label_processor.LabelProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">LabelProcessor</span></code></a></p>
+<p>The label processor creates and maps a label vocab</p>
+<p>Implementation of the LabelProcessor for CPU computation</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><dl class="simple">
+<dt>fields<span class="classifier">Union[str, List[str]]</span></dt><dd><p>the name(s) of label column(s) of which the values
+are used to generate a standardized mapping and
+then that mapping is applied to the column(s)</p>
+</dd>
+<dt>method<span class="classifier">str</span></dt><dd><p>currently only a default ‘unique’ method is
+supported which maps each unique value in the
+column to an id</p>
+</dd>
+<dt>mapping<span class="classifier">dict</span></dt><dd><p>mapping dict of the form {label: id} used to convert
+labels in the column to ids</p>
+</dd>
+<dt>id_to_label<span class="classifier">dict</span></dt><dd><p>the reverse of mapping. of the form {id: label} used
+downstream to map the ids back to the original label
+values</p>
+</dd>
+</dl>
+</dd>
+<dt>Methods:</dt><dd><p>run : run the step’s primary function
+get_parameters : get a dictionary representation of the step object
+set_write_config : Alter the default file writing configuration
+write_outputs : Write output data to a file</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.label_processor.CPULabelProcessor.get_parameters">
+<span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/label_processor.html#CPULabelProcessor.get_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.label_processor.CPULabelProcessor.get_parameters" title="Link to this definition"></a></dt>
+<dd><p>Retrive the label processor object configuration</p>
+<p>Does not return the mapping (vocab), but does return the id_to_label
+dict. This is because the mapping is just the reverse of id_to_label.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>a dictionary representation of the splitter object’s attributes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.label_processor.CPULabelProcessor.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artifacts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Table</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/label_processor.html#CPULabelProcessor.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.label_processor.CPULabelProcessor.run" title="Link to this definition"></a></dt>
+<dd><p>Run a label processor using CPU computation</p>
+<dl class="simple">
+<dt>Keyword Arguments:</dt><dd><dl class="simple">
+<dt>data<span class="classifier">PyArrow Table</span></dt><dd><p>The data to be processed. The data must contain the
+column specified by ‘field’ at object creation</p>
+</dd>
+<dt>artifacts<span class="classifier">dict</span></dt><dd><p>artifacts are not used in this run method, but must be received
+to operate correctly in the pipeline run method</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>Tuple[pyarrow.Table, dict]</dt><dd><p>The first position is a pyarrow.Table of processed data
+The second position is a dictionary of artifacts. The dict will
+contain a key for “id_to_label”.</p>
+</dd>
+</dl>
+</dd>
+<dt>Raises</dt><dd><dl class="simple">
+<dt>NotImplementedError</dt><dd><p>A value other than ‘unique’ was provided for the
+label processor’s method</p>
+</dd>
+<dt>TypeError</dt><dd><p>The run method was not supplied a PyArrow Table</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.label_processor.CPULabelProcessor.write_artifacts">
+<span class="sig-name descname"><span class="pre">write_artifacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">write_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artifacts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/label_processor.html#CPULabelProcessor.write_artifacts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.label_processor.CPULabelProcessor.write_artifacts" title="Link to this definition"></a></dt>
+<dd><p>Write the outputs produced by the label_processor</p>
+<dl class="simple">
+<dt>Keyword Arguments:</dt><dd><dl class="simple">
+<dt>write_path<span class="classifier">str</span></dt><dd><p>Path is a directory where files will be written</p>
+</dd>
+<dt>artifacts<span class="classifier">Union[dict, None]</span></dt><dd><p>Artifacts is a dictionary of artifacts produced in this step.
+Expected key is: “id_to_label”</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.label_processor.LabelProcessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.label_processor.</span></span><span class="sig-name descname"><span class="pre">LabelProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'unique'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/label_processor.html#LabelProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.label_processor.LabelProcessor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="bardi.html#bardi.pipeline.Step" title="bardi.pipeline.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">Step</span></code></a></p>
+<p>The label processor creates and maps a label vocab</p>
+<p>Avoid the direct instantiation of the LabelProcessor class
+and instead instantiate one of the child classes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.label_processor.LabelProcessor.run">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/label_processor.html#LabelProcessor.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.label_processor.LabelProcessor.run" title="Link to this definition"></a></dt>
+<dd><p>to be implemented in child class</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.label_processor.LabelProcessor.set_write_config">
+<span class="sig-name descname"><span class="pre">set_write_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="bardi.html#bardi.pipeline.DataWriteConfig" title="bardi.pipeline.DataWriteConfig"><span class="pre">DataWriteConfig</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artifacts_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bardi.nlp_engineering.label_processor.LabelProcessorArtifactsWriteConfig" title="bardi.nlp_engineering.label_processor.LabelProcessorArtifactsWriteConfig"><span class="pre">LabelProcessorArtifactsWriteConfig</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/label_processor.html#LabelProcessor.set_write_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.label_processor.LabelProcessor.set_write_config" title="Link to this definition"></a></dt>
+<dd><p>Overwrite the default file writing configurations</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.label_processor.LabelProcessorArtifactsWriteConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.label_processor.</span></span><span class="sig-name descname"><span class="pre">LabelProcessorArtifactsWriteConfig</span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/label_processor.html#LabelProcessorArtifactsWriteConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.label_processor.LabelProcessorArtifactsWriteConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<p>Indicates the keys and data types expected in an
+artifacts write config dict for the label processor
+if overwriting the default configuration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.label_processor.LabelProcessorArtifactsWriteConfig.id_to_label_args">
+<span class="sig-name descname"><span class="pre">id_to_label_args</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#bardi.nlp_engineering.label_processor.LabelProcessorArtifactsWriteConfig.id_to_label_args" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.label_processor.LabelProcessorArtifactsWriteConfig.id_to_label_format">
+<span class="sig-name descname"><span class="pre">id_to_label_format</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#bardi.nlp_engineering.label_processor.LabelProcessorArtifactsWriteConfig.id_to_label_format" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-bardi.nlp_engineering.normalizer">
+<span id="bardi-nlp-engineering-normalizer-module"></span><h2>bardi.nlp_engineering.normalizer module<a class="headerlink" href="#module-bardi.nlp_engineering.normalizer" title="Link to this heading"></a></h2>
+<p>Clean text with custom sets of regular expressions</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.normalizer.CPUNormalizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.normalizer.</span></span><span class="sig-name descname"><span class="pre">CPUNormalizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/normalizer.html#CPUNormalizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.normalizer.CPUNormalizer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bardi.nlp_engineering.normalizer.Normalizer" title="bardi.nlp_engineering.normalizer.Normalizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normalizer</span></code></a></p>
+<p>Normalizer cleans and standardizes text input using regular expression
+substitutions. Lowercasing is also applied if desired.</p>
+<p>Normalizer specific for CPU computation.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><dl class="simple">
+<dt>fields<span class="classifier">Union[str, List[str]]</span></dt><dd><p>the name of the column(s) containing text to be normalized</p>
+</dd>
+<dt>regex_set<span class="classifier">List[RegexSubPair]</span></dt><dd><p>a list of dicionaries with keys, ‘regex_str’ and ‘sub_str’ used to
+perform regular expression substitutions of the text</p>
+</dd>
+<dt>lowercase<span class="classifier">bool</span></dt><dd><p>whether or not the text will be lowercased</p>
+</dd>
+</dl>
+</dd>
+<dt>Methods:</dt><dd><p>run : run the step’s primary function
+get_parameters : get a dictionary representation of the step object
+set_write_config : Alter the default file writing configuration
+write_outputs : Write output data to a file</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.normalizer.CPUNormalizer.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artifacts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Table</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/normalizer.html#CPUNormalizer.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.normalizer.CPUNormalizer.run" title="Link to this definition"></a></dt>
+<dd><p>Runs a CPU-based normalizer method based on the configuration
+used to create the object of the CPUNormalizer class</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><dl class="simple">
+<dt>data<span class="classifier">pyarrow.Table</span></dt><dd><p>a pyarrow Table containing at least one text column of type
+string or large_string</p>
+</dd>
+<dt>artifacts<span class="classifier">dict</span></dt><dd><p>artifacts are not used in this run method, but must be received
+to operate correctly in the pipeline run method</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>pyarrow.Table of cleaned data</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.normalizer.Normalizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.normalizer.</span></span><span class="sig-name descname"><span class="pre">Normalizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regex_set</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lowercase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/normalizer.html#Normalizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.normalizer.Normalizer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="bardi.html#bardi.pipeline.Step" title="bardi.pipeline.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">Step</span></code></a></p>
+<p>Normalizer cleans and standardizes text input using regular expression
+substitutions. Lowercasing is also applied if desired.</p>
+<p>Avoid the direct instantiation of the PreTokenizer class
+and instead instantiate one of the child classes depending
+on hardware configuration.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.normalizer.Normalizer.run">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/normalizer.html#Normalizer.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.normalizer.Normalizer.run" title="Link to this definition"></a></dt>
+<dd><p>to be implemented in child class</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-bardi.nlp_engineering.post_processor">
+<span id="bardi-nlp-engineering-post-processor-module"></span><h2>bardi.nlp_engineering.post_processor module<a class="headerlink" href="#module-bardi.nlp_engineering.post_processor" title="Link to this heading"></a></h2>
+<p>Apply a vocab mapping converting a list of tokens in a column
+into a list of integers</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.post_processor.CPUPostProcessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.post_processor.</span></span><span class="sig-name descname"><span class="pre">CPUPostProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/post_processor.html#CPUPostProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.post_processor.CPUPostProcessor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bardi.nlp_engineering.post_processor.PostProcessor" title="bardi.nlp_engineering.post_processor.PostProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">PostProcessor</span></code></a></p>
+<p>The post processor maps a vocab to a list of tokens</p>
+<p>Implementation of the PostProcessor for CPU computation</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><dl class="simple">
+<dt>fields<span class="classifier">Union[str, List[str]],</span></dt><dd><p>the name of the column containing a list of tokens
+that will be mapped to integers using a vocab</p>
+</dd>
+<dt>field_rename<span class="classifier">str</span></dt><dd><p>optional ability to rename the supplied field with
+the field_rename value</p>
+</dd>
+<dt>id_to_token<span class="classifier">dict</span></dt><dd><p>optional vocabulary in the form of {id: token} that
+will be used to map the tokens to integers. This
+is optional for the construction of the object, and
+can alternatively be provided in the run method.
+This flexibility handles the use of a pre-existing
+vocab versus creating a vocab during a pipeline run.</p>
+</dd>
+<dt>concat_fields<span class="classifier">bool</span></dt><dd><p>indicate if you would like for fields to be concatenated
+into a single column or left as separate columns</p>
+</dd>
+</dl>
+</dd>
+<dt>Methods:</dt><dd><p>run : run the step’s primary function
+get_parameters : get a dictionary representation of the step object
+set_write_config : Alter the default file writing configuration
+write_outputs : Write output data to a file</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.post_processor.CPUPostProcessor.get_parameters">
+<span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/post_processor.html#CPUPostProcessor.get_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.post_processor.CPUPostProcessor.get_parameters" title="Link to this definition"></a></dt>
+<dd><p>Retrive the post-processor object configuration
+Does not return the mapping (vocab) as it can be large</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>a dictionary representation of the post-processor’s attributes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.post_processor.CPUPostProcessor.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artifacts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_to_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Table</span></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/post_processor.html#CPUPostProcessor.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.post_processor.CPUPostProcessor.run" title="Link to this definition"></a></dt>
+<dd><p>Run a post processor using CPU computation</p>
+<p>The post processor relies on receiving a vocab to map. The
+vocab can be supplied in multiple ways:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>id_to_token at object creation</p></li>
+<li><p>contained in the pipeline artifacts dictionary passed
+to the run method referenced by the key, ‘id_to_token’</p></li>
+<li><p>id_to_token in the run method</p></li>
+</ul>
+</div></blockquote>
+<dl>
+<dt>Keyword Arguments:</dt><dd><dl class="simple">
+<dt>data<span class="classifier">PyArrow Table</span></dt><dd><p>The data to be processed. The data must contain the
+column specified by field at object creation</p>
+</dd>
+<dt>artifacts<span class="classifier">dict</span></dt><dd><p>A dictionary of pipeline artifacts which contains
+a vocab referenced by the key, ‘id_to_token’</p>
+</dd>
+<dt>id_to_token<span class="classifier">dict</span></dt><dd><p>If a vocab wasn’t passed at object creation or
+through the pipeline artifacts dict, then it
+must be passed here as a final option</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl>
+<dt>Tuple(PyArrow Table, dict)</dt><dd><dl>
+<dt>A tuple with:</dt><dd><ul class="simple">
+<li><p>the first element holding a PyArrow Table of data</p></li>
+</ul>
+<p>processed with the post processor
+- the second element of the tuple intended for
+artifacts is None</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Raises</dt><dd><dl class="simple">
+<dt>AttributeError</dt><dd><p>The vocab (id_to_token) wasn’t supplied
+either at object creation or to the run method</p>
+</dd>
+<dt>TypeError</dt><dd><p>The run method was not supplied a PyArrow Table</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.post_processor.PostProcessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.post_processor.</span></span><span class="sig-name descname"><span class="pre">PostProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_rename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_to_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concat_fields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/post_processor.html#PostProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.post_processor.PostProcessor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="bardi.html#bardi.pipeline.Step" title="bardi.pipeline.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">Step</span></code></a></p>
+<p>The post processor maps a vocab to a list of tokens</p>
+<p>Avoid the direct instantiation of the PostProcessor class
+and instead instantiate one of the child classes depending
+on hardware configuration</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.post_processor.PostProcessor.run">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/post_processor.html#PostProcessor.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.post_processor.PostProcessor.run" title="Link to this definition"></a></dt>
+<dd><p>to be implemented in child class</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-bardi.nlp_engineering.pre_tokenizer">
+<span id="bardi-nlp-engineering-pre-tokenizer-module"></span><h2>bardi.nlp_engineering.pre_tokenizer module<a class="headerlink" href="#module-bardi.nlp_engineering.pre_tokenizer" title="Link to this heading"></a></h2>
+<p>Split text columns into lists of tokens using simple patterns</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.pre_tokenizer.CPUPreTokenizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.pre_tokenizer.</span></span><span class="sig-name descname"><span class="pre">CPUPreTokenizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/pre_tokenizer.html#CPUPreTokenizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.pre_tokenizer.CPUPreTokenizer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bardi.nlp_engineering.pre_tokenizer.PreTokenizer" title="bardi.nlp_engineering.pre_tokenizer.PreTokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PreTokenizer</span></code></a></p>
+<p>The pre tokenizer breaks down text into smaller units
+before further tokenization is applied.</p>
+<p>Implementation of the PreTokenizer for CPU computation</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><dl class="simple">
+<dt>fields<span class="classifier">Union[str, List[str]],</span></dt><dd><p>the name of the column(s) containing text</p>
+</dd>
+<dt>split_pattern<span class="classifier">str</span></dt><dd><p>a specific pattern of characters used to divide a string
+into smaller segments or tokens.
+By default, the split is done on a single space character.</p>
+</dd>
+</dl>
+</dd>
+<dt>Methods:</dt><dd><p>run : run the step’s primary function
+get_parameters : get a dictionary representation of the step object
+set_write_config : Alter the default file writing configuration
+write_outputs : Write output data to a file</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.pre_tokenizer.CPUPreTokenizer.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artifacts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Table</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/pre_tokenizer.html#CPUPreTokenizer.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.pre_tokenizer.CPUPreTokenizer.run" title="Link to this definition"></a></dt>
+<dd><p>Runs a CPU-based pre-tokenizer method based on the configuration
+used to create the object of the CPUPreTokenizer class</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><dl class="simple">
+<dt>data<span class="classifier">pyarrow.Table</span></dt><dd><p>a pyarrow Table containing at least one text column of type
+string or large_string</p>
+</dd>
+<dt>artifacts<span class="classifier">dict</span></dt><dd><p>artifacts are not used in this run method, but must be received
+to operate correctly in the pipeline run method</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>Tuple[pyarrow.Table, dict]</dt><dd><p>The first position is a pyarrow.Table of pre-tokenized data
+The second position is a dictionary of artifacts. No artifacts
+are produced in this run method, so the second position will
+return None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.pre_tokenizer.PreTokenizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.pre_tokenizer.</span></span><span class="sig-name descname"><span class="pre">PreTokenizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_pattern</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/pre_tokenizer.html#PreTokenizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.pre_tokenizer.PreTokenizer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="bardi.html#bardi.pipeline.Step" title="bardi.pipeline.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">Step</span></code></a></p>
+<p>The pre-tokenizer breaks down text into smaller units
+before further tokenization is applied.</p>
+<p>Avoid the direct instantiation of the PreTokenizer class
+and instead instantiate one of the child classes depending
+on hardware configuration.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.pre_tokenizer.PreTokenizer.run">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/pre_tokenizer.html#PreTokenizer.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.pre_tokenizer.PreTokenizer.run" title="Link to this definition"></a></dt>
+<dd><p>to be implemented in child class</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-bardi.nlp_engineering.splitter">
+<span id="bardi-nlp-engineering-splitter-module"></span><h2>bardi.nlp_engineering.splitter module<a class="headerlink" href="#module-bardi.nlp_engineering.splitter" title="Link to this heading"></a></h2>
+<p>Segment the dataset into splits, such as test, train, and val</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.splitter.CPUSplitter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.splitter.</span></span><span class="sig-name descname"><span class="pre">CPUSplitter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/splitter.html#CPUSplitter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.splitter.CPUSplitter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bardi.nlp_engineering.splitter.Splitter" title="bardi.nlp_engineering.splitter.Splitter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Splitter</span></code></a></p>
+<p>The splitter adds a ‘split’ column to the data assigning
+each record to a particular split for downstream model training.</p>
+<p>Two split types are available - creating a new random split
+from scratch and assigning previously created splits. This
+second option is helpful when running comparisons with
+other methods of data processing ensuring that splits are
+exactly the same.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>split_type : str
+unique_record_cols : List[str]
+split_mapping : dict[str, str]
+split_proportions : dict[str, float]
+num_splits : int
+group_cols : List[str]
+label_cols : List[str]
+random_seed: int</p>
+</dd>
+<dt>Methods:</dt><dd><p>run : run the step’s primary function
+get_parameters : get a dictionary representation of the step object
+set_write_config : Alter the default file writing configuration
+write_outputs : Write output data to a file</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.splitter.CPUSplitter.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artifacts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Table</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/splitter.html#CPUSplitter.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.splitter.CPUSplitter.run" title="Link to this definition"></a></dt>
+<dd><p>Runs a splitter using CPU computation based on the configuration
+used to create the object of the CPUSplitter class</p>
+<dl>
+<dt>Keyword Arguments:</dt><dd><dl class="simple">
+<dt>data<span class="classifier">PyArrow Table</span></dt><dd><p>The data to be split</p>
+</dd>
+<dt>artifacts<span class="classifier">dict</span></dt><dd><p>artifacts are not consumed in this run method, but must be
+received to operate correctly in the pipeline run method</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl>
+<dt>Tuple(PyArrow Table, dict)</dt><dd><dl>
+<dt>A tuple with:</dt><dd><ul class="simple">
+<li><p>the first element holding a PyArrow Table of data</p></li>
+</ul>
+<p>including the new split column
+- the second element of the tuple intended for
+artifacts is None</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Raises</dt><dd><dl class="simple">
+<dt>TypeError</dt><dd><p>The run method was not supplied a PyArrow Table</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.splitter.MapSplit">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.splitter.</span></span><span class="sig-name descname"><span class="pre">MapSplit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unique_record_cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_mapping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bardi.nlp_engineering.splitter.MapSplit" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<p>Specify the requirements for splitting data exactly in line with an existing data split</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.splitter.MapSplit.split_mapping">
+<span class="sig-name descname"><span class="pre">split_mapping</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#bardi.nlp_engineering.splitter.MapSplit.split_mapping" title="Link to this definition"></a></dt>
+<dd><p>A dictionary mapping where the keys are the hash of the concatenated values from unique_record_cols, or represented by the following pseudocode, hash(concat(<a href="#id1"><span class="problematic" id="id2">*</span></a>unique_record_cols)). The values are thecorresponding split value (train, test, val).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.splitter.MapSplit.unique_record_cols">
+<span class="sig-name descname"><span class="pre">unique_record_cols</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#bardi.nlp_engineering.splitter.MapSplit.unique_record_cols" title="Link to this definition"></a></dt>
+<dd><p>List of column names of which the combination forms a unique identifier in the dataset. This can be a single column name if that creates a unique identifier, but oftentimes in datasets a combination of fields are required. Note: This set of columns MUST create a unique record or the program will crash.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.splitter.NewSplit">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.splitter.</span></span><span class="sig-name descname"><span class="pre">NewSplit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">split_proportions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_record_cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bardi.nlp_engineering.splitter.NewSplit" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<p>Specify the requirements for splitting data with a new split from scratch.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.splitter.NewSplit.group_cols">
+<span class="sig-name descname"><span class="pre">group_cols</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#bardi.nlp_engineering.splitter.NewSplit.group_cols" title="Link to this definition"></a></dt>
+<dd><p>List of column names that form a ‘group’ that you would like to keep in discrete splits. E.x., if you had multiple medical notes for a single patient, you may desire that all notes for a single patient end up in the same split to prevent potential information leakage. In this case you would provide something like a patient_id.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.splitter.NewSplit.label_cols">
+<span class="sig-name descname"><span class="pre">label_cols</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#bardi.nlp_engineering.splitter.NewSplit.label_cols" title="Link to this definition"></a></dt>
+<dd><p>List of column names containing labels. Efforts are made to balance label distribution across splits, but this is not guaranteed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.splitter.NewSplit.random_seed">
+<span class="sig-name descname"><span class="pre">random_seed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#bardi.nlp_engineering.splitter.NewSplit.random_seed" title="Link to this definition"></a></dt>
+<dd><p>Required for reproducibility. If you have no preference, try on 42 for size.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.splitter.NewSplit.split_proportions">
+<span class="sig-name descname"><span class="pre">split_proportions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#bardi.nlp_engineering.splitter.NewSplit.split_proportions" title="Link to this definition"></a></dt>
+<dd><p>Mapping of split names to split proportions. i.e. {‘train’: 0.75, ‘test’: 0.15, ‘val’: 0.15} Note: values must add to 1.0.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.splitter.NewSplit.unique_record_cols">
+<span class="sig-name descname"><span class="pre">unique_record_cols</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#bardi.nlp_engineering.splitter.NewSplit.unique_record_cols" title="Link to this definition"></a></dt>
+<dd><p>List of column names of which the combination forms a unique identifier in the dataset. This can be a single column name if that creates a unique identifier, but oftentimes in datasets a combination of fields are required. Note: This set of columns MUST create a unique record or the program will crash.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.splitter.Splitter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.splitter.</span></span><span class="sig-name descname"><span class="pre">Splitter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">split_method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bardi.nlp_engineering.splitter.MapSplit" title="bardi.nlp_engineering.splitter.MapSplit"><span class="pre">MapSplit</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#bardi.nlp_engineering.splitter.NewSplit" title="bardi.nlp_engineering.splitter.NewSplit"><span class="pre">NewSplit</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/splitter.html#Splitter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.splitter.Splitter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="bardi.html#bardi.pipeline.Step" title="bardi.pipeline.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">Step</span></code></a></p>
+<p>Parent class to hardware specific child classes.
+Do not instantiate this parent class directly.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.splitter.Splitter.run">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/splitter.html#Splitter.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.splitter.Splitter.run" title="Link to this definition"></a></dt>
+<dd><p>to be implemented in child class</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-bardi.nlp_engineering">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bardi.nlp_engineering" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="bardi.data.utils.html" class="btn btn-neutral float-left" title="bardi.data.utils package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="bardi.nlp_engineering.regex_library.html" class="btn btn-neutral float-right" title="bardi.nlp_engineering.regex_library package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Dakota Murdoch and Patrycja Krawczuk (ORNL).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
