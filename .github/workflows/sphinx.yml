@@ -3,7 +3,7 @@
 name: Build-sphinx-docs
 
 permissions:
-  contents: read
+  contents: write
   pages: write
 
 
