@@ -19,7 +19,7 @@ Installation
 Documentation
 =============
 
-* Coming Soon
+*  [bardi's docs](https://doe-nci-mossaic.github.io/bardi/)
 
 Tutorial
 ========
