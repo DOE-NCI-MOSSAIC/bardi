@@ -7,5 +7,8 @@ pandas>=1.4.4
 polars>=0.19.8
 pyarrow>=14.0.1
 setuptools>=61.0
-
+sphinx>=7.2.6
+sphinx_rtd_theme>=2.0.0
+ghp-import>=2.1.0
+bardi>=0.3.0
 
