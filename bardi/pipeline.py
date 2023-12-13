@@ -36,17 +36,16 @@ class Step(metaclass=ABCMeta):
         """Implement a run method in the step that will be called by the
         pipeline's run_pipeline method.
 
-        Args:
-            - Expect to receive a PyArrow table of data
-            - Expect to receive a dict of artifacts from preceding steps
-              - artifacts can be ignored if values are not needed from it
-        Returns:
-            - If the method performs a transformation of data then return
+        :param data: Expect to receive a PyArrow table of data
+        :type data: PyArrow.Table
+        :param artifacts: Expect to receive a dict of artifacts from preceding steps,
+            but artifacts can be ignored in the method if values are not needed from it
+        :return: If the method performs a transformation of data then return
             the data as a PyArrow table. This will replace the pipeline
-            object's processed_data attribute.
-            - If the method creates new artifacts besides the data, return a
-            dictionary with keys corresponding to the name of the artifact
+            object's processed_data attribute. If the method creates new artifacts besides
+            the data, return a dictionary with keys corresponding to the name of the artifact
             and the values being the artifact's data or value
+        :rtype: Tuple[Union[pa.Table, None], Union[dict, None]]
         """
         pass
 
