@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bardi.nlp_engineering.regex_library.pathology_report &mdash; bardi 0.3.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=4621528c"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            bardi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../basic.html">Basic Package Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../advanced.html">Advanced Package Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../bardi.data.html">bardi.data package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../bardi.nlp_engineering.html">bardi.nlp_engineering package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">bardi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">bardi.nlp_engineering.regex_library.pathology_report</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for bardi.nlp_engineering.regex_library.pathology_report</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Curated set of regular expressions for cleaning text from pathology reports&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">bardi.nlp_engineering.regex_library</span> <span class="kn">import</span> <span class="n">regex_lib</span>
+<span class="kn">from</span> <span class="nn">bardi.nlp_engineering.regex_library.regex_set</span> <span class="kn">import</span> <span class="n">RegexSet</span><span class="p">,</span> <span class="n">RegexSubPair</span>
+
+
+<div class="viewcode-block" id="PathologyReportRegexSet">
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet">[docs]</a>
+<span class="k">class</span> <span class="nc">PathologyReportRegexSet</span><span class="p">(</span><span class="n">RegexSet</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">convert_escape_codes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 0</span>
+        <span class="n">handle_whitespaces</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 1</span>
+        <span class="n">remove_urls</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 2</span>
+        <span class="n">remove_special_punct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 3</span>
+        <span class="n">remove_multiple_punct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 4</span>
+        <span class="n">handle_angle_brackets</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 5</span>
+        <span class="n">replace_percent_sign</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 6</span>
+        <span class="n">handle_leading_digit_punct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 7</span>
+        <span class="n">remove_leading_punct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 8</span>
+        <span class="n">remove_trailing_punct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 9</span>
+        <span class="n">handle_words_with_punct_spacing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 10</span>
+        <span class="n">handle_math_spacing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 11</span>
+        <span class="n">handle_dimension_spacing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 12</span>
+        <span class="n">handle_measure_spacing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 13</span>
+        <span class="n">handle_cassettes_spacing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 14</span>
+        <span class="n">handle_dash_digit_spacing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 15</span>
+        <span class="n">handle_literals_floats_spacing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 16</span>
+        <span class="n">fix_pluralization</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 17</span>
+        <span class="n">handle_digits_words_spacing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 18</span>
+        <span class="n">remove_phone_numbers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 19</span>
+        <span class="n">remove_dates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 20</span>
+        <span class="n">remove_times</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 21</span>
+        <span class="n">remove_addresses</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 22</span>
+        <span class="n">remove_dimensions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 23</span>
+        <span class="n">remove_specimen</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 24</span>
+        <span class="n">remove_decimal_seg_numbers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 25</span>
+        <span class="n">remove_large_digits_seq</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 26</span>
+        <span class="n">remove_large_floats_seq</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 27</span>
+        <span class="n">trunc_decimals</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 28</span>
+        <span class="n">remove_cassette_names</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 29</span>
+        <span class="n">remove_duration_time</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 30</span>
+        <span class="n">remove_letter_num_seq</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="c1"># === List of regex sub pairs ===</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RegexSubPair</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># === Retrieve regular expression substitution pairs from regex_lib</span>
+        <span class="c1">#  0 removes escapes codes</span>
+        <span class="k">if</span> <span class="n">convert_escape_codes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_escape_codes</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_escape_code_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_escape_codes</span><span class="p">)</span>
+
+        <span class="c1">#  1 (regex, sub_str) for any new line, carriage return tab</span>
+        <span class="c1"># and multiple spaces --&gt; &quot; &quot;</span>
+        <span class="k">if</span> <span class="n">handle_whitespaces</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_whitespaces</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_whitespace_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_whitespaces</span><span class="p">)</span>
+
+        <span class="c1">#  2 removes URLs that start with https http or www</span>
+        <span class="k">if</span> <span class="n">remove_urls</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_urls</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_urls_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_urls</span><span class="p">)</span>
+
+        <span class="c1">#  3 matches a set of special punctuation</span>
+        <span class="c1"># ,();[]#{}* --&gt; &quot; &quot;</span>
+        <span class="k">if</span> <span class="n">remove_special_punct</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_special_punct</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_special_punct_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_special_punct</span><span class="p">)</span>
+
+        <span class="c1">#  4 matches multiple occurences of symbols like -, .and _</span>
+        <span class="k">if</span> <span class="n">remove_multiple_punct</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_multiple_punct</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_multiple_punct_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_multiple_punct</span><span class="p">)</span>
+
+        <span class="c1">#  5(regex, sub_str) removes angle brackets</span>
+        <span class="c1"># &lt;THIS IS INSIDE&gt; --&gt; THIS IS INSIDE</span>
+        <span class="k">if</span> <span class="n">handle_angle_brackets</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_angle_brackets</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_angle_brackets_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_angle_brackets</span><span class="p">)</span>
+
+        <span class="c1">#  6 (regex, sub_str) replaces % for a percent word 56% --&gt; 56 PERCENT</span>
+        <span class="k">if</span> <span class="n">replace_percent_sign</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_percent_sign</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_percent_sign_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_percent_sign</span><span class="p">)</span>
+
+        <span class="c1">#  7</span>
+        <span class="k">if</span> <span class="n">handle_leading_digit_punct</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_leading_digit_punct</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_leading_digit_punctuation_regex</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_leading_digit_punct</span><span class="p">)</span>
+
+        <span class="c1">#  8</span>
+        <span class="k">if</span> <span class="n">remove_leading_punct</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_leading_punct</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_leading_punctuation_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_leading_punct</span><span class="p">)</span>
+
+        <span class="c1">#  9</span>
+        <span class="k">if</span> <span class="n">remove_trailing_punct</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_trailing_punct</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_trailing_punctuation_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_trailing_punct</span><span class="p">)</span>
+
+        <span class="c1">#  10</span>
+        <span class="k">if</span> <span class="n">handle_words_with_punct_spacing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_words_with_punct_spacing</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_words_with_punct_spacing_regex</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_words_with_punct_spacing</span><span class="p">)</span>
+
+        <span class="c1">#  11</span>
+        <span class="k">if</span> <span class="n">handle_math_spacing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_math_spacing</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_math_spacing_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_math_spacing</span><span class="p">)</span>
+
+        <span class="c1">#  12</span>
+        <span class="k">if</span> <span class="n">handle_dimension_spacing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_dimension_spacing</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_dimension_spacing_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_dimension_spacing</span><span class="p">)</span>
+
+        <span class="c1">#  13</span>
+        <span class="k">if</span> <span class="n">handle_measure_spacing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_measure_spacing</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_measure_spacing_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_measure_spacing</span><span class="p">)</span>
+
+        <span class="c1">#  14</span>
+        <span class="k">if</span> <span class="n">handle_cassettes_spacing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_cassette_spacing</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_cassettes_spacing_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_cassette_spacing</span><span class="p">)</span>
+
+        <span class="c1">#  15</span>
+        <span class="k">if</span> <span class="n">handle_dash_digit_spacing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_dash_spacing</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_dash_digits_spacing_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_dash_spacing</span><span class="p">)</span>
+
+        <span class="c1">#  16</span>
+        <span class="k">if</span> <span class="n">handle_literals_floats_spacing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_literals_floats_spacing</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_literals_floats_spacing_regex</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_literals_floats_spacing</span><span class="p">)</span>
+
+        <span class="c1">#  17</span>
+        <span class="k">if</span> <span class="n">fix_pluralization</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_fix_pluralization</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_fix_pluralization_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_fix_pluralization</span><span class="p">)</span>
+
+        <span class="c1">#  18</span>
+        <span class="k">if</span> <span class="n">handle_digits_words_spacing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_digits_words_spacing</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_digits_words_spacing_regex</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_digits_words_spacing</span><span class="p">)</span>
+
+        <span class="c1">#  19 remove phone numbers</span>
+        <span class="k">if</span> <span class="n">remove_phone_numbers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_phone_numbers</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_phone_number_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_phone_numbers</span><span class="p">)</span>
+
+        <span class="c1">#  20 remove dates and times</span>
+        <span class="k">if</span> <span class="n">remove_dates</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_dates</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_dates_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_dates</span><span class="p">)</span>
+
+        <span class="c1">#  21 remove time</span>
+        <span class="k">if</span> <span class="n">remove_times</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_time</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_time_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_time</span><span class="p">)</span>
+
+        <span class="c1">#  22 remove addresses</span>
+        <span class="k">if</span> <span class="n">remove_addresses</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_address</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_address_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_address</span><span class="p">)</span>
+
+        <span class="c1">#  23 dimension substitution</span>
+        <span class="k">if</span> <span class="n">remove_dimensions</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_dimensions</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_dimensions_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_dimensions</span><span class="p">)</span>
+
+        <span class="c1">#  24 specimen</span>
+        <span class="k">if</span> <span class="n">remove_specimen</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_specimen</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_specimen_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_specimen</span><span class="p">)</span>
+
+        <span class="c1">#  25</span>
+        <span class="k">if</span> <span class="n">remove_decimal_seg_numbers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_decimal_seg_numbers</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_decimal_segmented_numbers_regex</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_decimal_seg_numbers</span><span class="p">)</span>
+
+        <span class="c1">#  26</span>
+        <span class="k">if</span> <span class="n">remove_large_digits_seq</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_large_digits_seq</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_large_digits_seq_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_large_digits_seq</span><span class="p">)</span>
+
+        <span class="c1">#  27</span>
+        <span class="k">if</span> <span class="n">remove_large_floats_seq</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_large_floats_seq</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_large_float_seq_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_large_floats_seq</span><span class="p">)</span>
+
+        <span class="c1">#  28</span>
+        <span class="k">if</span> <span class="n">trunc_decimals</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_trunc_decimals</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_trunc_decimals_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_trunc_decimals</span><span class="p">)</span>
+
+        <span class="c1">#  29</span>
+        <span class="k">if</span> <span class="n">remove_cassette_names</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_cassette_names</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_cassette_name_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_cassette_names</span><span class="p">)</span>
+
+        <span class="c1"># 30</span>
+        <span class="k">if</span> <span class="n">remove_duration_time</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_duration_time</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_duration_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_duration_time</span><span class="p">)</span>
+
+        <span class="c1"># 31</span>
+        <span class="k">if</span> <span class="n">remove_letter_num_seq</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_letter_num_seq</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_letter_num_seq_regex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_letter_num_seq</span><span class="p">)</span>
+
+        <span class="c1">#  LAST condense spacing - not configurable, always executes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_spaces</span> <span class="o">=</span> <span class="n">regex_lib</span><span class="o">.</span><span class="n">get_spaces_regex</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_sub_spaces</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Dakota Murdock, Patrycja Krawczuk - Oak Ridge National Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

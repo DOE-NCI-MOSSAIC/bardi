@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bardi.pipeline &mdash; bardi 0.3.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=4621528c"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            bardi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basic.html">Basic Package Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced.html">Advanced Package Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bardi.data.html">bardi.data package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bardi.nlp_engineering.html">bardi.nlp_engineering package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">bardi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">bardi.pipeline</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for bardi.pipeline</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Defines a pipeline and a framework for steps to run in it&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tracemalloc</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">pyarrow</span> <span class="k">as</span> <span class="nn">pa</span>
+
+<span class="kn">from</span> <span class="nn">bardi.data</span> <span class="kn">import</span> <span class="n">data_handlers</span>
+<span class="kn">from</span> <span class="nn">bardi.data.data_handlers</span> <span class="kn">import</span> <span class="n">Dataset</span>
+
+
+<div class="viewcode-block" id="DataWriteConfig">
+<a class="viewcode-back" href="../../bardi.html#bardi.pipeline.DataWriteConfig">[docs]</a>
+<span class="k">class</span> <span class="nc">DataWriteConfig</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">data_format</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">data_format_args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="Step">
+<a class="viewcode-back" href="../../bardi.html#bardi.pipeline.Step">[docs]</a>
+<span class="k">class</span> <span class="nc">Step</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Blueprint for creating new steps for data pre-processing pipelines&quot;&quot;&quot;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_write_config</span><span class="p">:</span> <span class="n">DataWriteConfig</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;data_format&quot;</span><span class="p">:</span> <span class="s2">&quot;parquet&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_format_args&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;compression&quot;</span><span class="p">:</span> <span class="s2">&quot;snappy&quot;</span><span class="p">,</span> <span class="s2">&quot;use_dictionary&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="p">}</span>  <span class="c1"># Default write config</span>
+
+<div class="viewcode-block" id="Step.run">
+<a class="viewcode-back" href="../../bardi.html#bardi.pipeline.Step.run">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">,</span>
+        <span class="n">artifacts</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implement a run method in the step that will be called by the</span>
+<span class="sd">        pipeline&#39;s run_pipeline method.</span>
+
+<span class="sd">        :param data: Expect to receive a PyArrow table of data</span>
+<span class="sd">        :type data: PyArrow.Table</span>
+<span class="sd">        :param artifacts: Expect to receive a dict of artifacts from preceding steps,</span>
+<span class="sd">            but artifacts can be ignored in the method if values are not needed from it</span>
+
+<span class="sd">        :return: If the method performs a transformation of data then return</span>
+<span class="sd">            the data as a PyArrow table. This will replace the pipeline</span>
+<span class="sd">            object&#39;s processed_data attribute. If the method creates new artifacts</span>
+<span class="sd">            besides the data, return a dictionary with keys corresponding to the name of</span>
+<span class="sd">            the artifact and the values being the artifact&#39;s data or value</span>
+<span class="sd">        :rtype: Tuple[Union[pa.Table, None], Union[dict, None]]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Step.set_write_config">
+<a class="viewcode-back" href="../../bardi.html#bardi.pipeline.Step.set_write_config">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_write_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_config</span><span class="p">:</span> <span class="n">DataWriteConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Default implementation of the set_write_config method.</span>
+
+<span class="sd">        Provide a method to customize the write configuration</span>
+<span class="sd">        used by the step&#39;s write_outputs method if desired.</span>
+
+<span class="sd">        :param data_config: A dictionary defining the data_format</span>
+<span class="sd">            (i.e., parquet, csv, etc.) and any particular data_format_args</span>
+<span class="sd">            available in the pyarrow API.</span>
+<span class="sd">        :type data_config: DataWriteConfig</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_write_config</span> <span class="o">=</span> <span class="n">data_config</span></div>
+
+
+<div class="viewcode-block" id="Step.get_parameters">
+<a class="viewcode-back" href="../../bardi.html#bardi.pipeline.Step.get_parameters">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Default implementation of the get_parameters method.</span>
+
+<span class="sd">        Called by the pipeline&#39;s get_parameters method. Implement a custom</span>
+<span class="sd">        method if needed, such as removing large items from the dictionary.</span>
+
+<span class="sd">        :return: A dictionary copy of the object&#39;s configuration.</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">params</span></div>
+
+
+<div class="viewcode-block" id="Step.write_data">
+<a class="viewcode-back" href="../../bardi.html#bardi.pipeline.Step.write_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">write_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+        <span class="n">data_filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Default implementation of the write_data method.</span>
+
+<span class="sd">        Reuse existing write patterns that exist in the data handlers.</span>
+
+<span class="sd">        :param write_path: A directory where a file will be written.</span>
+<span class="sd">        :type write_path: str</span>
+<span class="sd">        :param data: PyArrow Table of data.</span>
+<span class="sd">        :type data: Union[pa.Table, None]</span>
+<span class="sd">        :param data_filename: Overwrite default file name (no filetype extension).</span>
+<span class="sd">        :type data_filename: Union[str, None]</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Add the filename with the appropriate filetype extension to the write path</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data_filename</span><span class="p">:</span>
+            <span class="n">data_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">Data&quot;</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">write_path</span><span class="p">,</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">data_filename</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_write_config</span><span class="p">[</span><span class="s2">&quot;data_format&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="c1"># Call the data handler write_file function</span>
+        <span class="n">data_handlers</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">path</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span>
+            <span class="nb">format</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_write_config</span><span class="p">[</span><span class="s2">&quot;data_format&quot;</span><span class="p">],</span>
+            <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_write_config</span><span class="p">[</span><span class="s2">&quot;data_format_args&quot;</span><span class="p">],</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Step.write_artifacts">
+<a class="viewcode-back" href="../../bardi.html#bardi.pipeline.Step.write_artifacts">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_artifacts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">write_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">artifacts</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Default implementation of the write_artifacts method.</span>
+
+<span class="sd">        Since only some steps require this method, the default behavior is &#39;pass&#39;.</span>
+
+<span class="sd">        Implement a custom method to write the specific artifacts produced</span>
+<span class="sd">        in the step.</span>
+
+<span class="sd">        :param write_path: A directory where a file should be written.</span>
+<span class="sd">        :type write_path: str</span>
+<span class="sd">        :param artifacts: Union[dict, None]</span>
+<span class="sd">        :type artifacts: Union[dict, None]</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Pipeline">
+<a class="viewcode-back" href="../../bardi.html#bardi.pipeline.Pipeline">[docs]</a>
+<span class="k">class</span> <span class="nc">Pipeline</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Organize Steps into a pipeline to operate on data from a Dataset&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">dataset</span><span class="p">:</span> <span class="n">Dataset</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">write_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">write_outputs</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;pipeline-outputs&quot;</span><span class="p">,</span> <span class="s2">&quot;debug&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;pipeline-outputs&quot;</span><span class="p">,</span>
+        <span class="n">data_write_config</span><span class="p">:</span> <span class="n">DataWriteConfig</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">data_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bardi_processed_data&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a pipeline for organizing data pre-processing steps.</span>
+
+<span class="sd">        :param dataset: A bardi dataset object with data to pre-process.</span>
+<span class="sd">        :type dataset: bardi.data.data_handlers.Dataset</span>
+<span class="sd">        :param write_path: Directory in the file system to write outputs to.</span>
+<span class="sd">        :type write_path: str</span>
+<span class="sd">        :param write_outputs: Configuration for which outputs to write.</span>
+<span class="sd">            - &#39;pipeline-outputs&#39; will write all artifacts and final data.</span>
+<span class="sd">            - &#39;debug&#39; will write all artifacts and data from each step.</span>
+<span class="sd">            - False will not write any files.</span>
+<span class="sd">        :type write_outputs: Literal[&quot;pipeline-outputs&quot;, &quot;debug&quot;, False]</span>
+<span class="sd">        :param data_write_config: Supply a custom write configuration specifying</span>
+<span class="sd">            file types. Default will save data as parquet files.</span>
+<span class="sd">        :type data_write_config: DataWriteConfig</span>
+<span class="sd">        :param data_filename: Supply a filename for the final output data.</span>
+<span class="sd">        :type data_filename: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Reference a bardi dataset object that the pipeline will operate on</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">:</span> <span class="n">Dataset</span> <span class="o">=</span> <span class="n">dataset</span>
+
+        <span class="c1"># Pipeline configuration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Step</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_outputs</span> <span class="o">=</span> <span class="n">write_outputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_path</span> <span class="o">=</span> <span class="n">write_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_filename</span> <span class="o">=</span> <span class="n">data_filename</span>
+
+        <span class="c1"># File writing configuration</span>
+        <span class="k">if</span> <span class="n">data_write_config</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_write_config</span> <span class="o">=</span> <span class="n">data_write_config</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_write_config</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;data_format&quot;</span><span class="p">:</span> <span class="s2">&quot;parquet&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;data_format_args&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;compression&quot;</span><span class="p">:</span> <span class="s2">&quot;snappy&quot;</span><span class="p">,</span> <span class="s2">&quot;use_dictionary&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+            <span class="p">}</span>  <span class="c1"># Default config, but can be overwritten</span>
+        <span class="k">if</span> <span class="n">write_outputs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">write_path</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Pipeline write_outputs was configured to &quot;</span>
+                    <span class="s2">&quot;write, however a write_path was not &quot;</span>
+                    <span class="s2">&quot;correctly specified. Please provide a &quot;</span>
+                    <span class="s2">&quot;path to a directory to write files into.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Tracking information produced during pipeline execution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">artifacts</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">performance</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="Pipeline.add_step">
+<a class="viewcode-back" href="../../bardi.html#bardi.pipeline.Pipeline.add_step">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">Step</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a step object to the list of pipeline execution steps.</span>
+
+<span class="sd">        Also overwrites the step&#39;s data write configuration with a consistent</span>
+<span class="sd">        pipeline data write configuration.</span>
+
+<span class="sd">        :param step: A Step object to be added to the list of pipeline execution steps.</span>
+<span class="sd">        :type step: Step</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">Step</span><span class="p">):</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">set_write_config</span><span class="p">(</span><span class="n">data_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_write_config</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;Only objects of type Step may be added to &quot;</span> <span class="s2">&quot;a bardi pipeline.&quot;</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Pipeline.run_pipeline">
+<a class="viewcode-back" href="../../bardi.html#bardi.pipeline.Pipeline.run_pipeline">[docs]</a>
+    <span class="k">def</span> <span class="nf">run_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the run and write_outputs method for each respective step</span>
+<span class="sd">        object added to the pipeline.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">,</span> <span class="n">Dataset</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">processed_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;Pipeline&#39;s Dataset must reference a bardi &quot;</span>
+                <span class="s2">&quot;Dataset object. Please utilize bardi&#39;s data_&quot;</span>
+                <span class="s2">&quot;handlers to create a bardi Dataset object with &quot;</span>
+                <span class="s2">&quot;your data.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># For each step of the pipeline, call its run method</span>
+        <span class="n">pipeline_start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">step_position</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># Call the run method and time the execution</span>
+            <span class="n">step_start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="n">tracemalloc</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">processed_data</span><span class="p">,</span> <span class="n">artifacts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">artifacts</span><span class="p">)</span>
+            <span class="n">step_max_mem</span> <span class="o">=</span> <span class="n">tracemalloc</span><span class="o">.</span><span class="n">get_traced_memory</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000000</span>
+            <span class="n">tracemalloc</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="n">step_end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="n">step_run_time</span> <span class="o">=</span> <span class="n">step_end_time</span> <span class="o">-</span> <span class="n">step_start_time</span>
+
+            <span class="c1"># Record the performance</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_outputs</span> <span class="o">==</span> <span class="s2">&quot;debug&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">step</span><span class="p">))</span><span class="si">}</span><span class="s2"> run time: </span><span class="si">{</span><span class="n">step_run_time</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">step</span><span class="p">))</span><span class="si">}</span><span class="s2"> max memory (MB): </span><span class="si">{</span><span class="n">step_max_mem</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">performance</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">step</span><span class="p">))]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">step_run_time</span><span class="p">),</span>
+                <span class="s2">&quot;memory (MB)&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">step_max_mem</span><span class="p">),</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">):</span>
+                    <span class="c1"># Set the pipeline&#39;s processed_data attribute to the newest result</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">processed_data</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                    <span class="c1"># Write the step&#39;s data output to a file if pipeline is configured</span>
+                    <span class="c1"># to do so</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_outputs</span> <span class="o">==</span> <span class="s2">&quot;debug&quot;</span><span class="p">:</span>
+                        <span class="n">step</span><span class="o">.</span><span class="n">write_data</span><span class="p">(</span>
+                            <span class="n">write_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">write_path</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">processed_data</span>
+                        <span class="p">)</span>
+                    <span class="k">elif</span> <span class="p">(</span>
+                        <span class="n">step_position</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span>
+                        <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_outputs</span> <span class="o">==</span> <span class="s2">&quot;pipeline-outputs&quot;</span>
+                    <span class="p">):</span>
+                        <span class="n">step</span><span class="o">.</span><span class="n">write_data</span><span class="p">(</span>
+                            <span class="n">write_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">write_path</span><span class="p">,</span>
+                            <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">processed_data</span><span class="p">,</span>
+                            <span class="n">data_filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_filename</span><span class="p">,</span>
+                        <span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="c1"># If artifacts were returned by the step, add them to</span>
+                    <span class="c1"># the pipeline&#39;s total set of artifacts</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">artifacts</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">artifacts</span><span class="p">,</span> <span class="o">**</span><span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
+
+                    <span class="c1"># Write the step&#39;s artifacts to files if pipeline is configured</span>
+                    <span class="c1"># to do so</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_outputs</span><span class="p">:</span>
+                        <span class="n">step</span><span class="o">.</span><span class="n">write_artifacts</span><span class="p">(</span>
+                            <span class="n">write_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">write_path</span><span class="p">,</span> <span class="n">artifacts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">artifacts</span>
+                        <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s2">&quot;Pipeline expected step to return a tuple of &quot;</span>
+                    <span class="s2">&quot;PyArrow Table of data and a dictionary of &quot;</span>
+                    <span class="s2">&quot;artifacts. If the step doesn&#39;t return one of &quot;</span>
+                    <span class="s2">&quot;these, that position in the tuple can be &quot;</span>
+                    <span class="s2">&quot;empty, but it still needs to return a tuple.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Record the total pipeline performance</span>
+        <span class="n">pipeline_end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">pipeline_run_time</span> <span class="o">=</span> <span class="n">pipeline_end_time</span> <span class="o">-</span> <span class="n">pipeline_start_time</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_outputs</span> <span class="o">==</span> <span class="s2">&quot;debug&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pipeline run time: </span><span class="si">{</span><span class="n">pipeline_run_time</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">performance</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">))]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">pipeline_run_time</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Pipeline.get_parameters">
+<a class="viewcode-back" href="../../bardi.html#bardi.pipeline.Pipeline.get_parameters">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condensed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the parameters of the pipeline&#39;s dataset and parameters of each step.</span>
+
+<span class="sd">        :param condensed: If True, the step configuration dictionary will exclude any</span>
+<span class="sd">            attributes set to None or False.</span>
+<span class="sd">        :type condensed: bool</span>
+
+<span class="sd">        :return: Dictionary of parameters used to configure each pipeline step object.</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">pipeline_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;performance&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+
+        <span class="c1"># Get parameters for the pipeline&#39;s dataset</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">:</span>
+            <span class="n">dataset_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_parameters</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">condensed</span><span class="p">:</span>
+                <span class="n">condensed_params</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="n">dataset_params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">dataset_params</span><span class="p">[</span><span class="n">attribute</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+                        <span class="n">condensed_params</span><span class="p">[</span><span class="n">attribute</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataset_params</span><span class="p">[</span><span class="n">attribute</span><span class="p">]</span>
+                <span class="n">pipeline_params</span><span class="p">[</span><span class="s2">&quot;dataset&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">))]</span> <span class="o">=</span> <span class="n">condensed_params</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pipeline_params</span><span class="p">[</span><span class="s2">&quot;dataset&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">))]</span> <span class="o">=</span> <span class="n">dataset_params</span>
+
+        <span class="c1"># Get parameters for each step in the pipeline</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">):</span>
+            <span class="n">step_params</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">get_parameters</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">condensed</span><span class="p">:</span>
+                <span class="n">condensed_params</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="n">step_params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">step_params</span><span class="p">[</span><span class="n">attribute</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+                        <span class="n">condensed_params</span><span class="p">[</span><span class="n">attribute</span><span class="p">]</span> <span class="o">=</span> <span class="n">step_params</span><span class="p">[</span><span class="n">attribute</span><span class="p">]</span>
+                <span class="n">pipeline_params</span><span class="p">[</span><span class="s2">&quot;steps&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">step</span><span class="p">))]</span> <span class="o">=</span> <span class="n">condensed_params</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pipeline_params</span><span class="p">[</span><span class="s2">&quot;steps&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">step</span><span class="p">))]</span> <span class="o">=</span> <span class="n">step_params</span>
+
+        <span class="c1"># Get the pipeline performance</span>
+        <span class="n">pipeline_params</span><span class="p">[</span><span class="s2">&quot;performance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">performance</span>
+
+        <span class="k">return</span> <span class="n">pipeline_params</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Dakota Murdock, Patrycja Krawczuk - Oak Ridge National Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advanced Package Usage &mdash; bardi 0.3.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=4621528c"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="bardi.data package" href="bardi.data.html" />
+    <link rel="prev" title="Basic Package Usage" href="basic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bardi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic.html">Basic Package Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced Package Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#normalizer-customizations">Normalizer Customizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-custom-pipeline-step">Creating a Custom Pipeline Step</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.data.html">bardi.data package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.nlp_engineering.html">bardi.nlp_engineering package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bardi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Advanced Package Usage</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/advanced.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="advanced-package-usage">
+<h1>Advanced Package Usage<a class="headerlink" href="#advanced-package-usage" title="Link to this heading"></a></h1>
+<section id="normalizer-customizations">
+<h2>Normalizer Customizations<a class="headerlink" href="#normalizer-customizations" title="Link to this heading"></a></h2>
+<p>Documentation References:
+<a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.normalizer.CPUNormalizer" title="bardi.nlp_engineering.normalizer.CPUNormalizer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bardi.nlp_engineering.normalizer.CPUNormalizer</span></code></a>
+<a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet" title="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet</span></code></a></p>
+<p>The normalizer needs a regular expression set (regex_set) to apply to the text. A regex_set is just a Python list of dictionaries
+containing a key for the regular expression, <cite>regex_str</cite>, and a key for the substitution string, <cite>sub_str</cite>. There are a few methods you
+can use to customize what regular expressions are applied to your text.</p>
+<ol class="arabic">
+<li><p>Tuning a Provided bardi RegexSet</p>
+<blockquote>
+<div><p>An existing RegexSet is tunable by turning individual regular expressions off and on as desired. By default, all are
+turned on, so you would just need to turn off the ones you don’t want to use.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bardi.nlp_engineering.regex_library.pathology_report</span> <span class="kn">import</span> <span class="n">PathologyReportRegexSet</span>
+
+<span class="c1"># grabbing a pre-made regex set for normalizing pathology reports</span>
+<span class="c1"># turning off 3 of the regular expression substitutions I don&#39;t want to use</span>
+<span class="n">path_report_regex_set</span> <span class="o">=</span> <span class="n">PathologyReportRegexSet</span><span class="p">()</span><span class="o">.</span><span class="n">get_regex_set</span><span class="p">(</span>
+    <span class="n">remove_dimensions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">remove_specimen</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">remove_decimal_seg_number</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Using Python Built-in Types to Write a Custom Set</p>
+<blockquote>
+<div><p>Nothing is stopping you from writing your own set of regular expressions and providing that to the normalizer.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creating custom regular expression set</span>
+<span class="n">custom_regex_set</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="s1">&#39;\s&#39;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="s1">&#39;http[s]?\://\S+&#39;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s1">&#39;URLTOKEN&#39;</span><span class="p">}</span>
+<span class="p">]</span>
+
+<span class="c1"># Supplying custom regex set to Normalizer</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+    <span class="n">nlp_engineering</span><span class="o">.</span><span class="n">CPUNormalizer</span><span class="p">(</span>
+        <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">],</span>
+        <span class="n">regex_set</span><span class="o">=</span><span class="n">custom_regex_set</span><span class="p">,</span>
+        <span class="n">lowercase</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Using the bardi RegexSet Class to Write a Custom Set</p>
+<blockquote>
+<div><p>However, if you would like a more organized approach [than the method shown above] to handle your custom regular expression sets,
+you could follow our lead by creating a new class and inherit from our RegexSet class. The RegexSet class you are inheriting
+from gives you an attribute <cite>regex_set</cite>, which is a list of your regular expression substitution pairs, and the method to
+return this attribute, <cite>get_regex_set()</cite></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bardi.nlp_engineering.regex_library.regex_set</span> <span class="kn">import</span> <span class="n">RegexSet</span>
+
+
+<span class="c1"># Creating a custom regex set class inheriting from bardi RegexSet</span>
+<span class="k">class</span> <span class="nc">MyCustomRegexSet</span><span class="p">(</span><span class="n">RegexSet</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">handle_whitespace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">convert_urls</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">handle_whitespace</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="s1">&#39;\s&#39;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">convert_urls</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="s1">&#39;http[s]?\://\S+&#39;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s1">&#39;URLTOKEN&#39;</span><span class="p">}</span>
+            <span class="p">)</span>
+
+
+<span class="c1"># Supplying custom regex set to Normalizer</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+    <span class="n">nlp_engineering</span><span class="o">.</span><span class="n">CPUNormalizer</span><span class="p">(</span>
+        <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">],</span>
+        <span class="n">regex_set</span><span class="o">=</span><span class="n">MyCustomRegexSet</span><span class="o">.</span><span class="n">get_regex_set</span><span class="p">(),</span>
+        <span class="n">lowercase</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+</section>
+<section id="creating-a-custom-pipeline-step">
+<h2>Creating a Custom Pipeline Step<a class="headerlink" href="#creating-a-custom-pipeline-step" title="Link to this heading"></a></h2>
+<p>Documentation References:</p>
+<p>We have provided some out-of-the-box pipeline steps, and hope to continue adding more helpful steps, but we don’t
+expect to provide every possibility of data pre-processing action you could ever need. So, what if we don’t have
+something built that you need? Create your own custom step! By following these guidelines you can create a step
+that will run within our pipeline, alongside any of the steps we provide, and have all of your custom step’s
+metadata captured in the standard metadata file.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="basic.html" class="btn btn-neutral float-left" title="Basic Package Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="bardi.data.html" class="btn btn-neutral float-right" title="bardi.data package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Dakota Murdock, Patrycja Krawczuk - Oak Ridge National Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

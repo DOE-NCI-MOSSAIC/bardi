@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to bardi’s documentation! &mdash; bardi 0.3.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=4621528c"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            bardi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic.html">Basic Package Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Package Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.html">bardi.pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.data.html">bardi.data package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.nlp_engineering.html">bardi.nlp_engineering package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">bardi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Welcome to bardi’s documentation!</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="welcome-to-bardi-s-documentation">
+<h1>Welcome to bardi’s documentation!<a class="headerlink" href="#welcome-to-bardi-s-documentation" title="Link to this heading"></a></h1>
+<p><strong>bardi</strong> (Batch-processing Abstraction for Raw Data Integration) is a framework for building
+reproducible data pre-processing pipelines for both model training and inference machine
+learning workflows.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic.html">Basic Package Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#preparing-a-sample-set-of-data">Preparing a Sample Set of Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#register-the-sample-data-as-a-bardi-dataset">Register the Sample Data as a Bardi Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#initialize-a-pre-processing-pipeline">Initialize a Pre-Processing Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#adding-a-normalizer-to-our-pipeline">Adding a Normalizer to our Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#adding-a-pretokenizer">Adding a PreTokenizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#adding-an-embeddinggenerator">Adding an EmbeddingGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#adding-a-postprocessor">Adding a PostProcessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#adding-a-labelprocessor">Adding a LabelProcessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#running-the-pipeline">Running the Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#results">Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#collecting-metadata">Collecting Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic.html#full-tutorial-script">Full Tutorial Script</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Package Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced.html#normalizer-customizations">Normalizer Customizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced.html#creating-a-custom-pipeline-step">Creating a Custom Pipeline Step</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.html">bardi.pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bardi.html#module-bardi.pipeline">bardi.pipeline module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bardi.html#bardi.pipeline.DataWriteConfig"><code class="docutils literal notranslate"><span class="pre">DataWriteConfig</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.html#bardi.pipeline.Pipeline"><code class="docutils literal notranslate"><span class="pre">Pipeline</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.html#bardi.pipeline.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.data.html">bardi.data package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bardi.data.html#module-bardi.data.data_handlers">bardi.data.data_handlers module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bardi.data.html#bardi.data.data_handlers.Dataset"><code class="docutils literal notranslate"><span class="pre">Dataset</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.data.html#bardi.data.data_handlers.from_duckdb"><code class="docutils literal notranslate"><span class="pre">from_duckdb()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.data.html#bardi.data.data_handlers.from_file"><code class="docutils literal notranslate"><span class="pre">from_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.data.html#bardi.data.data_handlers.from_json"><code class="docutils literal notranslate"><span class="pre">from_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.data.html#bardi.data.data_handlers.from_pandas"><code class="docutils literal notranslate"><span class="pre">from_pandas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.data.html#bardi.data.data_handlers.from_pyarrow"><code class="docutils literal notranslate"><span class="pre">from_pyarrow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.data.html#bardi.data.data_handlers.to_pandas"><code class="docutils literal notranslate"><span class="pre">to_pandas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.data.html#bardi.data.data_handlers.to_polars"><code class="docutils literal notranslate"><span class="pre">to_polars()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.data.html#bardi.data.data_handlers.write_file"><code class="docutils literal notranslate"><span class="pre">write_file()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.nlp_engineering.html">bardi.nlp_engineering package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bardi.nlp_engineering.html#module-bardi.nlp_engineering.normalizer">bardi.nlp_engineering.normalizer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.normalizer.CPUNormalizer"><code class="docutils literal notranslate"><span class="pre">CPUNormalizer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.normalizer.Normalizer"><code class="docutils literal notranslate"><span class="pre">Normalizer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bardi.nlp_engineering.html#module-bardi.nlp_engineering.pre_tokenizer">bardi.nlp_engineering.pre_tokenizer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.pre_tokenizer.CPUPreTokenizer"><code class="docutils literal notranslate"><span class="pre">CPUPreTokenizer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.pre_tokenizer.PreTokenizer"><code class="docutils literal notranslate"><span class="pre">PreTokenizer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bardi.nlp_engineering.html#module-bardi.nlp_engineering.embedding_generator">bardi.nlp_engineering.embedding_generator module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.embedding_generator.CPUEmbeddingGenerator"><code class="docutils literal notranslate"><span class="pre">CPUEmbeddingGenerator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.embedding_generator.EmbeddingGenerator"><code class="docutils literal notranslate"><span class="pre">EmbeddingGenerator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.embedding_generator.EmbeddingGeneratorArtifactsWriteConfig"><code class="docutils literal notranslate"><span class="pre">EmbeddingGeneratorArtifactsWriteConfig</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bardi.nlp_engineering.html#module-bardi.nlp_engineering.post_processor">bardi.nlp_engineering.post_processor module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.post_processor.CPUPostProcessor"><code class="docutils literal notranslate"><span class="pre">CPUPostProcessor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.post_processor.PostProcessor"><code class="docutils literal notranslate"><span class="pre">PostProcessor</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bardi.nlp_engineering.html#module-bardi.nlp_engineering.label_processor">bardi.nlp_engineering.label_processor module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.label_processor.CPULabelProcessor"><code class="docutils literal notranslate"><span class="pre">CPULabelProcessor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.label_processor.LabelProcessor"><code class="docutils literal notranslate"><span class="pre">LabelProcessor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.label_processor.LabelProcessorArtifactsWriteConfig"><code class="docutils literal notranslate"><span class="pre">LabelProcessorArtifactsWriteConfig</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bardi.nlp_engineering.html#module-bardi.nlp_engineering.splitter">bardi.nlp_engineering.splitter module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.splitter.CPUSplitter"><code class="docutils literal notranslate"><span class="pre">CPUSplitter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.splitter.MapSplit"><code class="docutils literal notranslate"><span class="pre">MapSplit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.splitter.NewSplit"><code class="docutils literal notranslate"><span class="pre">NewSplit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.splitter.Splitter"><code class="docutils literal notranslate"><span class="pre">Splitter</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Dakota Murdock, Patrycja Krawczuk - Oak Ridge National Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

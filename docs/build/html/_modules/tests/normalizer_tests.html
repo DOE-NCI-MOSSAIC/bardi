@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tests.normalizer_tests &mdash; bardi 0.3.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=4621528c"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            bardi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basic.html">Basic Package Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced.html">Advanced Package Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bardi.data.html">bardi.data package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bardi.nlp_engineering.html">bardi.nlp_engineering package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">bardi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tests.normalizer_tests</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tests.normalizer_tests</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span> <span class="nn">polars</span> <span class="k">as</span> <span class="nn">pl</span>
+
+<span class="kn">from</span> <span class="nn">bardi.nlp_engineering.normalizer</span> <span class="kn">import</span> <span class="n">CPUNormalizer</span>
+<span class="kn">from</span> <span class="nn">bardi.nlp_engineering.regex_library.pathology_report</span> <span class="kn">import</span> <span class="n">PathologyReportRegexSet</span>
+
+
+<div class="viewcode-block" id="TestNormalizer">
+<a class="viewcode-back" href="../../tests.html#tests.normalizer_tests.TestNormalizer">[docs]</a>
+<span class="k">class</span> <span class="nc">TestNormalizer</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests the normalizer&#39;s methods and the implementation</span>
+<span class="sd">    of regex substitutions. The individual regex functionalities</span>
+<span class="sd">    themselves are tested in a different test class.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TestNormalizer.setUp">
+<a class="viewcode-back" href="../../tests.html#tests.normalizer_tests.TestNormalizer.setUp">[docs]</a>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the common setup code needed</span>
+<span class="sd">        for all of the normalizer tests&quot;&quot;&quot;</span>
+        <span class="c1"># Mock polars DataFrame to test the correct behaviour.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;text_1&quot;</span><span class="p">:</span> <span class="s2">&quot;At 1234 north 500 west provo ca 12345.</span><span class="se">\n</span><span class="s2"> The speciment: sh-22-0011300 3.89 x4.56cm. Or 4.3 km. &quot;</span><span class="p">,</span>
+                <span class="s2">&quot;text_2&quot;</span><span class="p">:</span> <span class="s2">&quot;Call  123 456 7890 .This is: 0.8943&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">regex_set</span> <span class="o">=</span> <span class="n">PathologyReportRegexSet</span><span class="p">(</span>
+            <span class="n">handle_whitespaces</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">remove_special_punct</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">handle_angle_brackets</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">replace_percent_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">remove_phone_numbers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">remove_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">remove_addresses</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">get_regex_set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normalizer</span> <span class="o">=</span> <span class="n">CPUNormalizer</span><span class="p">(</span>
+            <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;text_1&quot;</span><span class="p">,</span> <span class="s2">&quot;text_2&quot;</span><span class="p">],</span>
+            <span class="n">regex_set</span><span class="o">=</span><span class="n">regex_set</span><span class="p">,</span>
+            <span class="n">lowercase</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestNormalizer.test_cpu_normalizer">
+<a class="viewcode-back" href="../../tests.html#tests.normalizer_tests.TestNormalizer.test_cpu_normalizer">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_cpu_normalizer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Do a full test of the CPU normalizer class ensuring</span>
+<span class="sd">        the overall output is what is expected&quot;&quot;&quot;</span>
+
+        <span class="n">data</span><span class="p">,</span> <span class="n">artifacts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalizer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">to_arrow</span><span class="p">(),</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># Compare expected output table to the test table that</span>
+        <span class="c1"># has been processed with the normalizer</span>
+        <span class="n">result_1</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="s2">&quot;text_1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">correct_1</span> <span class="o">=</span> <span class="s2">&quot;at ADDRESSTOKEN the speciment SPECIMENTOKEN DIMENSIONTOKEN cm or 4.3 km &quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
+            <span class="n">result_1</span><span class="p">,</span>
+            <span class="n">correct_1</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;The overall result of&quot;</span> <span class="s2">&quot; the normalizer does not match&quot;</span> <span class="s2">&quot;the expected output.&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="n">result_2</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="s2">&quot;text_2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">correct_2</span> <span class="o">=</span> <span class="s2">&quot;call PHONENUMTOKEN this is 0.8943&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
+            <span class="n">result_2</span><span class="p">,</span>
+            <span class="n">correct_2</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;The overall result of&quot;</span> <span class="s2">&quot; the normalizer does not match&quot;</span> <span class="s2">&quot;the expected output.&quot;</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestNormalizer.test_write_data">
+<a class="viewcode-back" href="../../tests.html#tests.normalizer_tests.TestNormalizer.test_write_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_write_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A test to ensure that the normalizer&#39;s write function</span>
+<span class="sd">        correctly produces a file as desired&quot;&quot;&quot;</span>
+        <span class="n">test_data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">(),</span> <span class="s2">&quot;tests&quot;</span><span class="p">,</span> <span class="s2">&quot;test_data&quot;</span><span class="p">,</span> <span class="s2">&quot;outputs&quot;</span><span class="p">)</span>
+
+        <span class="c1"># prepare test directory</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">test_data_dir</span><span class="p">):</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">test_data_dir</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">test_data_dir</span><span class="p">)</span>
+
+        <span class="n">test_formats</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;csv&quot;</span><span class="p">,</span> <span class="s2">&quot;parquet&quot;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">test_format</span> <span class="ow">in</span> <span class="n">test_formats</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">test_format</span> <span class="o">==</span> <span class="s2">&quot;parquet&quot;</span><span class="p">:</span>
+                <span class="n">write_config</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;data_format&quot;</span><span class="p">:</span> <span class="s2">&quot;parquet&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;data_format_args&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;compression&quot;</span><span class="p">:</span> <span class="s2">&quot;snappy&quot;</span><span class="p">,</span> <span class="s2">&quot;use_dictionary&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+                <span class="p">}</span>
+            <span class="k">elif</span> <span class="n">test_format</span> <span class="o">==</span> <span class="s2">&quot;csv&quot;</span><span class="p">:</span>
+                <span class="n">write_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data_format&quot;</span><span class="p">:</span> <span class="s2">&quot;csv&quot;</span><span class="p">,</span> <span class="s2">&quot;data_format_args&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">normalizer</span><span class="o">.</span><span class="n">set_write_config</span><span class="p">(</span><span class="n">write_config</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">artifacts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalizer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">to_arrow</span><span class="p">(),</span> <span class="n">artifacts</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">normalizer</span><span class="o">.</span><span class="n">write_data</span><span class="p">(</span><span class="n">write_path</span><span class="o">=</span><span class="n">test_data_dir</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+            <span class="n">test_data_contents</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">test_data_dir</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">test_file</span> <span class="ow">in</span> <span class="n">test_data_contents</span><span class="p">:</span>
+                <span class="n">test_file_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CPUNormalizerData.</span><span class="si">{</span><span class="n">test_format</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">test_file</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">test_file_match</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">written_test_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_data_dir</span><span class="p">,</span> <span class="n">test_file_match</span><span class="o">.</span><span class="n">string</span><span class="p">)</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">written_test_file_path</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Dakota Murdock, Patrycja Krawczuk - Oak Ridge National Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
