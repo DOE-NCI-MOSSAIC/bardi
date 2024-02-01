@@ -136,13 +136,7 @@
 pipeline data write configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>step</strong> (<a class="reference internal" href="#bardi.pipeline.Step" title="bardi.pipeline.Step"><em>Step</em></a>) – A Step object to be added to the list of pipeline execution steps.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
+<dd class="field-odd"><p><strong>step</strong> (<a class="reference internal" href="#bardi.pipeline.Step" title="bardi.pipeline.Step"><em>bardi.pipeline.Step</em></a>) – A bardi Step object to be added to the list of pipeline execution steps.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -170,14 +164,6 @@ attributes set to None or False.</p>
 <span class="sig-name descname"><span class="pre">run_pipeline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/bardi/pipeline.html#Pipeline.run_pipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.pipeline.Pipeline.run_pipeline" title="Link to this definition"></a></dt>
 <dd><p>Calls the run and write_outputs method for each respective step
 object added to the pipeline.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
 </dd></dl>
 
 </dd></dl>
@@ -212,7 +198,7 @@ pipeline’s run_pipeline method.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>PyArrow.Table</em>) – Expect to receive a PyArrow table of data</p></li>
-<li><p><strong>artifacts</strong> – Expect to receive a dict of artifacts from preceding steps,
+<li><p><strong>artifacts</strong> (<em>dict</em>) – Expect to receive a dict of artifacts from preceding steps,
 but artifacts can be ignored in the method if values are not needed from it</p></li>
 </ul>
 </dd>
@@ -237,15 +223,8 @@ the artifact and the values being the artifact’s data or value</p>
 used by the step’s write_outputs method if desired.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data_config</strong> (<a class="reference internal" href="#bardi.pipeline.DataWriteConfig" title="bardi.pipeline.DataWriteConfig"><em>DataWriteConfig</em></a>) – A dictionary defining the data_format
-(i.e., parquet, csv, etc.) and any particular data_format_args
-available in the pyarrow API.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
+<dd class="field-odd"><p><strong>data_config</strong> (<a class="reference internal" href="#bardi.pipeline.DataWriteConfig" title="bardi.pipeline.DataWriteConfig"><em>DataWriteConfig</em></a>) – A typed dictionary defining the data_format (i.e., parquet, csv, etc.)
+and any particular data_format_args available in the pyarrow API.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -261,14 +240,8 @@ in the step.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>write_path</strong> (<em>str</em>) – A directory where a file should be written.</p></li>
-<li><p><strong>artifacts</strong> (<em>Union</em><em>[</em><em>dict</em><em>, </em><em>None</em><em>]</em>) – Union[dict, None]</p></li>
+<li><p><strong>artifacts</strong> (<em>Union</em><em>[</em><em>dict</em><em>, </em><em>None</em><em>]</em>) – A dictionary of artifacts from the step that should be written to a file</p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -285,12 +258,6 @@ in the step.</p>
 <li><p><strong>data</strong> (<em>Union</em><em>[</em><em>pa.Table</em><em>, </em><em>None</em><em>]</em>) – PyArrow Table of data.</p></li>
 <li><p><strong>data_filename</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>None</em><em>]</em>) – Overwrite default file name (no filetype extension).</p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>

@@ -63,6 +63,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Package Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.html">bardi.pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bardi.data.html">bardi.data package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bardi.nlp_engineering.html">bardi.nlp_engineering package</a></li>
 </ul>
@@ -122,7 +123,7 @@ to create a pandas DataFrame from some example data and show some of the basic p
 </section>
 <section id="register-the-sample-data-as-a-bardi-dataset">
 <h2>Register the Sample Data as a Bardi Dataset<a class="headerlink" href="#register-the-sample-data-as-a-bardi-dataset" title="Link to this heading"></a></h2>
-<p>Now that we have some sample data in a DataFrame we will register it as a bardi dataset (<code class="xref py py-mod docutils literal notranslate"><span class="pre">bardi.data.Dataset</span></code>).</p>
+<p>Now that we have some sample data in a DataFrame we will register it as a bardi dataset (<a class="reference internal" href="bardi.data.html#bardi.data.data_handlers.Dataset" title="bardi.data.data_handlers.Dataset"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bardi.data.data_handlers.Dataset</span></code></a>).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bardi.data</span> <span class="kn">import</span> <span class="n">data_handlers</span>
 
 <span class="c1"># register a dataset</span>
@@ -134,7 +135,7 @@ we have built.</p>
 </section>
 <section id="initialize-a-pre-processing-pipeline">
 <h2>Initialize a Pre-Processing Pipeline<a class="headerlink" href="#initialize-a-pre-processing-pipeline" title="Link to this heading"></a></h2>
-<p>Now that we have the data registered, let’s set up a Pipeline (<code class="xref py py-mod docutils literal notranslate"><span class="pre">bardi.Pipeline</span></code>) to pre-process the data.</p>
+<p>Now that we have the data registered, let’s set up a Pipeline (<a class="reference internal" href="bardi.html#bardi.pipeline.Pipeline" title="bardi.pipeline.Pipeline"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bardi.pipeline.Pipeline</span></code></a>) to pre-process the data.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bardi.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
 
 <span class="c1"># initialize a pipeline</span>
@@ -161,7 +162,7 @@ we could add some steps.</p>
 <section id="adding-a-normalizer-to-our-pipeline">
 <h2>Adding a Normalizer to our Pipeline<a class="headerlink" href="#adding-a-normalizer-to-our-pipeline" title="Link to this heading"></a></h2>
 <p><a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.normalizer.CPUNormalizer" title="bardi.nlp_engineering.normalizer.CPUNormalizer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bardi.nlp_engineering.normalizer.CPUNormalizer</span></code></a>
-<a class="reference internal" href="bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet" title="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet</span></code></a></p>
+<a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet" title="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet</span></code></a></p>
 <p>The normalizer’s key functionality is applying a set of regular expression substitutions to text.
 The normalizer also handles lowercasing text if desired. We need to specify the “fields” (AKA column names in the data)
 that we want the regular expression substitutions to be applied to. Then, we need to supply a set of regular expression
@@ -228,6 +229,7 @@ field_rename to a str of your desired column name.</p>
 </section>
 <section id="running-the-pipeline">
 <h2>Running the Pipeline<a class="headerlink" href="#running-the-pipeline" title="Link to this heading"></a></h2>
+<p><a class="reference internal" href="bardi.html#bardi.pipeline.Pipeline" title="bardi.pipeline.Pipeline"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bardi.pipeline.Pipeline</span></code></a></p>
 <p>Now that we have added all of the steps, let’s actually run the pipeline.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># run the pipeline</span>
 <span class="n">pipeline</span><span class="o">.</span><span class="n">run_pipeline</span><span class="p">()</span>

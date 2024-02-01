@@ -76,7 +76,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for bardi.data.data_handlers</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;bardi Dataset class stores a reference to data and relevant metadata&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Dataset class definition and data handler functions for loading datasets from various sources&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
@@ -109,11 +109,18 @@
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 
-<span class="sd">    data : PyArrow Table | List[PyArrow Table]</span>
+<span class="sd">    data : PyArrow.Table | List[PyArrow.Table]</span>
+<span class="sd">        The data table</span>
 <span class="sd">    origin_query : str</span>
+<span class="sd">        If a SQL data source was used by a data_handler function, the SQL query is</span>
+<span class="sd">        recorded here for reproducibility and data provenance.</span>
 <span class="sd">    origin_file_path : str</span>
+<span class="sd">        If a file was used as the data source by a data_handler function, the filepath</span>
+<span class="sd">        is recorded for reproducibility and data provenance.</span>
 <span class="sd">    origin_format : str</span>
+<span class="sd">        The format of the data source</span>
 <span class="sd">    origin_row_count : int</span>
+<span class="sd">        The total row count of the original dataset</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -156,14 +163,14 @@
 <span class="sd">    ----------</span>
 
 <span class="sd">    source : str, List[str]</span>
-<span class="sd">    Path to a single file, or list of paths</span>
+<span class="sd">        Path to a single file, or list of paths</span>
 <span class="sd">    format : str</span>
-<span class="sd">    Currently [&quot;parquet&quot;, &quot;ipc&quot;, &quot;arrow&quot;, &quot;feather&quot;, &quot;csv&quot;, &quot;orc&quot;] are</span>
-<span class="sd">    supported</span>
+<span class="sd">        Currently [&quot;parquet&quot;, &quot;ipc&quot;, &quot;arrow&quot;, &quot;feather&quot;, &quot;csv&quot;, &quot;orc&quot;] are</span>
+<span class="sd">        supported</span>
 <span class="sd">    min_batches : int</span>
-<span class="sd">    An integer number used to split the data into this amount of smaller</span>
-<span class="sd">    tables for distribution to worker nodes in distributed computing</span>
-<span class="sd">    environments.</span>
+<span class="sd">        An integer number used to split the data into this amount of smaller</span>
+<span class="sd">        tables for distribution to worker nodes in distributed computing</span>
+<span class="sd">        environments.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -498,7 +505,7 @@
 
 <span class="sd">    Only a subset of possible arguments are presented here. Additional arguments</span>
 <span class="sd">    can be passed for specific file types.</span>
-<span class="sd">    Reference PyArrow documentation for addition arguments.</span>
+<span class="sd">    Reference PyArrow documentation for additional arguments.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>

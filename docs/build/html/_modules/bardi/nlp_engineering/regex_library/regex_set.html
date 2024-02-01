@@ -46,6 +46,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../basic.html">Basic Package Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../advanced.html">Advanced Package Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../bardi.html">bardi.pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../bardi.data.html">bardi.data package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../bardi.nlp_engineering.html">bardi.nlp_engineering package</a></li>
 </ul>
@@ -81,17 +82,24 @@
 
 
 <div class="viewcode-block" id="RegexSubPair">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair">[docs]</a>
 <span class="k">class</span> <span class="nc">RegexSubPair</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Dictionary used for regular expression string substitutions</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        regex_str: regular expression pattern</span>
-<span class="sd">        sub_str: replacement value for matched string</span>
+<span class="sd">    Example of a regex sub pair dictionary: ::</span>
+<span class="sd">    </span>
+<span class="sd">        {</span>
+<span class="sd">            &quot;regex_str&quot;: r&quot;\\s&quot;,</span>
+<span class="sd">            &quot;sub_str&quot;: &quot;WHITESPACE&quot;</span>
+<span class="sd">        }</span>
 
-<span class="sd">    Example:</span>
-<span class="sd">        {&quot;regex_str&quot;: r&quot;\\s&quot;,</span>
-<span class="sd">         &quot;sub_str&quot;: &quot;WHITESPACE&quot;}</span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    regex_str : str </span>
+<span class="sd">        regular expression pattern</span>
+<span class="sd">    sub_str : str</span>
+<span class="sd">        replacement value for matched string</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">regex_str</span><span class="p">:</span> <span class="nb">str</span>
@@ -100,17 +108,31 @@
 
 
 <div class="viewcode-block" id="RegexSet">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_set.RegexSet">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_set.RegexSet">[docs]</a>
 <span class="k">class</span> <span class="nc">RegexSet</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Blueprint for creating a configurable, domain specific regular expression set&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Blueprint for creating a configurable, domain specific regular expression set</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    regex_set : List[RegexSubPair]</span>
+<span class="sd">        a list of regular expression substitution pairs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RegexSubPair</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="RegexSet.get_regex_set">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_set.RegexSet.get_regex_set">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_set.RegexSet.get_regex_set">[docs]</a>
     <span class="k">def</span> <span class="nf">get_regex_set</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">RegexSubPair</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the ordered set of regular expressions&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the ordered set of regular expressions</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        List[RegexSubPair]</span>
+<span class="sd">            a list of regular expression substitution pairs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span></div>
 </div>
 

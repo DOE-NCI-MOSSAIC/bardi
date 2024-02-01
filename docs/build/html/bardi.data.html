@@ -104,7 +104,7 @@
 <h1>bardi.data package<a class="headerlink" href="#bardi-data-package" title="Link to this heading"></a></h1>
 <section id="module-bardi.data.data_handlers">
 <span id="bardi-data-data-handlers-module"></span><h2>bardi.data.data_handlers module<a class="headerlink" href="#module-bardi.data.data_handlers" title="Link to this heading"></a></h2>
-<p>bardi Dataset class stores a reference to data and relevant metadata</p>
+<p>Dataset class definition and data handler functions for loading datasets from various sources</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="bardi.data.data_handlers.Dataset">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.data.data_handlers.</span></span><span class="sig-name descname"><span class="pre">Dataset</span></span><a class="reference internal" href="_modules/bardi/data/data_handlers.html#Dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.data.data_handlers.Dataset" title="Link to this definition"></a></dt>
@@ -115,9 +115,10 @@ starting point for both CPU &amp; GPU workflows.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="bardi.data.data_handlers.Dataset.data">
 <span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#bardi.data.data_handlers.Dataset.data" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>The data table</p>
+<dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>PyArrow Table | List[PyArrow Table]</p>
+<dd class="field-odd"><p>PyArrow.Table | List[PyArrow.Table]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -125,7 +126,9 @@ starting point for both CPU &amp; GPU workflows.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="bardi.data.data_handlers.Dataset.origin_query">
 <span class="sig-name descname"><span class="pre">origin_query</span></span><a class="headerlink" href="#bardi.data.data_handlers.Dataset.origin_query" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>If a SQL data source was used by a data_handler function, the SQL query is
+recorded here for reproducibility and data provenance.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
@@ -135,7 +138,9 @@ starting point for both CPU &amp; GPU workflows.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="bardi.data.data_handlers.Dataset.origin_file_path">
 <span class="sig-name descname"><span class="pre">origin_file_path</span></span><a class="headerlink" href="#bardi.data.data_handlers.Dataset.origin_file_path" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>If a file was used as the data source by a data_handler function, the filepath
+is recorded for reproducibility and data provenance.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
@@ -145,7 +150,8 @@ starting point for both CPU &amp; GPU workflows.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="bardi.data.data_handlers.Dataset.origin_format">
 <span class="sig-name descname"><span class="pre">origin_format</span></span><a class="headerlink" href="#bardi.data.data_handlers.Dataset.origin_format" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>The format of the data source</p>
+<dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
@@ -155,7 +161,8 @@ starting point for both CPU &amp; GPU workflows.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="bardi.data.data_handlers.Dataset.origin_row_count">
 <span class="sig-name descname"><span class="pre">origin_row_count</span></span><a class="headerlink" href="#bardi.data.data_handlers.Dataset.origin_row_count" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>The total row count of the original dataset</p>
+<dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
 </dd>
@@ -204,21 +211,12 @@ keyword arguments available for its API are available here.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>source</strong> (<em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em>) – </p></li>
-<li><p><strong>file</strong> (<em>Path to a single</em>) – </p></li>
-<li><p><strong>paths</strong> (<em>or list of</em>) – </p></li>
-<li><p><strong>format</strong> (<em>str</em>) – </p></li>
-<li><p><strong>[</strong><strong>&quot;parquet&quot;</strong> (<em>Currently</em>) – </p></li>
-<li><p><strong>&quot;ipc&quot;</strong> – </p></li>
-<li><p><strong>&quot;arrow&quot;</strong> – </p></li>
-<li><p><strong>&quot;feather&quot;</strong> – </p></li>
-<li><p><strong>&quot;csv&quot;</strong> – </p></li>
-<li><p><strong>are</strong> (<em>&quot;orc&quot;</em><em>]</em>) – </p></li>
-<li><p><strong>supported</strong> – </p></li>
-<li><p><strong>min_batches</strong> (<em>int</em>) – </p></li>
-<li><p><strong>smaller</strong> (<em>An integer number used to split the data into this amount of</em>) – </p></li>
-<li><p><strong>computing</strong> (<em>tables for distribution to worker nodes in distributed</em>) – </p></li>
-<li><p><strong>environments.</strong> – </p></li>
+<li><p><strong>source</strong> (<em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em>) – Path to a single file, or list of paths</p></li>
+<li><p><strong>format</strong> (<em>str</em>) – Currently [“parquet”, “ipc”, “arrow”, “feather”, “csv”, “orc”] are
+supported</p></li>
+<li><p><strong>min_batches</strong> (<em>int</em>) – An integer number used to split the data into this amount of smaller
+tables for distribution to worker nodes in distributed computing
+environments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -348,7 +346,7 @@ was supplied after conversion to a PyArrow Table.</p>
 <p class="admonition-title">Note</p>
 <p>Only a subset of possible arguments are presented here. Additional arguments
 can be passed for specific file types.
-Reference PyArrow documentation for addition arguments.</p>
+Reference PyArrow documentation for additional arguments.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

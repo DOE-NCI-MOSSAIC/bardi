@@ -33,7 +33,7 @@ to create a pandas DataFrame from some example data and show some of the basic p
 Register the Sample Data as a Bardi Dataset
 -------------------------------------------
 
-Now that we have some sample data in a DataFrame we will register it as a bardi dataset (:mod:`bardi.data.Dataset`). ::
+Now that we have some sample data in a DataFrame we will register it as a bardi dataset (:mod:`bardi.data.data_handlers.Dataset`). ::
 
     from bardi.data import data_handlers
 
@@ -46,7 +46,7 @@ we have built.
 Initialize a Pre-Processing Pipeline
 ------------------------------------
 
-Now that we have the data registered, let's set up a Pipeline (:mod:`bardi.Pipeline`) to pre-process the data. ::
+Now that we have the data registered, let's set up a Pipeline (:mod:`bardi.pipeline.Pipeline`) to pre-process the data. ::
 
     from bardi.pipeline import Pipeline
 
@@ -147,6 +147,8 @@ Again, a pretty straight-forward step. ::
 
 Running the Pipeline
 --------------------
+
+:mod:`bardi.pipeline.Pipeline`
 
 Now that we have added all of the steps, let's actually run the pipeline. ::
 

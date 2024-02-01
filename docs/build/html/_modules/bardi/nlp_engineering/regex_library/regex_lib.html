@@ -83,7 +83,7 @@
 
 <span class="c1"># 0</span>
 <div class="viewcode-block" id="get_escape_code_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_escape_code_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_escape_code_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_escape_code_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches escape codes such as \\x0d, \\x0a, etc.</span>
 
@@ -105,7 +105,7 @@
 
 <span class="c1"># 1</span>
 <div class="viewcode-block" id="get_whitespace_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_whitespace_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_whitespace_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_whitespace_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches any new line, carriage return tab and multiple</span>
 <span class="sd">    spaces and replaces it with a single space.</span>
@@ -124,7 +124,7 @@
 
 <span class="c1"># 2</span>
 <div class="viewcode-block" id="get_urls_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_urls_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_urls_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_urls_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches a url and replaces it</span>
 <span class="sd">    with a URLTOKEN.</span>
@@ -146,7 +146,7 @@
 
 <span class="c1"># 3</span>
 <div class="viewcode-block" id="get_special_punct_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_special_punct_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_special_punct_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_special_punct_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches a set of chosen punctuation symbols \\_,();[]#{}*&quot;&#39;~?!|^</span>
 <span class="sd">    and replaces them with a single space.</span>
@@ -168,7 +168,7 @@
 
 <span class="c1"># 4</span>
 <div class="viewcode-block" id="get_multiple_punct_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_multiple_punct_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_multiple_punct_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_multiple_punct_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches multiple occurences of symbols like -, .</span>
 <span class="sd">    and _ replaces them with a single space.</span>
@@ -187,7 +187,7 @@
 
 <span class="c1"># 5</span>
 <div class="viewcode-block" id="get_angle_brackets_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_angle_brackets_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_angle_brackets_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_angle_brackets_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches a content between matching angle brackets,</span>
 <span class="sd">    keeps the content only, removes the brackets.</span>
@@ -206,7 +206,7 @@
 
 <span class="c1"># 6</span>
 <div class="viewcode-block" id="get_percent_sign_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_percent_sign_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_percent_sign_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_percent_sign_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches the % sign and replaces</span>
 <span class="sd">    it with a word &#39;percent&#39;.</span>
@@ -225,7 +225,7 @@
 
 <span class="c1"># 7</span>
 <div class="viewcode-block" id="get_leading_digit_punctuation_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_leading_digit_punctuation_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_leading_digit_punctuation_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_leading_digit_punctuation_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches numeric digits at the start of a word,</span>
 <span class="sd">    followed by punctuation and additional characters.</span>
@@ -249,7 +249,7 @@
 
 <span class="c1"># 8</span>
 <div class="viewcode-block" id="get_leading_punctuation_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_leading_punctuation_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_leading_punctuation_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_leading_punctuation_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches leading punctuation and removes it.</span>
 <span class="sd">    Args:</span>
@@ -267,7 +267,7 @@
 
 <span class="c1"># 9</span>
 <div class="viewcode-block" id="get_trailing_punctuation_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_trailing_punctuation_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_trailing_punctuation_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_trailing_punctuation_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches trailing punctuation and removes it.</span>
 <span class="sd">    Args:</span>
@@ -285,7 +285,7 @@
 
 <span class="c1"># 10</span>
 <div class="viewcode-block" id="get_words_with_punct_spacing_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_words_with_punct_spacing_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_words_with_punct_spacing_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_words_with_punct_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches words with hyphen, colon or period and splits them.</span>
 <span class="sd">    Requires the words to be at least two characters in length</span>
@@ -308,7 +308,7 @@
 
 <span class="c1"># 11</span>
 <div class="viewcode-block" id="get_math_spacing_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_math_spacing_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_math_spacing_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_math_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches &quot;math operators symbols&quot; like &gt;&lt;=%:</span>
 <span class="sd">    and adds spaces aroud them.</span>
@@ -327,7 +327,7 @@
 
 <span class="c1"># 12</span>
 <div class="viewcode-block" id="get_dimension_spacing_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_dimension_spacing_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_dimension_spacing_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_dimension_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches digits and x and adds spaces between them.</span>
 <span class="sd">    Args:</span>
@@ -345,7 +345,7 @@
 
 <span class="c1"># 13</span>
 <div class="viewcode-block" id="get_measure_spacing_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_measure_spacing_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_measure_spacing_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_measure_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches measurements in mm, cm and ml provides</span>
 <span class="sd">    proper spacing between the digits and measure.</span>
@@ -365,7 +365,7 @@
 
 <span class="c1"># 14</span>
 <div class="viewcode-block" id="get_cassettes_spacing_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_cassettes_spacing_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_cassettes_spacing_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_cassettes_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches patterns like 5e-6f</span>
 <span class="sd">    and adds spaces around them.</span>
@@ -388,7 +388,7 @@
 
 <span class="c1"># 15</span>
 <div class="viewcode-block" id="get_dash_digits_spacing_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_dash_digits_spacing_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_dash_digits_spacing_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_dash_digits_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches dashes around digits and adds</span>
 <span class="sd">    spaces around the dashes.</span>
@@ -410,7 +410,7 @@
 
 <span class="c1"># 16</span>
 <div class="viewcode-block" id="get_literals_floats_spacing_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_literals_floats_spacing_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_literals_floats_spacing_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_literals_floats_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches character followed by a float and a word.</span>
 <span class="sd">    This is a common formating problem.</span>
@@ -433,7 +433,7 @@
 
 <span class="c1"># 17</span>
 <div class="viewcode-block" id="get_fix_pluralization_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_fix_pluralization_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_fix_pluralization_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_fix_pluralization_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches s character after a word</span>
 <span class="sd">    and attaches it back to the word. This restores</span>
@@ -453,7 +453,7 @@
 
 <span class="c1"># 18</span>
 <div class="viewcode-block" id="get_digits_words_spacing_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_digits_words_spacing_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_digits_words_spacing_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_digits_words_spacing_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches digits that are attached to the</span>
 <span class="sd">    beginning of a word.</span>
@@ -472,7 +472,7 @@
 
 <span class="c1"># 19</span>
 <div class="viewcode-block" id="get_phone_number_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_phone_number_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_phone_number_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_phone_number_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches any phone number that consists</span>
 <span class="sd">    of 10 digits with delimeters.</span>
@@ -494,7 +494,7 @@
 
 <span class="c1"># 20</span>
 <div class="viewcode-block" id="get_dates_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_dates_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_dates_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_dates_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches dates of specified formats.</span>
 <span class="sd">    Args:</span>
@@ -519,7 +519,7 @@
 
 <span class="c1"># 21</span>
 <div class="viewcode-block" id="get_time_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_time_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_time_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_time_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches time of format 11:20 am</span>
 <span class="sd">    or 1.30pm or 9:52:07AM.</span>
@@ -544,7 +544,7 @@
 
 <span class="c1"># 22</span>
 <div class="viewcode-block" id="get_address_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_address_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_address_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_address_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches any address of format</span>
 <span class="sd">    num (street name) in 1 to 6 words 2-letter state</span>
@@ -567,7 +567,7 @@
 
 <span class="c1"># 23</span>
 <div class="viewcode-block" id="get_dimensions_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_dimensions_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_dimensions_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_dimensions_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches 2D or 3D dimension measurements</span>
 <span class="sd">    and adds spaces around them.</span>
@@ -591,7 +591,7 @@
 
 <span class="c1"># 24</span>
 <div class="viewcode-block" id="get_specimen_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_specimen_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_specimen_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_specimen_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches marking of a pathology speciman.</span>
 <span class="sd">    Args:</span>
@@ -612,7 +612,7 @@
 
 <span class="c1"># 25</span>
 <div class="viewcode-block" id="get_decimal_segmented_numbers_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_decimal_segmented_numbers_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_decimal_segmented_numbers_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_decimal_segmented_numbers_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches combinations of digits and periods or dashes.</span>
 <span class="sd">    Args:</span>
@@ -633,7 +633,7 @@
 
 <span class="c1"># 26</span>
 <div class="viewcode-block" id="get_large_digits_seq_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_large_digits_seq_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_large_digits_seq_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_large_digits_seq_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches large sequences of digits and replaces it.</span>
 <span class="sd">    Args:</span>
@@ -651,7 +651,7 @@
 
 <span class="c1"># 27</span>
 <div class="viewcode-block" id="get_large_float_seq_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_large_float_seq_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_large_float_seq_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_large_float_seq_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches large floats and replace them.</span>
 <span class="sd">    Args:</span>
@@ -669,7 +669,7 @@
 
 <span class="c1"># 28</span>
 <div class="viewcode-block" id="get_trunc_decimals_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_trunc_decimals_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_trunc_decimals_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_trunc_decimals_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches floats and keeps only first decimal.</span>
 <span class="sd">    Args:</span>
@@ -687,7 +687,7 @@
 
 <span class="c1"># 29</span>
 <div class="viewcode-block" id="get_cassette_name_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_cassette_name_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_cassette_name_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_cassette_name_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches cassettes markings of</span>
 <span class="sd">    the specified format:</span>
@@ -712,7 +712,7 @@
 
 <span class="c1"># 30</span>
 <div class="viewcode-block" id="get_duration_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_duration_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_duration_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_duration_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches duration specimen was treated:</span>
 <span class="sd">    Args:</span>
@@ -733,7 +733,7 @@
 
 <span class="c1"># 31</span>
 <div class="viewcode-block" id="get_letter_num_seq_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_letter_num_seq_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_letter_num_seq_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_letter_num_seq_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches a character followed directly</span>
 <span class="sd">    by 6 to 10 digits:</span>
@@ -755,7 +755,7 @@
 
 <span class="c1">#   LAST REGEX that removed additional spaces</span>
 <div class="viewcode-block" id="get_spaces_regex">
-<a class="viewcode-back" href="../../../../bardi.nlp_engineering.regex_library.html#bardi.nlp_engineering.regex_library.regex_lib.get_spaces_regex">[docs]</a>
+<a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.regex_lib.get_spaces_regex">[docs]</a>
 <span class="k">def</span> <span class="nf">get_spaces_regex</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RegexSubPair</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matches additional spaces (artifact of applying</span>
 <span class="sd">    other regex), matches not needed periods that can be removed.</span>

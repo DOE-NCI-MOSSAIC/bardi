@@ -46,6 +46,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../basic.html">Basic Package Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../advanced.html">Advanced Package Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bardi.html">bardi.pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../bardi.data.html">bardi.data package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../bardi.nlp_engineering.html">bardi.nlp_engineering package</a></li>
 </ul>
@@ -104,6 +105,8 @@
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor method</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_write_config</span><span class="p">:</span> <span class="n">DataWriteConfig</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;data_format&quot;</span><span class="p">:</span> <span class="s2">&quot;parquet&quot;</span><span class="p">,</span>
             <span class="s2">&quot;data_format_args&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;compression&quot;</span><span class="p">:</span> <span class="s2">&quot;snappy&quot;</span><span class="p">,</span> <span class="s2">&quot;use_dictionary&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
@@ -120,17 +123,23 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Implement a run method in the step that will be called by the</span>
 <span class="sd">        pipeline&#39;s run_pipeline method.</span>
 
-<span class="sd">        :param data: Expect to receive a PyArrow table of data</span>
-<span class="sd">        :type data: PyArrow.Table</span>
-<span class="sd">        :param artifacts: Expect to receive a dict of artifacts from preceding steps,</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        data : PyArrow.Table</span>
+<span class="sd">            Expect to receive a PyArrow table of data</span>
+<span class="sd">        artifacts : dict</span>
+<span class="sd">            Expect to receive a dict of artifacts from preceding steps,</span>
 <span class="sd">            but artifacts can be ignored in the method if values are not needed from it</span>
 
-<span class="sd">        :return: If the method performs a transformation of data then return</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[Union[pa.Table, None], Union[dict, None]]</span>
+<span class="sd">            If the method performs a transformation of data then return</span>
 <span class="sd">            the data as a PyArrow table. This will replace the pipeline</span>
 <span class="sd">            object&#39;s processed_data attribute. If the method creates new artifacts</span>
 <span class="sd">            besides the data, return a dictionary with keys corresponding to the name of</span>
 <span class="sd">            the artifact and the values being the artifact&#39;s data or value</span>
-<span class="sd">        :rtype: Tuple[Union[pa.Table, None], Union[dict, None]]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
@@ -143,13 +152,12 @@
 <span class="sd">        Provide a method to customize the write configuration</span>
 <span class="sd">        used by the step&#39;s write_outputs method if desired.</span>
 
-<span class="sd">        :param data_config: A dictionary defining the data_format</span>
-<span class="sd">            (i.e., parquet, csv, etc.) and any particular data_format_args</span>
-<span class="sd">            available in the pyarrow API.</span>
-<span class="sd">        :type data_config: DataWriteConfig</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 
-<span class="sd">        :return: None</span>
-<span class="sd">        :rtype: None</span>
+<span class="sd">        data_config : DataWriteConfig</span>
+<span class="sd">            A typed dictionary defining the data_format (i.e., parquet, csv, etc.) </span>
+<span class="sd">            and any particular data_format_args available in the pyarrow API.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_write_config</span> <span class="o">=</span> <span class="n">data_config</span></div>
 
@@ -162,8 +170,11 @@
 <span class="sd">        Called by the pipeline&#39;s get_parameters method. Implement a custom</span>
 <span class="sd">        method if needed, such as removing large items from the dictionary.</span>
 
-<span class="sd">        :return: A dictionary copy of the object&#39;s configuration.</span>
-<span class="sd">        :rtype: dict</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        dict</span>
+<span class="sd">            A dictionary copy of the object&#39;s configuration.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">params</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">params</span></div>
@@ -181,15 +192,15 @@
 
 <span class="sd">        Reuse existing write patterns that exist in the data handlers.</span>
 
-<span class="sd">        :param write_path: A directory where a file will be written.</span>
-<span class="sd">        :type write_path: str</span>
-<span class="sd">        :param data: PyArrow Table of data.</span>
-<span class="sd">        :type data: Union[pa.Table, None]</span>
-<span class="sd">        :param data_filename: Overwrite default file name (no filetype extension).</span>
-<span class="sd">        :type data_filename: Union[str, None]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 
-<span class="sd">        :return: None</span>
-<span class="sd">        :rtype: None</span>
+<span class="sd">        write_path : str </span>
+<span class="sd">            A directory where a file will be written.</span>
+<span class="sd">        data : Union[pa.Table, None]</span>
+<span class="sd">            PyArrow Table of data.</span>
+<span class="sd">        data_filename : Union[str, None]</span>
+<span class="sd">            Overwrite default file name (no filetype extension).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Add the filename with the appropriate filetype extension to the write path</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">data_filename</span><span class="p">:</span>
@@ -216,13 +227,13 @@
 <span class="sd">        Implement a custom method to write the specific artifacts produced</span>
 <span class="sd">        in the step.</span>
 
-<span class="sd">        :param write_path: A directory where a file should be written.</span>
-<span class="sd">        :type write_path: str</span>
-<span class="sd">        :param artifacts: Union[dict, None]</span>
-<span class="sd">        :type artifacts: Union[dict, None]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 
-<span class="sd">        :return: None</span>
-<span class="sd">        :rtype: None</span>
+<span class="sd">        write_path : str</span>
+<span class="sd">            A directory where a file should be written.</span>
+<span class="sd">        artifacts : Union[dict, None]</span>
+<span class="sd">            A dictionary of artifacts from the step that should be written to a file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 </div>
@@ -244,20 +255,23 @@
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a pipeline for organizing data pre-processing steps.</span>
 
-<span class="sd">        :param dataset: A bardi dataset object with data to pre-process.</span>
-<span class="sd">        :type dataset: bardi.data.data_handlers.Dataset</span>
-<span class="sd">        :param write_path: Directory in the file system to write outputs to.</span>
-<span class="sd">        :type write_path: str</span>
-<span class="sd">        :param write_outputs: Configuration for which outputs to write.</span>
-<span class="sd">            - &#39;pipeline-outputs&#39; will write all artifacts and final data.</span>
-<span class="sd">            - &#39;debug&#39; will write all artifacts and data from each step.</span>
-<span class="sd">            - False will not write any files.</span>
-<span class="sd">        :type write_outputs: Literal[&quot;pipeline-outputs&quot;, &quot;debug&quot;, False]</span>
-<span class="sd">        :param data_write_config: Supply a custom write configuration specifying</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        dataset : bardi.data.data_handlers.Dataset</span>
+<span class="sd">            A bardi dataset object with data to pre-process.</span>
+<span class="sd">        write_path : str</span>
+<span class="sd">            Directory in the file system to write outputs to.</span>
+<span class="sd">        write_outputs : Literal[&quot;pipeline-outputs&quot;, &quot;debug&quot;, False]</span>
+<span class="sd">            Configuration for which outputs to write.</span>
+<span class="sd">                *   &#39;pipeline-outputs&#39; will write all artifacts and final data.</span>
+<span class="sd">                *   &#39;debug&#39; will write all artifacts and data from each step.</span>
+<span class="sd">                *   False will not write any files.</span>
+<span class="sd">        data_write_config : DataWriteConfig</span>
+<span class="sd">            Supply a custom write configuration specifying</span>
 <span class="sd">            file types. Default will save data as parquet files.</span>
-<span class="sd">        :type data_write_config: DataWriteConfig</span>
-<span class="sd">        :param data_filename: Supply a filename for the final output data.</span>
-<span class="sd">        :type data_filename: str</span>
+<span class="sd">        data_filename : str</span>
+<span class="sd">            Supply a filename for the final output data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Reference a bardi dataset object that the pipeline will operate on</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">:</span> <span class="n">Dataset</span> <span class="o">=</span> <span class="n">dataset</span>
@@ -298,11 +312,11 @@
 <span class="sd">        Also overwrites the step&#39;s data write configuration with a consistent</span>
 <span class="sd">        pipeline data write configuration.</span>
 
-<span class="sd">        :param step: A Step object to be added to the list of pipeline execution steps.</span>
-<span class="sd">        :type step: Step</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 
-<span class="sd">        :return: None</span>
-<span class="sd">        :rtype: None</span>
+<span class="sd">        step : bardi.pipeline.Step</span>
+<span class="sd">            A bardi Step object to be added to the list of pipeline execution steps.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">Step</span><span class="p">):</span>
             <span class="n">step</span><span class="o">.</span><span class="n">set_write_config</span><span class="p">(</span><span class="n">data_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_write_config</span><span class="p">)</span>
@@ -319,9 +333,6 @@
     <span class="k">def</span> <span class="nf">run_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the run and write_outputs method for each respective step</span>
 <span class="sd">        object added to the pipeline.</span>
-
-<span class="sd">        :return: None</span>
-<span class="sd">        :rtype: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">,</span> <span class="n">Dataset</span><span class="p">):</span>
@@ -408,12 +419,18 @@
     <span class="k">def</span> <span class="nf">get_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condensed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the parameters of the pipeline&#39;s dataset and parameters of each step.</span>
 
-<span class="sd">        :param condensed: If True, the step configuration dictionary will exclude any</span>
-<span class="sd">            attributes set to None or False.</span>
-<span class="sd">        :type condensed: bool</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 
-<span class="sd">        :return: Dictionary of parameters used to configure each pipeline step object.</span>
-<span class="sd">        :rtype: dict</span>
+<span class="sd">        condensed : bool</span>
+<span class="sd">            If True, the step configuration dictionary will exclude any</span>
+<span class="sd">            attributes set to None or False.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        dict</span>
+<span class="sd">            Dictionary of parameters used to configure each pipeline step object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">pipeline_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;performance&quot;</span><span class="p">:</span> <span class="p">{}}</span>
