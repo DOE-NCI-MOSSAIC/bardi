@@ -21,9 +21,32 @@ from bardi.pipeline import DataWriteConfig, Step
 class PostProcessor(Step):
     """The post processor maps a vocab to a list of tokens
 
+    Note
+    ----
+
     Avoid the direct instantiation of the PostProcessor class
     and instead instantiate one of the child classes depending
     on hardware configuration
+
+    Attributes
+    ----------
+
+    fields : Union[str, List[str]]
+        the name of the column containing a list of tokens
+        that will be mapped to integers using a vocab
+    field_rename : str
+        optional ability to rename the supplied field with
+        the field_rename value
+    id_to_token : dict
+        optional vocabulary in the form of {id: token} that
+        will be used to map the tokens to integers. This
+        is optional for the construction of the object, and
+        can alternatively be provided in the run method.
+        This flexibility handles the use of a pre-existing
+        vocab versus creating a vocab during a pipeline run.
+    concat_fields : bool
+        indicate if you would like for fields to be concatenated
+        into a single column or left as separate columns
     """
 
     def __init__(
@@ -33,7 +56,8 @@ class PostProcessor(Step):
         id_to_token: dict = None,
         concat_fields: bool = False,
     ):
-        """instantiate a post processor object"""
+        """Constructor method
+        """
         self.fields = fields
         if isinstance(fields, str):
             self.fields = [fields]
@@ -56,59 +80,43 @@ class PostProcessor(Step):
 
     @abstractmethod
     def run(self):
-        """to be implemented in child class"""
+        """Abstract method
+        """
         pass
 
 
 class CPUPostProcessor(PostProcessor):
     """The post processor maps a vocab to a list of tokens
 
-    Implementation of the PostProcessor for CPU computation
+    Note
+    ----
 
-    Attributes:
-        fields : Union[str, List[str]],
-            the name of the column containing a list of tokens
-            that will be mapped to integers using a vocab
-        field_rename : str
-            optional ability to rename the supplied field with
-            the field_rename value
-        id_to_token : dict
-            optional vocabulary in the form of {id: token} that
-            will be used to map the tokens to integers. This
-            is optional for the construction of the object, and
-            can alternatively be provided in the run method.
-            This flexibility handles the use of a pre-existing
-            vocab versus creating a vocab during a pipeline run.
-        concat_fields : bool
-            indicate if you would like for fields to be concatenated
-            into a single column or left as separate columns
+    This implementation of the PostProcessor is specific for CPU computation.
 
-    Methods:
-        run : run the step's primary function
-        get_parameters : get a dictionary representation of the step object
-        set_write_config : Alter the default file writing configuration
-        write_outputs : Write output data to a file
+    Attributes
+    ----------
+
+    fields : Union[str, List[str]]
+        the name of the column containing a list of tokens
+        that will be mapped to integers using a vocab
+    field_rename : str
+        optional ability to rename the supplied field with
+        the field_rename value
+    id_to_token : dict
+        optional vocabulary in the form of {id: token} that
+        will be used to map the tokens to integers. This
+        is optional for the construction of the object, and
+        can alternatively be provided in the run method.
+        This flexibility handles the use of a pre-existing
+        vocab versus creating a vocab during a pipeline run.
+    concat_fields : bool
+        indicate if you would like for fields to be concatenated
+        into a single column or left as separate columns
     """
 
     def __init__(self, *args, **kwargs):
+        """Constructor method
         """
-        Keyword Arguments:
-            fields : Union[str, List[str]],
-                the name of the column containing a list of tokens
-                that will be mapped to integers using a vocab
-            field_rename : str
-                optional ability to rename the supplied field with
-                the field_rename value
-            id_to_token : dict
-                optional vocabulary in the form of {id: token} that
-                will be used to map the tokens to integers. This
-                is optional for the construction of the object, and
-                can alternatively be provided in the run method.
-                This flexibility handles the use of a pre-existing
-                vocab versus creating a vocab during a pipeline run.
-            concat_fields : bool
-                indicate if you would like for fields to be concatenated
-                into a single column or left as separate columns"""
         super().__init__(*args, **kwargs)
 
     def run(
@@ -126,32 +134,38 @@ class CPUPostProcessor(PostProcessor):
             to the run method referenced by the key, 'id_to_token'
           - id_to_token in the run method
 
-        Keyword Arguments:
-            data : PyArrow Table
-                The data to be processed. The data must contain the
-                column specified by field at object creation
-            artifacts : dict
-                A dictionary of pipeline artifacts which contains
-                a vocab referenced by the key, 'id_to_token'
-            id_to_token : dict
-                If a vocab wasn't passed at object creation or
-                through the pipeline artifacts dict, then it
-                must be passed here as a final option
+        Attributes
+        ----------
 
-        Returns:
-            Tuple(PyArrow Table, dict)
-                A tuple with:
-                 - the first element holding a PyArrow Table of data
-                 processed with the post processor
-                 - the second element of the tuple intended for
-                 artifacts is None
+        data : PyArrow Table
+            The data to be processed. The data must contain the
+            column specified by field at object creation
+        artifacts : dict
+            A dictionary of pipeline artifacts which contains
+            a vocab referenced by the key, 'id_to_token'
+        id_to_token : dict
+            If a vocab wasn't passed at object creation or
+            through the pipeline artifacts dict, then it
+            must be passed here as a final option
+
+        Returns
+        -------
+
+        Tuple(PyArrow Table, dict)
+            A tuple with:
+                - the first element holding a PyArrow Table of data
+                processed with the post processor
+                - the second element of the tuple intended for
+                artifacts is None
 
         Raises
-            AttributeError
-                The vocab (id_to_token) wasn't supplied
-                either at object creation or to the run method
-            TypeError
-                The run method was not supplied a PyArrow Table
+        ------
+
+        AttributeError
+            The vocab (id_to_token) wasn't supplied
+            either at object creation or to the run method
+        TypeError
+            The run method was not supplied a PyArrow Table
         """
 
         # Perform validations
@@ -261,7 +275,10 @@ class CPUPostProcessor(PostProcessor):
         """Retrive the post-processor object configuration
         Does not return the mapping (vocab) as it can be large
 
-        Returns:
+        Returns
+        -------
+
+        dict
             a dictionary representation of the post-processor's attributes
         """
         params = vars(self).copy()

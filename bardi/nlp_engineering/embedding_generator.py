@@ -4,7 +4,7 @@ import os
 from abc import abstractmethod
 from multiprocessing import cpu_count
 from os.path import isfile
-from typing import List, TypedDict, Union, Tuple
+from typing import List, TypedDict, Union, Tuple, Optional
 
 import numpy as np
 import polars as pl
@@ -32,21 +32,54 @@ class EmbeddingGeneratorArtifactsWriteConfig(TypedDict):
 
 
 class EmbeddingGenerator(Step):
-    """The embedding generator provides interface to create
+    """The embedding generator provides an interface to create
     word embeddings or vector representations of words (tokens).
 
-    The embedding generator uses Word2Vec model from Gensim library.
+    The embedding generator uses the Word2Vec model from the Gensim library.
+
+    Note
+    ----
 
     Avoid the direct instantiation of the PreTokenizer class
     and instead instantiate one of the child classes depending
     on hardware configuration.
+
+    Attributes
+    ----------
+
+    fields : Union[str, List[str]]
+        The name of the column(s) containing text to generate embeddings.
+    load_saved_model : bool
+        Whether to load a saved Word2Vec model or train a new one.
+    checkpoint_path : str
+        Path to the saved model checkpoint if `load_saved_model` is True.
+    cores : int
+        Number of CPU cores to use for training.
+    min_word_count : int
+        Ignore all words with a total frequency lower than this.
+    window : int
+        Maximum distance between the current and predicted word within a sentence.
+    vector_size : int
+        Dimensionality of the word vectors.
+    sample : float
+        The threshold for configuring which higher-frequency words are randomly downsampled.
+    min_alpha : float
+        Learning rate will linearly drop to `min_alpha` as training progresses.
+    negative : int
+        If > 0, specifies how many "noise words" should be drawn.
+    epochs : int
+        Number of iterations (epochs) over the corpus.
+    seed : int
+        Seed for the random number generator.
+    vocab_exclude_list : List[str]
+        List of words to force exclude from the vocabulary.
     """
 
     def __init__(
         self,
         fields: Union[str, List[str]],
         load_saved_model: bool = False,
-        checkpoint_path: str = None,
+        checkpoint_path: Optional[str] = None,
         cores: int = cpu_count(),
         min_word_count: int = 10,
         window: int = 5,
@@ -58,7 +91,8 @@ class EmbeddingGenerator(Step):
         seed: int = 42,
         vocab_exclude_list: List[str] = [],
     ):
-        """instantiate an embedding generator object"""
+        """Constructor method
+        """
         if isinstance(fields, str):
             self.fields = [fields]
         else:
@@ -88,8 +122,8 @@ class EmbeddingGenerator(Step):
 
     def set_write_config(
         self,
-        data_config: DataWriteConfig = None,
-        artifacts_config: EmbeddingGeneratorArtifactsWriteConfig = None,
+        data_config: Optional[DataWriteConfig] = None,
+        artifacts_config: Optional[EmbeddingGeneratorArtifactsWriteConfig] = None,
     ):
         """Overwrite the default file writing configurations"""
 
@@ -100,99 +134,62 @@ class EmbeddingGenerator(Step):
 
     @abstractmethod
     def run(self):
-        """to be implemented in child class"""
+        """Abstract method
+        """
         pass
 
 
 class CPUEmbeddingGenerator(EmbeddingGenerator):
-    """The embedding generator provides interface to create
+    """The embedding generator provides an interface to create
     word embeddings or vector representations of words (tokens).
 
-    The embedding generator uses Word2Vec model from Gensim library.
+    The embedding generator uses the Word2Vec model from the Gensim library.
 
-    EmbeddingGenerator specific for CPU computation.
+    Note
+    ----
+    This implementation of the EmbeddingGenerator is specific for CPU computation.
 
-    Attributes:
+    Attributes
+    ----------
+
         fields : Union[str, List[str]]
-            the name of the column(s) containing text to be considered
-            in the vocab and used in Word2Vec
+            The name of the column(s) containing text to be considered
+            in the vocab and used in Word2Vec.
         load_saved_model : bool
-            if True, use pre-trained word2vec model.
+            If True, use a pre-trained Word2Vec model.
         checkpoint_path : str
-            path to word2vec model checkpoint.
+            Path to the Word2Vec model checkpoint.
         cores : int
-            numbers of cores to run word2vec model on.
+            Number of cores to run the Word2Vec model on.
         min_word_count : int
-            ignores all words with total frequency lower than this.
+            Ignores all words with total frequency lower than this.
         window : int
-            maximum distance between the current and predicted word.
+            Maximum distance between the current and predicted word.
         vector_size : int
-            output embedding size.
+            Output embedding size.
         sample : float
-            the threshold for configuring which high-frequency
-            words are randomly ownsamples, use range (0, 1e-5).
+            The threshold for configuring which high-frequency
+            words are randomly downsampled, use range (0, 1e-5).
         min_alpha : float
-            learning rate will linearly drop to min_alpha
+            Learning rate will linearly drop to min_alpha
             as training progresses.
         negative : int
-            if > 0, negative sampling will be used.
+            If > 0, negative sampling will be used.
         epochs : int
-            total number of iterations of all training data in
-            the training of the word2vec model
+            Total number of iterations of all training data in
+            the training of the Word2Vec model.
         seed : int
-            seed for random number generetor, for deterministic
-            run you need thread = 1 (aka cpu core)
-            and PYTHONHASHSEED
+            Seed for the random number generator. For deterministic
+            run, you need thread = 1 (aka CPU core)
+            and PYTHONHASHSEED.
         vocab_exclude_list : List[str]
-            provide a list of tokens that may be present in the
+            Provide a list of tokens that may be present in the
             text that you would like to exclude from the vocab and
-            from Word2Vec
-
-    Methods:
-        run : run the step's primary function
-        get_parameters : get a dictionary representation of the step object
-        set_write_config : alter the default file writing configuration
-        write_outputs : Write output data to a file
+            from Word2Vec.
     """
 
     def __init__(self, *args, **kwargs):
-        """Create an object of the CPUEmbeddingGenerator Classs
-
-        Keyword Arguments:
-            fields : Union[str, List[str]]
-                the name of the column(s) containing text to be considered
-                in the vocab and used in Word2Vec
-            load_saved_model : bool
-                if True, use pre-trained word2vec model.
-            checkpoint_path : str
-                path to word2vec model checkpoint.
-            cores : int
-                numbers of cores to run word2vec model on.
-            min_word_count : int
-                ignores all words with total frequency lower than this.
-            window : int
-                maximum distance between the current and predicted word.
-            vector_size : int
-                output embedding size.
-            sample : float
-                the threshold for configuring which high-frequency
-                words are randomly ownsamples, use range (0, 1e-5).
-            min_alpha : float
-                learning rate will linearly drop to min_alpha
-                as training progresses.
-            negative : int
-                if > 0, negative sampling will be used.
-            epochs : int
-                total number of iterations of all training data in
-                the training of the word2vec model
-            seed : int
-                seed for random number generetor, for deterministic
-                run you need thread = 1 (aka cpu core)
-                and PYTHONHASHSEED
-            vocab_exclude_list : List[str]
-                provide a list of tokens that may be present in the
-                text that you would like to exclude from the vocab and
-                from Word2Vec
+        """Constructor method
         """
         super().__init__(*args, **kwargs)
 
@@ -201,23 +198,26 @@ class CPUEmbeddingGenerator(EmbeddingGenerator):
         self.id_to_token = None
 
     def run(self, data: pa.Table, artifacts: dict) -> Tuple[pa.Table, dict]:
-        """Runs a CPU-based embedding generator method based on the
+        """Runs a CPU-based embedding generator run method based on the
         configuration used to create the object of the CPUEmbeddingGenerator
         class
 
-        Arguments:
-            data : pyarrow.Table
-                a pyarrow Table containing at least one list column containing
-                text
-            artifacts : dict
-                artifacts are not consumed in this run method, but must be
-                received to operate correctly in the pipeline run method
+        Parameters
+        ----------
 
-        Returns:
-            Tuple[pyarrow.Table, dict]
-                The first position is a pyarrow.Table of pre-tokenized data
-                The second position is a dictionary of artifacts. The dict will
-                contain keys for "embedding_matrix" and "id_to_token".
+        data : pyarrow.Table
+            A pyarrow Table containing at least one list column containing text.
+        artifacts : dict
+            Artifacts are not consumed in this run method, but must be
+            received in the method to operate correctly in the pipeline run method.
+
+        Returns
+        -------
+
+        Tuple[pyarrow.Table, dict]
+            The first position is a pyarrow.Table of pre-tokenized data.
+            The second position is a dictionary of artifacts. The dict will
+            contain keys for "embedding_matrix" and "id_to_token".
         """
         # Perform validations
         validate_pyarrow_table(data=data)
@@ -297,18 +297,16 @@ class CPUEmbeddingGenerator(EmbeddingGenerator):
 
         return (data, produced_artifacts)
 
-    def write_artifacts(self, write_path: str, artifacts: Union[dict, None]) -> None:
-        """Write the oartifactsproduced by the embedding_generator
+    def write_artifacts(self, write_path: str, artifacts: dict) -> None:
+        """Write the artifacts produced by the embedding generator.
 
-        Keyword Arguments:
-            write_path : str
-                Path is a directory where files will be written
-            artifacts : Union[dict, None]
-                Artifacts is a dictionary of artifacts produced in this step.
-                Expected keys are: "id_to_token" and "embedding_matrix"
-
-        Returns:
-            None
+        Parameters
+        ----------
+        write_path : str
+            Path is a directory where files will be written.
+        artifacts : dict
+            Artifacts is a dictionary of artifacts produced in this step.
+            Expected keys are: "id_to_token" and "embedding_matrix".
         """
         id_to_token = artifacts["id_to_token"]
         # Add the filename with the appropriate filetype to the write path
@@ -342,11 +340,12 @@ class CPUEmbeddingGenerator(EmbeddingGenerator):
         )
 
     def get_parameters(self) -> dict:
-        """Retrive the embedding generetor object configuration
+        """Retrieve the embedding generator object configuration.
 
-        Returns:
-            a dictionary representation
-            of the embedding generetor object's attributes
+        Returns
+        -------
+        dict
+            A dictionary representation of the EmbeddingGenerator object's attributes.
         """
 
         params = vars(self).copy()

@@ -1,4 +1,4 @@
-"""bardi Dataset class stores a reference to data and relevant metadata"""
+"""Dataset class definition and data handler functions for loading datasets from various sources"""
 
 from __future__ import annotations
 
@@ -26,12 +26,21 @@ class Dataset:
     Under the hood it uses a PyArrow Table as it is a modern and efficient
     starting point for both CPU & GPU workflows.
 
-    Attributes:
-        data : PyArrow Table | List[PyArrow Table]
-        origin_query : str
-        origin_file_path : str
-        origin_format : str
-        origin_row_count : int
+    Attributes
+    ----------
+
+    data : PyArrow.Table | List[PyArrow.Table]
+        The data table
+    origin_query : str
+        If a SQL data source was used by a data_handler function, the SQL query is
+        recorded here for reproducibility and data provenance.
+    origin_file_path : str
+        If a file was used as the data source by a data_handler function, the filepath
+        is recorded for reproducibility and data provenance.
+    origin_format : str
+        The format of the data source
+    origin_row_count : int
+        The total row count of the original dataset
     """
 
     def __init__(self):
@@ -64,24 +73,31 @@ def from_file(
     The function utilizes PyArrow's dataset API to read files, and thus all
     keyword arguments available for its API are available here.
 
-    Keyword Arguments:
-      source : str, List[str]
+    Parameters
+    ----------
+
+    source : str, List[str]
         Path to a single file, or list of paths
-      format : str
+    format : str
         Currently ["parquet", "ipc", "arrow", "feather", "csv", "orc"] are
         supported
-      min_batches : int
+    min_batches : int
         An integer number used to split the data into this amount of smaller
         tables for distribution to worker nodes in distributed computing
         environments.
 
-    Returns:
-      bardi Dataset object with the data attribute referencing the data that
-      was supplied after conversion to a PyArrow Table.
+    Returns
+    -------
 
-    Raises:
-      ValueError if the supplied file path does not contain a filetype of an
-      accepted format.
+    bardi.data.data_handlers.Dataset
+        bardi Dataset object with the data attribute referencing the data that
+        was supplied after conversion to a PyArrow Table.
+
+    Raises
+    ------
+
+    ValueError if the supplied file path does not contain a filetype of an
+        accepted format.
     """
 
     format = format.lower()
@@ -130,19 +146,24 @@ def from_duckdb(path: str, query: str, min_batches: int = None) -> Dataset:
     """Create a bardi Dataset object using data returned from
     a custom query on a DuckDB database
 
-    Keyword Arguments:
-      path : str
+    Parameters
+    ----------
+
+    path : str
         A filepath to the DuckDB database file
-      query : str
+    query : str
         A valid SQL query adhering to DuckDB syntax specifications
-      min_batches : int
+    min_batches : int
         An integer number used to split the data into this amount of smaller
         tables for distribution to worker nodes.
         Number will probably align with the number of worker nodes.
 
-    Returns:
-      bardi Dataset object with the data attribute referencing the data that
-      was supplied after conversion to a PyArrow Table.
+    Returns
+    -------
+
+    bardi.data.data_handlers.Dataset
+        bardi Dataset object with the data attribute referencing the data that
+        was supplied after conversion to a PyArrow Table.
     """
 
     # Create a read-only connection to DuckDB database file and execute the
@@ -182,23 +203,28 @@ def from_pandas(df: pd.DataFrame, min_batches: int = None) -> Dataset:
     """Create a bardi dataset object from a Pandas DataFrame using the PyArrow
     function
 
-    Keyword Arguments:
-      df : Pandas DataFrame
+    Parameters
+    ----------
+
+    df : Pandas DataFrame
         A Pandas DataFrame containing data intended to be passed into a bardi
         pipeline
-      distributed : bool
+    distributed : bool
         A flag which prompts splitting data into smaller chunks to prepare for
         later distribution to worker nodes.
         Also used to set a flag in the bardi Dataset object to direct future
         operations to be performed in a distributed manner.
-      min_batches : int
+    min_batches : int
         An integer number used to split the data into this amount of smaller
         tables for distribution to worker nodes.
         Number will probably align with the number of worker nodes.
 
-    Returns:
-      bardi Dataset object with the data attribute referencing the data that
-      was supplied after conversion to a PyArrow Table.
+    Returns
+    -------
+
+    bardi.data.data_handlers.Dataset
+        bardi Dataset object with the data attribute referencing the data that
+        was supplied after conversion to a PyArrow Table.
     """
     # Convert the Pandas DataFrame to a PyArrow Table
     table = pa.Table.from_pandas(df)
@@ -232,18 +258,23 @@ def from_pandas(df: pd.DataFrame, min_batches: int = None) -> Dataset:
 def from_pyarrow(table: pa.Table, min_batches: int = None) -> Dataset:
     """Create a bardi dataset object from an existing PyArrow Table
 
-    Keyword Arguments:
-      table : PyArrow Table
+    Parameters
+    ----------
+
+    table : PyArrow Table
         A PyArrow Table containing data intended to be passed into a bardi
         pipeline
-      min_batches : int
+    min_batches : int
         An integer number used to split the data into this amount of smaller
         tables for distribution to worker nodes.
         Number will probably align with the number of worker nodes.
 
-    Returns:
-      bardi Dataset object with the data attribute referencing the data that
-      was supplied after conversion to a PyArrow Table.
+    Returns
+    -------
+
+    bardi.data.data_handlers.Dataset
+        bardi Dataset object with the data attribute referencing the data that
+        was supplied after conversion to a PyArrow Table.
     """
 
     row_count = table.num_rows
@@ -276,14 +307,18 @@ def from_pyarrow(table: pa.Table, min_batches: int = None) -> Dataset:
 def from_json(json_data: Union[str, dict, List(dict)]) -> Dataset:
     """Create a bardi Dataset object from JSON data
 
-    Keyword Arguments:
-      json_data : str
+    Parameters
+    ----------
+
+    json_data : str
         An object of name/value pairs. Names will become columns in the PyArrow
         Table.
 
-    Returns:
-      bardi Dataset object with the data attribute referencing the data that
-      was supplied after conversion to a PyArrow Table.
+    Returns
+    -------
+    bardi.data.data_handlers.Dataset
+        bardi Dataset object with the data attribute referencing the data that
+        was supplied after conversion to a PyArrow Table.
     """
 
     # Convert the JSON object into a dictionary and then load that as a single
@@ -318,13 +353,39 @@ def from_json(json_data: Union[str, dict, List(dict)]) -> Dataset:
 
 
 def to_pandas(table: pa.Table) -> pd.DataFrame:
-    """Return data as a pandas DataFrame"""
+    """Return data as a pandas DataFrame
+    
+    Parameters
+    ----------
+
+    table : PyArrow.Table
+        Table of data you want to convert to a Pandas DataFrame
+    
+    Returns
+    -------
+
+    pandas.DataFrame
+        The same data as the input table, converted into a DataFrame
+    """
     df = table.to_pandas()
     return df
 
 
 def to_polars(table: pa.Table) -> pl.DataFrame:
-    """Return data as a polars DataFrame"""
+    """Return data as a polars DataFrame
+    
+    Parameters
+    ----------
+
+    table : PyArrow.Table
+        Table of data you want to convert to a Pandas DataFrame
+    
+    Returns
+    -------
+
+    polars.DataFrame
+        The same data as the input table, converted into a DataFrame
+    """
     df = pl.from_arrow(table)
     return df
 
@@ -332,15 +393,21 @@ def to_polars(table: pa.Table) -> pl.DataFrame:
 def write_file(data: pa.Table, path: str, format: str, *args, **kwargs) -> None:
     """Write data to a file
 
-    Keyword Arguments:
-        data : PyArrow Table
-        path : str
-            path in filesystem where data is to be written
-        format : str
-            filetype in ["parquet", "feather", "csv",
-                         "orc", "json", "npy"]
-        Additional arguments can be passed for specific file types.
-        Reference PyArrow documentation for addition arguments.
+    Note
+    ----
+
+    Only a subset of possible arguments are presented here. Additional arguments
+    can be passed for specific file types.
+    Reference PyArrow documentation for additional arguments.
+
+    Parameters
+    ----------
+
+    data : PyArrow Table
+    path : str
+        path in filesystem where data is to be written
+    format : str
+        filetype in "parquet", "feather", "csv", "orc", "json", "npy"
     """
 
     format = format.lower()

@@ -22,6 +22,8 @@ class Step(metaclass=ABCMeta):
 
     @abstractmethod
     def __init__(self):
+        """Constructor method
+        """
         self._data_write_config: DataWriteConfig = {
             "data_format": "parquet",
             "data_format_args": {"compression": "snappy", "use_dictionary": False},
@@ -36,16 +38,23 @@ class Step(metaclass=ABCMeta):
         """Implement a run method in the step that will be called by the
         pipeline's run_pipeline method.
 
-        :param data: Expect to receive a PyArrow table of data
-        :type data: PyArrow.Table
-        :param artifacts: Expect to receive a dict of artifacts from preceding steps,
+        Parameters
+        ----------
+
+        data : PyArrow.Table
+            Expect to receive a PyArrow table of data
+        artifacts : dict
+            Expect to receive a dict of artifacts from preceding steps,
             but artifacts can be ignored in the method if values are not needed from it
-        :return: If the method performs a transformation of data then return
+
+        Returns
+        -------
+        Tuple[Union[pa.Table, None], Union[dict, None]]
+            If the method performs a transformation of data then return
             the data as a PyArrow table. This will replace the pipeline
-            object's processed_data attribute. If the method creates new artifacts besides
-            the data, return a dictionary with keys corresponding to the name of the artifact
-            and the values being the artifact's data or value
-        :rtype: Tuple[Union[pa.Table, None], Union[dict, None]]
+            object's processed_data attribute. If the method creates new artifacts
+            besides the data, return a dictionary with keys corresponding to the name of
+            the artifact and the values being the artifact's data or value
         """
         pass
 
@@ -55,10 +64,12 @@ class Step(metaclass=ABCMeta):
         Provide a method to customize the write configuration
         used by the step's write_outputs method if desired.
 
-        Args:
-            data_config: a dictionary defining the data_format
-            (i.e. parquet, csv, etc) and any particular data_format_args
-            available in the pyarrow API
+        Parameters
+        ----------
+
+        data_config : DataWriteConfig
+            A typed dictionary defining the data_format (i.e., parquet, csv, etc.) 
+            and any particular data_format_args available in the pyarrow API.
         """
         self._data_write_config = data_config
 
@@ -68,8 +79,11 @@ class Step(metaclass=ABCMeta):
         Called by the pipeline's get_parameters method. Implement a custom
         method if needed, such as removing large items from the dictionary.
 
-        Returns:
-            - A dictionary copy of the object's configuration
+        Returns
+        -------
+
+        dict
+            A dictionary copy of the object's configuration.
         """
         params = vars(self).copy()
         return params
@@ -84,10 +98,15 @@ class Step(metaclass=ABCMeta):
 
         Reuse existing write patterns that exist in the data handlers.
 
-        Args:
-            data: PyArrow Table of data
-            write_path: a directory where a file will be written
-            data_filename: overwrite default file name (no filetype extension)
+        Parameters
+        ----------
+
+        write_path : str 
+            A directory where a file will be written.
+        data : Union[pa.Table, None]
+            PyArrow Table of data.
+        data_filename : Union[str, None]
+            Overwrite default file name (no filetype extension).
         """
         # Add the filename with the appropriate filetype extension to the write path
         if not data_filename:
@@ -105,15 +124,19 @@ class Step(metaclass=ABCMeta):
 
     def write_artifacts(self, write_path: str, artifacts: Union[dict, None]):
         """Default implementation of the write_artifacts method.
-        Since only some steps require this methods - the default
-        behaviour is 'pass'.
+
+        Since only some steps require this method, the default behavior is 'pass'.
 
         Implement a custom method to write the specific artifacts produced
         in the step.
 
-        Args:
-            write_path: a directory where a file should be written
-            artifacts: Union[dict,None]
+        Parameters
+        ----------
+
+        write_path : str
+            A directory where a file should be written.
+        artifacts : Union[dict, None]
+            A dictionary of artifacts from the step that should be written to a file
         """
         pass
 
@@ -129,23 +152,25 @@ class Pipeline:
         data_write_config: DataWriteConfig = None,
         data_filename: str = "bardi_processed_data",
     ):
-        """Create a pipeline for organizing data pre-processing steps
+        """Create a pipeline for organizing data pre-processing steps.
 
-        Keyword Arguments:
-            dataset : bardi Dataset
-                A bardi dataset object with data to pre-process
-            write_path : str
-                Directory in file system to write outputs to
-            write_outputs : Literal["pipeline-outputs", "debug", False]
-                Configuration for which outputs to write.
-                pipeline-outputs will write all artifacts and final data
-                debug will write all artifacts and data from each step
-                False will not write any files
-            data_write_config : DataWriteConfig
-                Supply a custom write configuration specifying filetypes.
-                Default will save data as parquet files
-            data_filename : str
-                Supply a filename for the final output data
+        Parameters
+        ----------
+
+        dataset : bardi.data.data_handlers.Dataset
+            A bardi dataset object with data to pre-process.
+        write_path : str
+            Directory in the file system to write outputs to.
+        write_outputs : Literal["pipeline-outputs", "debug", False]
+            Configuration for which outputs to write.
+                *   'pipeline-outputs' will write all artifacts and final data.
+                *   'debug' will write all artifacts and data from each step.
+                *   False will not write any files.
+        data_write_config : DataWriteConfig
+            Supply a custom write configuration specifying
+            file types. Default will save data as parquet files.
+        data_filename : str
+            Supply a filename for the final output data.
         """
         # Reference a bardi dataset object that the pipeline will operate on
         self.dataset: Dataset = dataset
@@ -179,10 +204,16 @@ class Pipeline:
         self.performance = {}
 
     def add_step(self, step: Step) -> None:
-        """Adds a step object to list of pipeline execution steps.
+        """Adds a step object to the list of pipeline execution steps.
 
         Also overwrites the step's data write configuration with a consistent
         pipeline data write configuration.
+
+        Parameters
+        ----------
+
+        step : bardi.pipeline.Step
+            A bardi Step object to be added to the list of pipeline execution steps.
         """
         if isinstance(step, Step):
             step.set_write_config(data_config=self.data_write_config)
@@ -195,7 +226,8 @@ class Pipeline:
 
     def run_pipeline(self) -> None:
         """Calls the run and write_outputs method for each respective step
-        object added to the pipeline"""
+        object added to the pipeline.
+        """
 
         if isinstance(self.dataset, Dataset):
             self.processed_data = self.dataset.data
@@ -276,15 +308,20 @@ class Pipeline:
         self.performance[str(type(self))] = str(pipeline_run_time)
 
     def get_parameters(self, condensed: bool = True) -> dict:
-        """Returns the params of the pipeline's dataset and params of each step
+        """Returns the parameters of the pipeline's dataset and parameters of each step.
 
-        Keyword Arguments:
-            condensed : bool
-                If True, the step configuration dictionary will exclude any
-                attributes set to None or False
+        Parameters
+        ----------
 
-        Returns:
-            dict of params used to configure each pipeline step object
+        condensed : bool
+            If True, the step configuration dictionary will exclude any
+            attributes set to None or False.
+
+        Returns
+        -------
+
+        dict
+            Dictionary of parameters used to configure each pipeline step object.
         """
 
         pipeline_params = {"dataset": {}, "steps": {}, "performance": {}}

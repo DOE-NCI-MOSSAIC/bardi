@@ -1,7 +1,7 @@
 """Split text columns into lists of tokens using simple patterns"""
 
 from abc import abstractmethod
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, Optional
 
 import polars as pl
 import pyarrow as pa
@@ -17,13 +17,27 @@ class PreTokenizer(Step):
     """The pre-tokenizer breaks down text into smaller units
     before further tokenization is applied.
 
+    Note
+    ----
+
     Avoid the direct instantiation of the PreTokenizer class
     and instead instantiate one of the child classes depending
     on hardware configuration.
+
+    Attributes
+    ----------
+
+    fields : Union[str, List[str]]
+        The name of the column(s) containing text.
+    split_pattern : str
+        A specific pattern of characters used to divide a string
+        into smaller segments or tokens.
+        By default, the split is done on a single space character.
     """
 
     def __init__(self, fields: Union[str, List[str]], split_pattern: str = " "):
-        """instantiate a pre tokenizer object"""
+        """Constructor method
+        """
         if isinstance(fields, str):
             self.fields = [fields]
         else:
@@ -32,63 +46,59 @@ class PreTokenizer(Step):
 
     @abstractmethod
     def run(self):
-        """to be implemented in child class"""
+        """Abstract method
+        """
         pass
 
 
 class CPUPreTokenizer(PreTokenizer):
-    """The pre tokenizer breaks down text into smaller units
+    """The pre-tokenizer breaks down text into smaller units
     before further tokenization is applied.
 
-    Implementation of the PreTokenizer for CPU computation
+    Note
+    ----
 
-    Attributes:
-        fields : Union[str, List[str]],
-            the name of the column(s) containing text
-        split_pattern : str
-            a specific pattern of characters used to divide a string
-            into smaller segments or tokens.
-            By default, the split is done on a single space character.
+    This implementation of the PreTokenizer is specific for CPU computation.
 
-    Methods:
-        run : run the step's primary function
-        get_parameters : get a dictionary representation of the step object
-        set_write_config : Alter the default file writing configuration
-        write_outputs : Write output data to a file
+    Attributes
+    ----------
+
+    fields : Union[str, List[str]]
+        The name of the column(s) containing text.
+    split_pattern : str
+        A specific pattern of characters used to divide a string
+        into smaller segments or tokens.
+        By default, the split is done on a single space character.
     """
 
     def __init__(self, *args, **kwargs):
-        """
-        Keyword Arguments:
-            fields : Union[str, List[str]],
-                the name of the column(s) containing text
-            split_pattern : str
-                a specific pattern of characters used to divide a string
-                into smaller segments or tokens.
-                By default, the split is done on a single space character.
+        """Constructor method
         """
         super().__init__(*args, **kwargs)
 
     def run(
-        self, data: pa.Table, artifacts: dict = None
+        self, data: pa.Table, artifacts: Optional[dict] = None
     ) -> Tuple[pa.Table, Union[dict, None]]:
         """Runs a CPU-based pre-tokenizer method based on the configuration
-        used to create the object of the CPUPreTokenizer class
+        used to create the object of the CPUPreTokenizer class.
 
-        Arguments:
-            data : pyarrow.Table
-                a pyarrow Table containing at least one text column of type
-                string or large_string
-            artifacts : dict
-                artifacts are not used in this run method, but must be received
-                to operate correctly in the pipeline run method
+        Parameters
+        ----------
 
-        Returns:
-            Tuple[pyarrow.Table, dict]
-                The first position is a pyarrow.Table of pre-tokenized data
-                The second position is a dictionary of artifacts. No artifacts
-                are produced in this run method, so the second position will
-                return None.
+        data : pyarrow.Table
+            A pyarrow Table containing at least one text column of type
+            string or large_string.
+        artifacts : Optional[dict]
+            Artifacts are not used in this run method but must
+            be received to operate correctly in the pipeline run method.
+
+        Returns
+        -------
+        Tuple[pa.Table, Union[dict, None]]
+            The first position is a pyarrow.Table of pre-tokenized data.
+            The second position is a dictionary of artifacts. No artifacts
+            are produced in this run method, so the second position will
+            return None.
         """
         # Perform validations
         validate_pyarrow_table(data=data)

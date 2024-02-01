@@ -6,12 +6,17 @@ from bardi.nlp_engineering.regex_library.regex_set import RegexSubPair
 # 0
 def get_escape_code_regex() -> RegexSubPair:
     """Matches escape codes such as \\x0d, \\x0a, etc.
-    Args:
-        None
+
     Returns
-        RegexSubPair - (regex pattern, replacement string)
-    Example:
-    'Codes\\x0d\\x0a\\x0d \\r30 '--> 'Codes      30 '
+    -------
+
+    RegexSubPair
+         {regex pattern, replacement string}
+
+    Example
+    -------
+    ::
+        'Codes\\x0d\\x0a\\x0d \\r30 '--> 'Codes      30 '
     """
     regex_sub_pair = {"regex_str": r"(\\x[0-9A-Fa-f]{2,})|\\[stepr]", "sub_str": " "}
     return regex_sub_pair

@@ -13,7 +13,7 @@ The normalizer needs a regular expression set (regex_set) to apply to the text. 
 containing a key for the regular expression, `regex_str`, and a key for the substitution string, `sub_str`. There are a few methods you 
 can use to customize what regular expressions are applied to your text.
 
-1. Tuning a Provided bardi RegexSet
+1. **Tuning a Provided bardi RegexSet**
 
     An existing RegexSet is tunable by turning individual regular expressions off and on as desired. By default, all are
     turned on, so you would just need to turn off the ones you don't want to use. ::
@@ -28,7 +28,11 @@ can use to customize what regular expressions are applied to your text.
             remove_decimal_seg_number=False
         )
 
-2. Using Python Built-in Types to Write a Custom Set
+2. **Append to a Provided bardi RegexSet**
+
+    Suppose you want to use a provided regular expression set, but 
+
+2. **Using Python Built-in Types to Write a Custom Set**
 
     Nothing is stopping you from writing your own set of regular expressions and providing that to the normalizer. ::
 
@@ -47,7 +51,7 @@ can use to customize what regular expressions are applied to your text.
             )
         )
 
-3. Using the bardi RegexSet Class to Write a Custom Set
+3. **Using the bardi RegexSet Class to Write a Custom Set**
 
     However, if you would like a more organized approach [than the method shown above] to handle your custom regular expression sets, 
     you could follow our lead by creating a new class and inherit from our RegexSet class. The RegexSet class you are inheriting 

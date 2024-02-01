@@ -1,6 +1,8 @@
+"""Encode label columns into numerical representations"""
+
 import os
 from abc import abstractmethod
-from typing import List, Tuple, TypedDict, Union
+from typing import List, Tuple, TypedDict, Union, Optional
 
 import polars as pl
 import pyarrow as pa
@@ -20,24 +22,29 @@ class LabelProcessorArtifactsWriteConfig(TypedDict):
 
 
 class LabelProcessor(Step):
-    """The label processor creates and maps a label vocab
+    """The label processor encodes label columns into numerical representations and
+    provides a mapping for each label to its respective representation.
+
+    Note
+    ----
 
     Avoid the direct instantiation of the LabelProcessor class
     and instead instantiate one of the child classes.
+
+    Attributes
+    ----------
+
+    fields : Union[str, List[str]]
+        The name of a label column of which the values
+        are used to generate a standardized mapping and
+        then that mapping is applied to the column.
+    method : str
+        Currently only a default 'unique' method is
+        supported which maps each unique value in the column to an id.
     """
 
     def __init__(self, fields: Union[str, List[str]], method: str = "unique"):
-        """Create an object of the LabelProcessor class
-
-        Keyword Arguments:
-            fields : Union[str, List[str]]
-                the name of a label column of which the values
-                are used to generate a standardized mapping and
-                then that mapping is applied to the column
-            method : str
-                currently only a default 'unique' method is
-                supported which maps each unique value in the
-                column to an id
+        """Constructor method
         """
         self.fields = fields
         if isinstance(fields, str):
@@ -58,8 +65,8 @@ class LabelProcessor(Step):
 
     def set_write_config(
         self,
-        data_config: DataWriteConfig = None,
-        artifacts_config: LabelProcessorArtifactsWriteConfig = None,
+        data_config: Optional[DataWriteConfig] = None,
+        artifacts_config: Optional[LabelProcessorArtifactsWriteConfig] = None,
     ):
         """Overwrite the default file writing configurations"""
         if data_config:
@@ -69,77 +76,68 @@ class LabelProcessor(Step):
 
     @abstractmethod
     def run(self):
-        """to be implemented in child class"""
+        """Abstract method
+        """
         pass
 
 
 class CPULabelProcessor(LabelProcessor):
-    """The label processor creates and maps a label vocab
+    """The label processor creates and maps a label vocab.
 
-    Implementation of the LabelProcessor for CPU computation
+    Note
+    ----
 
-    Attributes:
-        fields : Union[str, List[str]]
-            the name(s) of label column(s) of which the values
-            are used to generate a standardized mapping and
-            then that mapping is applied to the column(s)
-        method : str
-            currently only a default 'unique' method is
-            supported which maps each unique value in the
-            column to an id
-        mapping : dict
-            mapping dict of the form {label: id} used to convert
-            labels in the column to ids
-        id_to_label : dict
-            the reverse of mapping. of the form {id: label} used
-            downstream to map the ids back to the original label
-            values
+    This implementation of the LabelProcessor is specific for CPU computation.
 
-    Methods:
-        run : run the step's primary function
-        get_parameters : get a dictionary representation of the step object
-        set_write_config : Alter the default file writing configuration
-        write_outputs : Write output data to a file
+    Attributes
+    ----------
+
+    fields : Union[str, List[str]]
+        The name(s) of label column(s) of which the values 
+        are used to generate a standardized mapping and then that mapping is applied to the column(s).
+    method : str 
+        Currently only a default 'unique' method is supported which maps each unique value in the column to an id.
+    mapping : dict
+        Mapping dict of the form {label: id} used to convert labels in the column to ids.
+    id_to_label : dict
+        The reverse of mapping. Of the form {id: label} used downstream to map 
+        the ids back to the original label values.
     """
 
     def __init__(self, *args, **kwargs):
-        """Create an object of the CPULabelProcessor class
-
-        Keyword Arguments:
-            fields : Union[str, List[str]]
-                the name of a label column of which the values
-                are used to generate a standardized mapping and
-                then that mapping is applied to the column
-            method : str
-                currently only a default 'unique' method is
-                supported which maps each unique value in the
-                column to an id
+        """Constructor method
         """
         super().__init__(*args, **kwargs)
 
-    def run(self, data: pa.Table, artifacts: dict = None) -> Tuple[pa.Table, dict]:
+    def run(self, data: pa.Table, artifacts: Optional[dict] = None) -> Tuple[pa.Table, dict]:
         """Run a label processor using CPU computation
 
-        Keyword Arguments:
-            data : PyArrow Table
-                The data to be processed. The data must contain the
-                column specified by 'field' at object creation
-            artifacts : dict
-                artifacts are not used in this run method, but must be received
-                to operate correctly in the pipeline run method
+        Parameters
+        ----------
 
-        Returns:
-            Tuple[pyarrow.Table, dict]
-                The first position is a pyarrow.Table of processed data
-                The second position is a dictionary of artifacts. The dict will
-                contain a key for "id_to_label".
+        data : PyArrow Table
+            The data to be processed. The data must contain the
+            column specified by 'field' at object creation
+        artifacts : dict
+            artifacts are not used in this run method, but must be received
+            to operate correctly in the pipeline run method
+
+        Returns
+        -------
+
+        Tuple[pyarrow.Table, dict]
+            The first position is a pyarrow.Table of processed data.
+            The second position is a dictionary of artifacts. The dict will
+            contain a key for "id_to_label".
 
         Raises
-            NotImplementedError
-                A value other than 'unique' was provided for the
-                label processor's method
-            TypeError
-                The run method was not supplied a PyArrow Table
+        ------
+
+        NotImplementedError
+            A value other than 'unique' was provided for the
+            label processor's method
+        TypeError
+            The run method was not supplied a PyArrow Table
         """
         # Perform validations
         validate_pyarrow_table(data=data)
@@ -185,18 +183,17 @@ class CPULabelProcessor(LabelProcessor):
 
         return (data, produced_artifacts)
 
-    def write_artifacts(self, write_path: str, artifacts: Union[dict, None]) -> None:
+    def write_artifacts(self, write_path: str, artifacts: dict) -> None:
         """Write the outputs produced by the label_processor
 
-        Keyword Arguments:
-            write_path : str
-                Path is a directory where files will be written
-            artifacts : Union[dict, None]
-                Artifacts is a dictionary of artifacts produced in this step.
-                Expected key is: "id_to_label"
+        Parameters
+        ----------
 
-        Returns:
-            None
+        write_path : str
+            Path is a directory where files will be written
+        artifacts : dict
+            Artifacts is a dictionary of artifacts produced in this step.
+            Expected key is: "id_to_label"
         """
         id_to_token = artifacts["id_to_label"]
         # Add the filename with the appropriate filetype to the write path
@@ -218,7 +215,10 @@ class CPULabelProcessor(LabelProcessor):
         Does not return the mapping (vocab), but does return the id_to_label
         dict. This is because the mapping is just the reverse of id_to_label.
 
-        Returns:
+        Returns
+        -------
+
+        dict
             a dictionary representation of the splitter object's attributes
         """
         params = vars(self).copy()
