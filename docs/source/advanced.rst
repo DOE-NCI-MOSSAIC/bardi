@@ -30,7 +30,24 @@ can use to customize what regular expressions are applied to your text.
 
 2. **Append to a Provided bardi RegexSet**
 
-    Suppose you want to use a provided regular expression set, but 
+    Suppose you want to use a provided regular expression set, but you have some additional regular expressions 
+    you would like to add. Because the regular expression set just returns a Python list, you can just append 
+    your additional regular expressions to the list. ::
+
+        from bardi.nlp_engineering.regex_library.pathology_report import PathologyReportRegexSet
+
+        # grabbing a pre-made regex set for normalizing pathology reports
+        # turning off 3 of the regular expression substitutions I don't want to use
+        path_report_regex_set = PathologyReportRegexSet().get_regex_set(
+            remove_dimensions=False,
+            remove_specimen=False,
+            remove_decimal_seg_number=False
+        )
+
+        # Adding a custom regular expression substitution pair
+        path_report_regex_set.append(
+            {"regex_str": '$[0-9]+', "sub_str": 'MONEYTOKEN'}
+        )
 
 2. **Using Python Built-in Types to Write a Custom Set**
 
@@ -91,12 +108,51 @@ Creating a Custom Pipeline Step
 -------------------------------
 
 Documentation References:
-
+:mod:`bardi.pipeline.Step`
 
 We have provided some out-of-the-box pipeline steps, and hope to continue adding more helpful steps, but we don't 
-expect to provide every possibility of data pre-processing action you could ever need. So, what if we don't have 
-something built that you need? Create your own custom step! By following these guidelines you can create a step
-that will run within our pipeline, alongside any of the steps we provide, and have all of your custom step's 
-metadata captured in the standard metadata file.
+expect to have provided every possible data pre-processing action you could ever need. So, what if we don't have 
+something built that you need, but you still would like to use the framework? Create your own custom step! 
+By following these guidelines you can create a step that will run within our pipeline, alongside any of the steps 
+we provide, and have all of your custom step's metadata captured in the standard pipeline metadata file for
+reproducibility. ::
+
+    from bardi import Step
+
+    # initialize a pipeline
+    pipeline = Pipeline(dataset=dataset, write_outputs=False)
+
+    # adding a normalizer step to the pipeline
+    pipeline.add_step(
+        nlp_engineering.CPUNormalizer(
+            fields=['text'],
+            regex_set=pathology_regex_set,
+            lowercase=True
+        )
+    )
+
+    # creating a custom step
+    class MyCustomStep(Step):
+
+        def run(
+            self, data: pa.Table, artifacts: Optional[dict] = None
+        ) -> Tuple[pa.Table, dict]:
+            
+            df = pl.from_arrow(data)
+
+            
+
+            data = df.to_arrow()
+
+            return data
+
+    # adding the custom step to the pipeline
+    pipeline.add_step(
+        MyCustomStep()
+    )
+
+    # run the pipeline with the provided step and the custom step
+    pipeline.run_pipeline()
+                                            
 
 

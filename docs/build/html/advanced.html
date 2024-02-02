@@ -93,7 +93,7 @@
 containing a key for the regular expression, <cite>regex_str</cite>, and a key for the substitution string, <cite>sub_str</cite>. There are a few methods you
 can use to customize what regular expressions are applied to your text.</p>
 <ol class="arabic">
-<li><p>Tuning a Provided bardi RegexSet</p>
+<li><p><strong>Tuning a Provided bardi RegexSet</strong></p>
 <blockquote>
 <div><p>An existing RegexSet is tunable by turning individual regular expressions off and on as desired. By default, all are
 turned on, so you would just need to turn off the ones you don’t want to use.</p>
@@ -110,7 +110,32 @@ turned on, so you would just need to turn off the ones you don’t want to use.<
 </div>
 </div></blockquote>
 </li>
-<li><p>Using Python Built-in Types to Write a Custom Set</p>
+<li><p><strong>Append to a Provided bardi RegexSet</strong></p>
+<blockquote>
+<div><p>Suppose you want to use a provided regular expression set, but you have some additional regular expressions
+you would like to add. Because the regular expression set just returns a Python list, you can just append
+your additional regular expressions to the list.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bardi.nlp_engineering.regex_library.pathology_report</span> <span class="kn">import</span> <span class="n">PathologyReportRegexSet</span>
+
+<span class="c1"># grabbing a pre-made regex set for normalizing pathology reports</span>
+<span class="c1"># turning off 3 of the regular expression substitutions I don&#39;t want to use</span>
+<span class="n">path_report_regex_set</span> <span class="o">=</span> <span class="n">PathologyReportRegexSet</span><span class="p">()</span><span class="o">.</span><span class="n">get_regex_set</span><span class="p">(</span>
+    <span class="n">remove_dimensions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">remove_specimen</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">remove_decimal_seg_number</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="c1"># Adding a custom regular expression substitution pair</span>
+<span class="n">path_report_regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="s1">&#39;$[0-9]+&#39;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s1">&#39;MONEYTOKEN&#39;</span><span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+<ol class="arabic" start="2">
+<li><p><strong>Using Python Built-in Types to Write a Custom Set</strong></p>
 <blockquote>
 <div><p>Nothing is stopping you from writing your own set of regular expressions and providing that to the normalizer.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creating custom regular expression set</span>
@@ -131,7 +156,7 @@ turned on, so you would just need to turn off the ones you don’t want to use.<
 </div>
 </div></blockquote>
 </li>
-<li><p>Using the bardi RegexSet Class to Write a Custom Set</p>
+<li><p><strong>Using the bardi RegexSet Class to Write a Custom Set</strong></p>
 <blockquote>
 <div><p>However, if you would like a more organized approach [than the method shown above] to handle your custom regular expression sets,
 you could follow our lead by creating a new class and inherit from our RegexSet class. The RegexSet class you are inheriting
@@ -173,12 +198,52 @@ return this attribute, <cite>get_regex_set()</cite></p>
 </section>
 <section id="creating-a-custom-pipeline-step">
 <h2>Creating a Custom Pipeline Step<a class="headerlink" href="#creating-a-custom-pipeline-step" title="Link to this heading"></a></h2>
-<p>Documentation References:</p>
+<p>Documentation References:
+<a class="reference internal" href="bardi.html#bardi.pipeline.Step" title="bardi.pipeline.Step"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bardi.pipeline.Step</span></code></a></p>
 <p>We have provided some out-of-the-box pipeline steps, and hope to continue adding more helpful steps, but we don’t
-expect to provide every possibility of data pre-processing action you could ever need. So, what if we don’t have
-something built that you need? Create your own custom step! By following these guidelines you can create a step
-that will run within our pipeline, alongside any of the steps we provide, and have all of your custom step’s
-metadata captured in the standard metadata file.</p>
+expect to have provided every possible data pre-processing action you could ever need. So, what if we don’t have
+something built that you need, but you still would like to use the framework? Create your own custom step!
+By following these guidelines you can create a step that will run within our pipeline, alongside any of the steps
+we provide, and have all of your custom step’s metadata captured in the standard pipeline metadata file for
+reproducibility.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bardi</span> <span class="kn">import</span> <span class="n">Step</span>
+
+<span class="c1"># initialize a pipeline</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">write_outputs</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># adding a normalizer step to the pipeline</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+    <span class="n">nlp_engineering</span><span class="o">.</span><span class="n">CPUNormalizer</span><span class="p">(</span>
+        <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">],</span>
+        <span class="n">regex_set</span><span class="o">=</span><span class="n">pathology_regex_set</span><span class="p">,</span>
+        <span class="n">lowercase</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># creating a custom step</span>
+<span class="k">class</span> <span class="nc">MyCustomStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">,</span> <span class="n">artifacts</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">from_arrow</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">to_arrow</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">data</span>
+
+<span class="c1"># adding the custom step to the pipeline</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+    <span class="n">MyCustomStep</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="c1"># run the pipeline with the provided step and the custom step</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">run_pipeline</span><span class="p">()</span>
+</pre></div>
+</div>
 </section>
 </section>
 

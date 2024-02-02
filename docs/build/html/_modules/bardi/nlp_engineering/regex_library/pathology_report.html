@@ -76,7 +76,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for bardi.nlp_engineering.regex_library.pathology_report</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Curated set of regular expressions for cleaning text from pathology reports&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Curated set of regular expressions for cleaning text from pathology reports.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
@@ -87,6 +87,104 @@
 <div class="viewcode-block" id="PathologyReportRegexSet">
 <a class="viewcode-back" href="../../../../bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet">[docs]</a>
 <span class="k">class</span> <span class="nc">PathologyReportRegexSet</span><span class="p">(</span><span class="n">RegexSet</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The PathologyReportRegexSet includes set of standard</span>
+<span class="sd">    regular expression to normalize a pathology report.</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    </span>
+<span class="sd">    The set of regular expressions tailored for pathology reports</span>
+<span class="sd">    was crafted with the understanding that dividing text based</span>
+<span class="sd">    on punctuation often results in the loss of crucial information.</span>
+<span class="sd">    E.g. terms like &quot;her-2&quot; should not be split. However, to ensure</span>
+<span class="sd">    that the number of unique tokens remains manageable we employ a number</span>
+<span class="sd">    of regular expression to separate some tokens around punctuation.</span>
+<span class="sd">    E.g. :code:`22-years` becomes :code:`22 years`.</span>
+<span class="sd">    This consideration is particularly important when </span>
+<span class="sd">    employing the word2vec algorithm, as an excessive number of tokens</span>
+<span class="sd">    can impede the model&#39;s effectiveness by diluting the representation of key concepts.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    convert_escape_codes: bool</span>
+<span class="sd">        Removes escape codes such as \\x0d, \\x0a, etc.</span>
+<span class="sd">    handle_whitespaces: bool</span>
+<span class="sd">        Removes extra whitespaces: any new line, carriage return tab.</span>
+<span class="sd">    remove_urls: bool</span>
+<span class="sd">        Removes URLs found in the text that match the pattern. </span>
+<span class="sd">    remove_special_punct: bool </span>
+<span class="sd">        Removes special punctuation like (?,$).</span>
+<span class="sd">    remove_multiple_punct: bool</span>
+<span class="sd">        Removes duplicated punctuation.</span>
+<span class="sd">        E.g. :code:`---`</span>
+<span class="sd">    handle_angle_brackets: bool</span>
+<span class="sd">        Removes angle brackets.</span>
+<span class="sd">        E.g. :code:`&lt;title&gt;` becomes :code:`title`.</span>
+<span class="sd">    replace_percent_sign: bool</span>
+<span class="sd">        Replaces a percent sign with a &#39;percent&#39; word.</span>
+<span class="sd">    handle_leading_digit_punct: bool</span>
+<span class="sd">        Removes punctuation when digit is attached to word.</span>
+<span class="sd">        E.g. :code:`22-years` becomes :code:`22 years`.</span>
+<span class="sd">    remove_leading_punct: bool</span>
+<span class="sd">        Removes leading punctuation from words.</span>
+<span class="sd">        E.g. :code:`-result` becomes :code:`result`.    </span>
+<span class="sd">    remove_trailing_punct: bool</span>
+<span class="sd">        Removes trailing punctuation from words.</span>
+<span class="sd">        E.g. :code:`result-` becomes :code:`result`.</span>
+<span class="sd">    handle_words_with_punct_spacing: bool</span>
+<span class="sd">        Matches words with hyphen, colon or period and splits them.</span>
+<span class="sd">    handle_math_spacing: bool </span>
+<span class="sd">        Matches &quot;math operators symbols&quot; like &gt;&lt;=%: and adds spaces aroud them.</span>
+<span class="sd">    handle_dimension_spacing: bool</span>
+<span class="sd">        Matches digits and x and adds spaces between them.</span>
+<span class="sd">    handle_measure_spacing: bool</span>
+<span class="sd">        Matches measurements in mm, cm and ml provides proper spacing between the digits and measure.</span>
+<span class="sd">    handle_cassettes_spacing: bool</span>
+<span class="sd">        Matches patterns like 5e-6f and adds spaces around them.</span>
+<span class="sd">    handle_dash_digit_spacing: bool</span>
+<span class="sd">        Matches dashes around digits and adds spaces around the dashes.</span>
+<span class="sd">    handle_literals_floats_spacing: bool</span>
+<span class="sd">        Matches character followed by a float and a word.</span>
+<span class="sd">        This is a common formating problem.</span>
+<span class="sd">        E.g. :code:`r18.0admission` becomes :code:`r18.0 admission`.</span>
+<span class="sd">    fix_pluralization: bool</span>
+<span class="sd">        Matches s character after a word and attaches it back to the word.</span>
+<span class="sd">        This restores plural nouns demages by removed punctuation.</span>
+<span class="sd">    handle_digits_words_spacing: bool</span>
+<span class="sd">        Matches digits that are attached to the beginning of a word.</span>
+<span class="sd">    remove_phone_numbers: bool</span>
+<span class="sd">        Matches any phone number that consists of 10 digits with delimeters.</span>
+<span class="sd">    remove_dates: bool</span>
+<span class="sd">        Removes dates of prespecified format.</span>
+<span class="sd">    remove_times: bool</span>
+<span class="sd">        Matches time of format 11:20 am or 1.30pm or 9:52:07AM.</span>
+<span class="sd">    remove_addresses: bool</span>
+<span class="sd">        Matches any address of format num (street name) in 1 to 6 words 2-letter state</span>
+<span class="sd">        and short or long zip code.</span>
+<span class="sd">    remove_dimensions: bool</span>
+<span class="sd">        Matches 2D or 3D dimension measurements and adds spaces around them.</span>
+<span class="sd">    remove_specimen: bool</span>
+<span class="sd">        Matches marking of a pathology speciman.</span>
+<span class="sd">    remove_decimal_seg_numbers: bool</span>
+<span class="sd">        Matches combinations of digits and periods or dashes.</span>
+<span class="sd">        E.g. :code:` 1.78.9.87`.</span>
+<span class="sd">    remove_large_digits_seq: bool</span>
+<span class="sd">        Matches large sequences of digits (3 or more) and replaces it.</span>
+<span class="sd">    remove_large_floats_seq: bool</span>
+<span class="sd">        Matches large floats and replace them.</span>
+<span class="sd">    trunc_decimals: bool = True</span>
+<span class="sd">        Matches floats and keeps only first decimal.</span>
+<span class="sd">    remove_cassette_names: bool</span>
+<span class="sd">        Removes pathology samples&#39; markings.</span>
+<span class="sd">        E.g. :code:`1-e`.</span>
+<span class="sd">    remove_duration_time: bool</span>
+<span class="sd">        Removes duration a speciment was treated.</span>
+<span class="sd">        E.g. :code:`32d09090301`.</span>
+<span class="sd">    remove_letter_num_seq: bool</span>
+<span class="sd">        Removes a character followed directly by 6 to 10 digits.</span>
+<span class="sd">      </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">convert_escape_codes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># 0</span>

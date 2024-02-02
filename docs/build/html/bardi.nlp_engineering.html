@@ -1773,191 +1773,622 @@ distribution across splits, but this is not guaranteed.</p>
 </section>
 <section id="module-bardi.nlp_engineering.regex_library.pathology_report">
 <span id="bardi-provided-regex-sets"></span><h3>bardi provided regex sets<a class="headerlink" href="#module-bardi.nlp_engineering.regex_library.pathology_report" title="Link to this heading"></a></h3>
-<p>Curated set of regular expressions for cleaning text from pathology reports</p>
+<p>Curated set of regular expressions for cleaning text from pathology reports.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.pathology_report.</span></span><span class="sig-name descname"><span class="pre">PathologyReportRegexSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">convert_escape_codes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_whitespaces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_urls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_special_punct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_multiple_punct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_angle_brackets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace_percent_sign</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_leading_digit_punct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_leading_punct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_trailing_punct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_words_with_punct_spacing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_math_spacing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_dimension_spacing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_measure_spacing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_cassettes_spacing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_dash_digit_spacing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_literals_floats_spacing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix_pluralization</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_digits_words_spacing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_phone_numbers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_dates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_times</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_addresses</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_specimen</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_decimal_seg_numbers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_large_digits_seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_large_floats_seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_decimals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_cassette_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_duration_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_letter_num_seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/pathology_report.html#PathologyReportRegexSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSet" title="bardi.nlp_engineering.regex_library.regex_set.RegexSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">RegexSet</span></code></a></p>
+<p>The PathologyReportRegexSet includes set of standard
+regular expression to normalize a pathology report.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The set of regular expressions tailored for pathology reports
+was crafted with the understanding that dividing text based
+on punctuation often results in the loss of crucial information.
+E.g. terms like “her-2” should not be split. However, to ensure
+that the number of unique tokens remains manageable we employ a number
+of regular expression to separate some tokens around punctuation.
+E.g. <code class="code docutils literal notranslate"><span class="pre">22-years</span></code> becomes <code class="code docutils literal notranslate"><span class="pre">22</span> <span class="pre">years</span></code>.
+This consideration is particularly important when
+employing the word2vec algorithm, as an excessive number of tokens
+can impede the model’s effectiveness by diluting the representation of key concepts.</p>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.convert_escape_codes">
+<span class="sig-name descname"><span class="pre">convert_escape_codes</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.convert_escape_codes" title="Link to this definition"></a></dt>
+<dd><p>Removes escape codes such as x0d, x0a, etc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_whitespaces">
+<span class="sig-name descname"><span class="pre">handle_whitespaces</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_whitespaces" title="Link to this definition"></a></dt>
+<dd><p>Removes extra whitespaces: any new line, carriage return tab.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_urls">
+<span class="sig-name descname"><span class="pre">remove_urls</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_urls" title="Link to this definition"></a></dt>
+<dd><p>Removes URLs found in the text that match the pattern.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_special_punct">
+<span class="sig-name descname"><span class="pre">remove_special_punct</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_special_punct" title="Link to this definition"></a></dt>
+<dd><p>Removes special punctuation like (?,$).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_multiple_punct">
+<span class="sig-name descname"><span class="pre">remove_multiple_punct</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_multiple_punct" title="Link to this definition"></a></dt>
+<dd><p>Removes duplicated punctuation.
+E.g. <code class="code docutils literal notranslate"><span class="pre">---</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_angle_brackets">
+<span class="sig-name descname"><span class="pre">handle_angle_brackets</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_angle_brackets" title="Link to this definition"></a></dt>
+<dd><p>Removes angle brackets.
+E.g. <code class="code docutils literal notranslate"><span class="pre">&lt;title&gt;</span></code> becomes <code class="code docutils literal notranslate"><span class="pre">title</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.replace_percent_sign">
+<span class="sig-name descname"><span class="pre">replace_percent_sign</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.replace_percent_sign" title="Link to this definition"></a></dt>
+<dd><p>Replaces a percent sign with a ‘percent’ word.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_leading_digit_punct">
+<span class="sig-name descname"><span class="pre">handle_leading_digit_punct</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_leading_digit_punct" title="Link to this definition"></a></dt>
+<dd><p>Removes punctuation when digit is attached to word.
+E.g. <code class="code docutils literal notranslate"><span class="pre">22-years</span></code> becomes <code class="code docutils literal notranslate"><span class="pre">22</span> <span class="pre">years</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_leading_punct">
+<span class="sig-name descname"><span class="pre">remove_leading_punct</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_leading_punct" title="Link to this definition"></a></dt>
+<dd><p>Removes leading punctuation from words.
+E.g. <code class="code docutils literal notranslate"><span class="pre">-result</span></code> becomes <code class="code docutils literal notranslate"><span class="pre">result</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_trailing_punct">
+<span class="sig-name descname"><span class="pre">remove_trailing_punct</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_trailing_punct" title="Link to this definition"></a></dt>
+<dd><p>Removes trailing punctuation from words.
+E.g. <code class="code docutils literal notranslate"><span class="pre">result-</span></code> becomes <code class="code docutils literal notranslate"><span class="pre">result</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_words_with_punct_spacing">
+<span class="sig-name descname"><span class="pre">handle_words_with_punct_spacing</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_words_with_punct_spacing" title="Link to this definition"></a></dt>
+<dd><p>Matches words with hyphen, colon or period and splits them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_math_spacing">
+<span class="sig-name descname"><span class="pre">handle_math_spacing</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_math_spacing" title="Link to this definition"></a></dt>
+<dd><p>Matches “math operators symbols” like &gt;&lt;=%: and adds spaces aroud them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_dimension_spacing">
+<span class="sig-name descname"><span class="pre">handle_dimension_spacing</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_dimension_spacing" title="Link to this definition"></a></dt>
+<dd><p>Matches digits and x and adds spaces between them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_measure_spacing">
+<span class="sig-name descname"><span class="pre">handle_measure_spacing</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_measure_spacing" title="Link to this definition"></a></dt>
+<dd><p>Matches measurements in mm, cm and ml provides proper spacing between the digits and measure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_cassettes_spacing">
+<span class="sig-name descname"><span class="pre">handle_cassettes_spacing</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_cassettes_spacing" title="Link to this definition"></a></dt>
+<dd><p>Matches patterns like 5e-6f and adds spaces around them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_dash_digit_spacing">
+<span class="sig-name descname"><span class="pre">handle_dash_digit_spacing</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_dash_digit_spacing" title="Link to this definition"></a></dt>
+<dd><p>Matches dashes around digits and adds spaces around the dashes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_literals_floats_spacing">
+<span class="sig-name descname"><span class="pre">handle_literals_floats_spacing</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_literals_floats_spacing" title="Link to this definition"></a></dt>
+<dd><p>Matches character followed by a float and a word.
+This is a common formating problem.
+E.g. <code class="code docutils literal notranslate"><span class="pre">r18.0admission</span></code> becomes <code class="code docutils literal notranslate"><span class="pre">r18.0</span> <span class="pre">admission</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.fix_pluralization">
+<span class="sig-name descname"><span class="pre">fix_pluralization</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.fix_pluralization" title="Link to this definition"></a></dt>
+<dd><p>Matches s character after a word and attaches it back to the word.
+This restores plural nouns demages by removed punctuation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_digits_words_spacing">
+<span class="sig-name descname"><span class="pre">handle_digits_words_spacing</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.handle_digits_words_spacing" title="Link to this definition"></a></dt>
+<dd><p>Matches digits that are attached to the beginning of a word.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_phone_numbers">
+<span class="sig-name descname"><span class="pre">remove_phone_numbers</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_phone_numbers" title="Link to this definition"></a></dt>
+<dd><p>Matches any phone number that consists of 10 digits with delimeters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_dates">
+<span class="sig-name descname"><span class="pre">remove_dates</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_dates" title="Link to this definition"></a></dt>
+<dd><p>Removes dates of prespecified format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_times">
+<span class="sig-name descname"><span class="pre">remove_times</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_times" title="Link to this definition"></a></dt>
+<dd><p>Matches time of format 11:20 am or 1.30pm or 9:52:07AM.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_addresses">
+<span class="sig-name descname"><span class="pre">remove_addresses</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_addresses" title="Link to this definition"></a></dt>
+<dd><p>Matches any address of format num (street name) in 1 to 6 words 2-letter state
+and short or long zip code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_dimensions">
+<span class="sig-name descname"><span class="pre">remove_dimensions</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_dimensions" title="Link to this definition"></a></dt>
+<dd><p>Matches 2D or 3D dimension measurements and adds spaces around them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_specimen">
+<span class="sig-name descname"><span class="pre">remove_specimen</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_specimen" title="Link to this definition"></a></dt>
+<dd><p>Matches marking of a pathology speciman.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_decimal_seg_numbers">
+<span class="sig-name descname"><span class="pre">remove_decimal_seg_numbers</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_decimal_seg_numbers" title="Link to this definition"></a></dt>
+<dd><p>Matches combinations of digits and periods or dashes.
+E.g. :code:` 1.78.9.87`.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_large_digits_seq">
+<span class="sig-name descname"><span class="pre">remove_large_digits_seq</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_large_digits_seq" title="Link to this definition"></a></dt>
+<dd><p>Matches large sequences of digits (3 or more) and replaces it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_large_floats_seq">
+<span class="sig-name descname"><span class="pre">remove_large_floats_seq</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_large_floats_seq" title="Link to this definition"></a></dt>
+<dd><p>Matches large floats and replace them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.trunc_decimals">
+<span class="sig-name descname"><span class="pre">trunc_decimals</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.trunc_decimals" title="Link to this definition"></a></dt>
+<dd><p>Matches floats and keeps only first decimal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool = True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_cassette_names">
+<span class="sig-name descname"><span class="pre">remove_cassette_names</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_cassette_names" title="Link to this definition"></a></dt>
+<dd><p>Removes pathology samples’ markings.
+E.g. <code class="code docutils literal notranslate"><span class="pre">1-e</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_duration_time">
+<span class="sig-name descname"><span class="pre">remove_duration_time</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_duration_time" title="Link to this definition"></a></dt>
+<dd><p>Removes duration a speciment was treated.
+E.g. <code class="code docutils literal notranslate"><span class="pre">32d09090301</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_letter_num_seq">
+<span class="sig-name descname"><span class="pre">remove_letter_num_seq</span></span><a class="headerlink" href="#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet.remove_letter_num_seq" title="Link to this definition"></a></dt>
+<dd><p>Removes a character followed directly by 6 to 10 digits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
 <section id="module-bardi.nlp_engineering.regex_library.regex_lib">
 <span id="bardi-provided-regex-library"></span><h3>bardi provided regex library<a class="headerlink" href="#module-bardi.nlp_engineering.regex_library.regex_lib" title="Link to this heading"></a></h3>
-<p>Library of pre-defined regular expression substitution pairs</p>
+<p>Library of pre-defined regular expression substitution pairs.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_address_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_address_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_address_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_address_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches any address of format
 num (street name) in 1 to 6 words 2-letter state
-and short or long zip code.
-:param None:</p>
+and short or long zip code.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“ 1034 north 500 west provo ut 84604-3337 “ –&gt;
-“  ADDRESSTOKEN  “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1034</span> <span class="n">north</span> <span class="mi">500</span> <span class="n">west</span> <span class="n">provo</span> <span class="n">ut</span> <span class="mi">84604</span><span class="o">-</span><span class="mi">3337</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ADDRESSTOKEN</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_angle_brackets_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_angle_brackets_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_angle_brackets_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_angle_brackets_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches a content between matching angle brackets,
-keeps the content only, removes the brackets.
-:param None:</p>
+keeps the content only, removes the brackets.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
-<p>Example:
-“&lt;This should be fixed&gt; But not this &gt;90” –&gt;
-“ This should be fixed  But not this &gt;90”</p>
+<p class="rubric">Example</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">This</span> <span class="n">should</span> <span class="n">be</span> <span class="n">fixed</span><span class="o">&gt;</span> <span class="n">But</span> <span class="ow">not</span> <span class="n">this</span> <span class="o">&gt;</span><span class="mi">90</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">This</span> <span class="n">should</span> <span class="n">be</span> <span class="n">fixed</span> <span class="n">But</span> <span class="ow">not</span> <span class="n">this</span> <span class="o">&gt;</span><span class="mi">90</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_cassette_name_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_cassette_name_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_cassette_name_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_cassette_name_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches cassettes markings of
-the specified format:
-:param None:</p>
+the specified format:</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“ block:  1-e ”
-“ block:  CASSETTETOKEN “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">block</span><span class="p">:</span>  <span class="mi">1</span><span class="o">-</span><span class="n">e</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">block</span><span class="p">:</span>  <span class="n">CASSETTETOKEN</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_cassettes_spacing_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_cassettes_spacing_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_cassettes_spacing_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_cassettes_spacing_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches patterns like 5e-6f
-and adds spaces around them.
-E.g.
-:param None:</p>
+and adds spaces around them.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p>“ 3e-3f” –&gt;
-“ 3e - 3f “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">3e-3</span><span class="n">f</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span><span class="n">e</span> <span class="o">-</span> <span class="mi">3</span><span class="n">f</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_dash_digits_spacing_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_dash_digits_spacing_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_dash_digits_spacing_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_dash_digits_spacing_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches dashes around digits and adds
-spaces around the dashes.
-:param None:</p>
+spaces around the dashes.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<p>“right 1:30-2:30 1.5-2.0 cm 0.9 cm for the 7-6”
-“right 1:30 - 2:30 1.5 - 2.0 cm 0.9 cm for the 7 - 6”</p>
+<p class="rubric">Example</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">right</span> <span class="mi">1</span><span class="p">:</span><span class="mi">30</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="mi">30</span> <span class="mf">1.5</span><span class="o">-</span><span class="mf">2.0</span> <span class="n">cm</span> <span class="mf">0.9</span> <span class="n">cm</span> <span class="k">for</span> <span class="n">the</span> <span class="mi">7</span><span class="o">-</span><span class="mi">6</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">right</span> <span class="mi">1</span><span class="p">:</span><span class="mi">30</span> <span class="o">-</span> <span class="mi">2</span><span class="p">:</span><span class="mi">30</span> <span class="mf">1.5</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="n">cm</span> <span class="mf">0.9</span> <span class="n">cm</span> <span class="k">for</span> <span class="n">the</span> <span class="mi">7</span> <span class="o">-</span> <span class="mi">6</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_dates_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_dates_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_dates_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_dates_regex" title="Link to this definition"></a></dt>
-<dd><p>Matches dates of specified formats.
-:param None:</p>
+<dd><p>Matches dates of specified formats.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“co: 03/09/2021 1015 completed: 03/10/21 at 3:34.”
-“co:  DATETOKEN completed:  DATETOKEN .”</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">co</span><span class="p">:</span> <span class="mi">03</span><span class="o">/</span><span class="mi">09</span><span class="o">/</span><span class="mi">2021</span> <span class="mi">1015</span> <span class="n">completed</span><span class="p">:</span> <span class="mi">03</span><span class="o">/</span><span class="mi">10</span><span class="o">/</span><span class="mi">21</span> <span class="n">at</span> <span class="mi">3</span><span class="p">:</span><span class="mf">34.</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">co</span><span class="p">:</span>  <span class="n">DATETOKEN</span> <span class="n">completed</span><span class="p">:</span>  <span class="n">DATETOKEN</span> <span class="o">.</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_decimal_segmented_numbers_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_decimal_segmented_numbers_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_decimal_segmented_numbers_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_decimal_segmented_numbers_regex" title="Link to this definition"></a></dt>
-<dd><p>Matches combinations of digits and periods or dashes.
-:param None:</p>
+<dd><p>Matches combinations of digits and periods or dashes.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“ 1.78.9.87 ”
-“  DECIMALSEGMENTEDNUMBERTOKEN  “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.78.9.87</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DECIMALSEGMENTEDNUMBERTOKEN</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_digits_words_spacing_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_digits_words_spacing_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_digits_words_spacing_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_digits_words_spacing_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches digits that are attached to the
-beginning of a word.
-:param None:</p>
+beginning of a word.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<dl class="simple">
-<dt>“ 9837648admission “ –&gt;</dt><dd><p>9837648 admission “</p>
-</dd>
-</dl>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">9837648</span><span class="n">admission</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">9837648</span> <span class="n">admission</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_dimension_spacing_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_dimension_spacing_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_dimension_spacing_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_dimension_spacing_regex" title="Link to this definition"></a></dt>
-<dd><p>Matches digits and x and adds spaces between them.
-:param None:</p>
+<dd><p>Matches digits and x and adds spaces between them.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“measuring 1.3x0.7x0.1 cm”
-“measuring 1.3 x 0.7 x 0.1 cm”</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">measuring</span> <span class="mf">1.3</span><span class="n">x0</span><span class="mf">.7</span><span class="n">x0</span><span class="mf">.1</span> <span class="n">cm</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">measuring</span> <span class="mf">1.3</span> <span class="n">x</span> <span class="mf">0.7</span> <span class="n">x</span> <span class="mf">0.1</span> <span class="n">cm</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_dimensions_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_dimensions_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_dimensions_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_dimensions_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches 2D or 3D dimension measurements
-and adds spaces around them.
-:param None:</p>
+and adds spaces around them.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“ 3.5 x 2.5 x 9.0 cm and 33 x 6.5 cm” –&gt;
-“  DIMENSIONTOKEN  cm and  DIMENSIONTOKEN  cm”</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">3.5</span> <span class="n">x</span> <span class="mf">2.5</span> <span class="n">x</span> <span class="mf">9.0</span> <span class="n">cm</span> <span class="ow">and</span> <span class="mi">33</span> <span class="n">x</span> <span class="mf">6.5</span> <span class="n">cm</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DIMENSIONTOKEN</span>  <span class="n">cm</span> <span class="ow">and</span>  <span class="n">DIMENSIONTOKEN</span>  <span class="n">cm</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_duration_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_duration_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_duration_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_duration_regex" title="Link to this definition"></a></dt>
-<dd><p>Matches duration specimen was treated:
-:param None:</p>
+<dd><p>Matches duration specimen was treated:</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“ 32d0909091”
-“ DURATIONTOKEN “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">32</span><span class="n">d0909091</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DURATIONTOKEN</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -1973,10 +2404,14 @@ and adds spaces around them.
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<dl class="simple">
-<dt>::</dt><dd><p>‘Codesx0dx0ax0d r30 ‘–&gt; ‘Codes      30 ‘</p>
-</dd>
-</dl>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Codes</span>\<span class="n">x0d</span>\<span class="n">x0a</span>\<span class="n">x0d</span> \<span class="n">r30</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Codes</span>      <span class="mi">30</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -1984,46 +2419,61 @@ and adds spaces around them.
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_fix_pluralization_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_fix_pluralization_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_fix_pluralization_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches s character after a word
 and attaches it back to the word. This restores
-plural nouns demages by removed punctuation.
-:param None:</p>
+plural nouns demages by removed punctuation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“ specimen s code s ”
-“ specimens codes “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">specimen</span> <span class="n">s</span> <span class="n">code</span> <span class="n">s</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">specimens</span> <span class="n">codes</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_large_digits_seq_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_large_digits_seq_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_large_digits_seq_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_large_digits_seq_regex" title="Link to this definition"></a></dt>
-<dd><p>Matches large sequences of digits and replaces it.
-:param None:</p>
+<dd><p>Matches large sequences of digits and replaces it.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“ 456123456 ”
-“ DIGITSEQUENCETOKEN “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">456123456</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DIGITSEQUENCETOKEN</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_large_float_seq_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_large_float_seq_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_large_float_seq_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_large_float_seq_regex" title="Link to this definition"></a></dt>
-<dd><p>Matches large floats and replace them.
-:param None:</p>
+<dd><p>Matches large floats and replace them.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“ 456 123456.783 ”
-“ 456 LARGEFLOATTOKEN  “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">456</span> <span class="mf">123456.783</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">456</span> <span class="n">LARGEFLOATTOKEN</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -2032,47 +2482,62 @@ plural nouns demages by removed punctuation.
 <dd><p>Matches numeric digits at the start of a word,
 followed by punctuation and additional characters.
 Proceeds to eliminate the punctuation and inserts
-a space between the digits an the word.
-:param None:</p>
+a space between the digits an the word.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“ 13-unremarkable 1-e 22-years ”
-“  13 unremarkable   1 e   22 years  “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">13</span><span class="o">-</span><span class="n">unremarkable</span> <span class="mi">1</span><span class="o">-</span><span class="n">e</span> <span class="mi">22</span><span class="o">-</span><span class="n">years</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">13</span> <span class="n">unremarkable</span>   <span class="mi">1</span> <span class="n">e</span>   <span class="mi">22</span> <span class="n">years</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_leading_punctuation_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_leading_punctuation_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_leading_punctuation_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_leading_punctuation_regex" title="Link to this definition"></a></dt>
-<dd><p>Matches leading punctuation and removes it.
-:param None:</p>
+<dd><p>Matches leading punctuation and removes it.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“ -3a -anterior -result- :cassette ”
-“ 3a  anterior  result-  cassette  “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mi">3</span><span class="n">a</span> <span class="o">-</span><span class="n">anterior</span> <span class="o">-</span><span class="n">result</span><span class="o">-</span> <span class="p">:</span><span class="n">cassette</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span><span class="n">a</span>  <span class="n">anterior</span>  <span class="n">result</span><span class="o">-</span>  <span class="n">cassette</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_letter_num_seq_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_letter_num_seq_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_letter_num_seq_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_letter_num_seq_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches a character followed directly
-by 6 to 10 digits:
-:param None:</p>
+by 6 to 10 digits:</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“ c001234567”
-“ LETTERDIGITSTOKEN “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">c001234567</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">LETTERDIGITSTOKEN</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -2080,32 +2545,42 @@ by 6 to 10 digits:
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_literals_floats_spacing_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_literals_floats_spacing_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_literals_floats_spacing_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches character followed by a float and a word.
 This is a common formating problem.
-e.g. r18.0admission -&gt;  r18.0 admission
-:param None:</p>
+e.g. r18.0admission -&gt;  r18.0 admission</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<p>“ r18.0admission diagnosis: bi n13.30admission ”
-“ r18.0 admission diagnosis: bi n13.30 admission “</p>
+<p class="rubric">Example</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">r18</span><span class="mf">.0</span><span class="n">admission</span> <span class="n">diagnosis</span><span class="p">:</span> <span class="n">bi</span> <span class="n">n13</span><span class="mf">.30</span><span class="n">admission</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">r18</span><span class="mf">.0</span> <span class="n">admission</span> <span class="n">diagnosis</span><span class="p">:</span> <span class="n">bi</span> <span class="n">n13</span><span class="mf">.30</span> <span class="n">admission</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_math_spacing_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_math_spacing_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_math_spacing_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_math_spacing_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches “math operators symbols” like &gt;&lt;=%:
-and adds spaces aroud them.
-:param None:</p>
+and adds spaces aroud them.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“This is &gt;95% 3+3=8  6/7”
-“This is  &gt; 95 %  3 + 3 = 8  6 / 7”</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">This</span> <span class="ow">is</span> <span class="o">&gt;</span><span class="mi">95</span><span class="o">%</span> <span class="mi">3</span><span class="o">+</span><span class="mi">3</span><span class="o">=</span><span class="mi">8</span>  <span class="mi">6</span><span class="o">/</span><span class="mi">7</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">This</span> <span class="ow">is</span>  <span class="o">&gt;</span> <span class="mi">95</span> <span class="o">%</span>  <span class="mi">3</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">=</span> <span class="mi">8</span>  <span class="mi">6</span> <span class="o">/</span> <span class="mi">7</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -2113,198 +2588,249 @@ and adds spaces aroud them.
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_measure_spacing_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_measure_spacing_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_measure_spacing_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches measurements in mm, cm and ml provides
 proper spacing between the digits and measure.
-Also provides specing between 11th -&gt; 11 th.
-:param None:</p>
+Also provides specing between 11th -&gt; 11 th.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“10mm histologic type 2 x 3cm. this is 3.0-cm “ –&gt;
-“10 mm  histologic type 2 x 3 cm . this is 3.0 cm  “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span><span class="n">mm</span> <span class="n">histologic</span> <span class="nb">type</span> <span class="mi">2</span> <span class="n">x</span> <span class="mi">3</span><span class="n">cm</span><span class="o">.</span> <span class="n">this</span> <span class="ow">is</span> <span class="mf">3.0</span><span class="o">-</span><span class="n">cm</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span> <span class="n">mm</span>  <span class="n">histologic</span> <span class="nb">type</span> <span class="mi">2</span> <span class="n">x</span> <span class="mi">3</span> <span class="n">cm</span> <span class="o">.</span> <span class="n">this</span> <span class="ow">is</span> <span class="mf">3.0</span> <span class="n">cm</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_multiple_punct_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_multiple_punct_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_multiple_punct_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_multiple_punct_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches multiple occurences of symbols like -, .
-and _ replaces them with a single space.
-:param None:</p>
+and _ replaces them with a single space.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“—–this is report ___ signature” –&gt;
-“ this is report   signature”</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-----</span><span class="n">this</span> <span class="ow">is</span> <span class="n">report</span> <span class="n">___</span> <span class="n">signature</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">this</span> <span class="ow">is</span> <span class="n">report</span>   <span class="n">signature</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_percent_sign_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_percent_sign_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_percent_sign_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_percent_sign_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches the % sign and replaces
-it with a word ‘percent’.
-:param None:</p>
+it with a word ‘percent’.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“strong intensity &gt;95%” –&gt;
-“strong intensity &gt;95 percent “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">strong</span> <span class="n">intensity</span> <span class="o">&gt;</span><span class="mi">95</span><span class="o">%</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">strong</span> <span class="n">intensity</span> <span class="o">&gt;</span><span class="mi">95</span> <span class="n">percent</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_phone_number_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_phone_number_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_phone_number_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_phone_number_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches any phone number that consists
-of 10 digits with delimeters.
-:param None:</p>
+of 10 digits with delimeters.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“Ph: (123) 456 7890. It is (123)4567890. –&gt;
-“Ph:  PHONENUMTOKEN . It is  PHONENUMTOKEN .”</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Ph</span><span class="p">:</span> <span class="p">(</span><span class="mi">123</span><span class="p">)</span> <span class="mi">456</span> <span class="mf">7890.</span> <span class="n">It</span> <span class="ow">is</span> <span class="p">(</span><span class="mi">123</span><span class="p">)</span><span class="mf">4567890.</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Ph</span><span class="p">:</span>  <span class="n">PHONENUMTOKEN</span> <span class="o">.</span> <span class="n">It</span> <span class="ow">is</span>  <span class="n">PHONENUMTOKEN</span> <span class="o">.</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_spaces_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_spaces_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_spaces_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_spaces_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches additional spaces (artifact of applying
-other regex), matches not needed periods that can be removed.
-:param None:</p>
+other regex), matches not needed periods that can be removed.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“located around lower arm specimen   date”
-“located around lower arm specimen date”</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">located</span> <span class="n">around</span> <span class="n">lower</span> <span class="n">arm</span> <span class="n">specimen</span>   <span class="n">date</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">located</span> <span class="n">around</span> <span class="n">lower</span> <span class="n">arm</span> <span class="n">specimen</span> <span class="n">date</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_special_punct_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_special_punct_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_special_punct_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_special_punct_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches a set of chosen punctuation symbols _,();[]#{}*”’~?!|^
-and replaces them with a single space.
-:param None:</p>
+and replaces them with a single space.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
-<p>Example:
-“ wt-1, ck-7 (focal) negative; [sth] ab|cd” –&gt;
-“ wt-1  ck-7  focal  negative   sth  ab cd”</p>
+<p class="rubric">Example</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wt</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ck</span><span class="o">-</span><span class="mi">7</span> <span class="p">(</span><span class="n">focal</span><span class="p">)</span> <span class="n">negative</span><span class="p">;</span> <span class="p">[</span><span class="n">sth</span><span class="p">]</span> <span class="n">ab</span><span class="o">|</span><span class="n">cd</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wt</span><span class="o">-</span><span class="mi">1</span>  <span class="n">ck</span><span class="o">-</span><span class="mi">7</span>  <span class="n">focal</span>  <span class="n">negative</span>   <span class="n">sth</span>  <span class="n">ab</span> <span class="n">cd</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_specimen_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_specimen_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_specimen_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_specimen_regex" title="Link to this definition"></a></dt>
-<dd><p>Matches marking of a pathology speciman.
-:param None:</p>
+<dd><p>Matches marking of a pathology speciman.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“ for s-21-009345 sh-22-0011300 ”
-“expected_output”: “ for  SPECIMENTOKEN   SPECIMENTOKEN  “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">s</span><span class="o">-</span><span class="mi">21</span><span class="o">-</span><span class="mi">009345</span> <span class="n">sh</span><span class="o">-</span><span class="mi">22</span><span class="o">-</span><span class="mi">0011300</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span>  <span class="n">SPECIMENTOKEN</span>   <span class="n">SPECIMENTOKEN</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_time_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_time_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_time_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_time_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches time of format 11:20 am
-or 1.30pm or 9:52:07AM.
-:param None:</p>
+or 1.30pm or 9:52:07AM.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“at 11:12 pm or 11.12am “ –&gt;
-“at  TIMETOKEN  or  TIMETOKEN  “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">at</span> <span class="mi">11</span><span class="p">:</span><span class="mi">12</span> <span class="n">pm</span> <span class="ow">or</span> <span class="mf">11.12</span><span class="n">am</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">at</span>  <span class="n">TIMETOKEN</span>  <span class="ow">or</span>  <span class="n">TIMETOKEN</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_trailing_punctuation_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_trailing_punctuation_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_trailing_punctuation_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_trailing_punctuation_regex" title="Link to this definition"></a></dt>
-<dd><p>Matches trailing punctuation and removes it.
-:param None:</p>
+<dd><p>Matches trailing punctuation and removes it.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“ -3a -anterior -result- :cassette “ –&gt;
-“ -3a -anterior  -result :cassette “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mi">3</span><span class="n">a</span> <span class="o">-</span><span class="n">anterior</span> <span class="o">-</span><span class="n">result</span><span class="o">-</span> <span class="p">:</span><span class="n">cassette</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mi">3</span><span class="n">a</span> <span class="o">-</span><span class="n">anterior</span>  <span class="o">-</span><span class="n">result</span> <span class="p">:</span><span class="n">cassette</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_trunc_decimals_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_trunc_decimals_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_trunc_decimals_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_trunc_decimals_regex" title="Link to this definition"></a></dt>
-<dd><p>Matches floats and keeps only first decimal.
-:param None:</p>
+<dd><p>Matches floats and keeps only first decimal.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“ 1.78  9.87 - 8.99 ”
-“ 1.7  9.8 - 8.9 “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.78</span>  <span class="mf">9.87</span> <span class="o">-</span> <span class="mf">8.99</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.7</span>  <span class="mf">9.8</span> <span class="o">-</span> <span class="mf">8.9</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_urls_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_urls_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_urls_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_urls_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches a url and replaces it
-with a URLTOKEN.
-:param None:</p>
+with a URLTOKEN.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
-<p>Example:
-“Source: <a class="reference external" href="https://www.merck.com/keytruda_pi.pdf">https://www.merck.com/keytruda_pi.pdf</a> “–&gt;
-“Source: URLTOKEN “</p>
+<p class="rubric">Example</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Source</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">merck</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">keytruda_pi</span><span class="o">.</span><span class="n">pdf</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Source</span><span class="p">:</span> <span class="n">URLTOKEN</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bardi.nlp_engineering.regex_library.regex_lib.get_whitespace_regex">
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_whitespace_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_whitespace_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_whitespace_regex" title="Link to this definition"></a></dt>
-<dd><dl>
-<dt>Matches any new line, carriage return tab and multiple</dt><dd><p>spaces and replaces it with a single space.
-Args:</p>
-<blockquote>
-<div><p>None</p>
-</div></blockquote>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>RegexSubPair - (regex pattern, replacement string)</p>
+<dd><p>Matches any new line, carriage return tab and multiple
+spaces and replaces it with a single space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
-<p>Example:
-“INVASIVE:</p>
-</dd>
-</dl>
-<p>Negative    IN SITU:
-N/A  IN         The result
-“ –&gt;</p>
-<blockquote>
-<div><p>“INVASIVE: Negative IN SITU: N/A IN The result “</p>
-</div></blockquote>
+<p class="rubric">Example</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INVASIVE</span><span class="p">:</span>\<span class="n">nNegative</span>    <span class="n">IN</span> <span class="n">SITU</span><span class="p">:</span>\<span class="n">nN</span><span class="o">/</span><span class="n">A</span>  <span class="n">IN</span> \<span class="n">tThe</span> <span class="n">result</span>\
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INVASIVE</span><span class="p">:</span> <span class="n">Negative</span> <span class="n">IN</span> <span class="n">SITU</span><span class="p">:</span> <span class="n">N</span><span class="o">/</span><span class="n">A</span> <span class="n">IN</span> <span class="n">The</span> <span class="n">result</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -2312,16 +2838,21 @@ N/A  IN         The result
 <span class="sig-prename descclassname"><span class="pre">bardi.nlp_engineering.regex_library.regex_lib.</span></span><span class="sig-name descname"><span class="pre">get_words_with_punct_spacing_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#bardi.nlp_engineering.regex_library.regex_set.RegexSubPair" title="bardi.nlp_engineering.regex_library.regex_set.RegexSubPair"><span class="pre">RegexSubPair</span></a></span></span><a class="reference internal" href="_modules/bardi/nlp_engineering/regex_library/regex_lib.html#get_words_with_punct_spacing_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.nlp_engineering.regex_library.regex_lib.get_words_with_punct_spacing_regex" title="Link to this definition"></a></dt>
 <dd><p>Matches words with hyphen, colon or period and splits them.
 Requires the words to be at least two characters in length
-to avoid splitting words like ph.d.
-:param None:</p>
+to avoid splitting words like ph.d.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RegexSubPair - (regex pattern, replacement string)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>“this-that her-2 tiff-1k description:gleason “ –&gt;
-“this that her-2 tiff-1k description gleason “</p>
+<p>Input string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">this</span><span class="o">-</span><span class="n">that</span> <span class="n">her</span><span class="o">-</span><span class="mi">2</span> <span class="n">tiff</span><span class="o">-</span><span class="mi">1</span><span class="n">k</span> <span class="n">description</span><span class="p">:</span><span class="n">gleason</span>
+</pre></div>
+</div>
+<p>Output string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">this</span> <span class="n">that</span> <span class="n">her</span><span class="o">-</span><span class="mi">2</span> <span class="n">tiff</span><span class="o">-</span><span class="mi">1</span><span class="n">k</span> <span class="n">description</span> <span class="n">gleason</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
