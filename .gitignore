@@ -2,7 +2,7 @@
 .venv/
 .vscode/
 __pycache__/
-docs/_build/*
+docs/build/*
 bardi.egg-info/
 tests/test_data/*
 dist/
