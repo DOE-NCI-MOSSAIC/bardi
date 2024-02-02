@@ -182,10 +182,12 @@ patient_id_number    X                                                   dark_si
 
 Vocab:
 ::
+    
     {0: '<pad>', 1: 'a', 2: 'aggression', 3: 'alignment', 4: 'an', 5: 'and', 6: 'any', 7: 'assessments', 8: 'be', 9: 'code', 10: 'connection', 11: 'count', 12: 'dark', 13: 'deviation', 14: 'examinations', 15: 'exposure', 16: 'force', 17: 'force.', 18: 'from', 19: 'further', 20: 'heightened', 21: 'imperative', 22: 'impulsivity', 23: 'in', 24: 'individual', 25: 'individuals', 26: 'interventions', 27: 'is', 28: 'jedi', 29: 'midichlorian', 30: 'no', 31: 'of', 32: 'overall', 33: 'patient', 34: 'preliminary', 35: 'side', 36: 'sith', 37: 'symptoms', 38: 'teachings', 39: 'the', 40: 'therapeutic', 41: 'to', 42: 'trajectory', 43: 'will', 44: 'with', 45: '<unk>'}
 
 Label Map:
 ::
+    
     {'dark_side_dx': {'0': 'negative', '1': 'positive'}}
 
 Embedding Matrix: ::
@@ -220,6 +222,7 @@ tracked and reproduced. Let's observe this behavior below. ::
 
 Result:
 ::
+
     {
         "dataset": {
             "<class 'bardi.data.data_handlers.Dataset'>": {

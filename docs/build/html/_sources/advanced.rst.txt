@@ -2,6 +2,9 @@
 Advanced Package Usage
 ======================
 
+`Note: all code snippets on this page are based on setup performed in the basic tutorial. As such, code from the snippets may
+not run exactly as-is without adding some of the setup steps such as creating a dataset and pipeline.`
+
 Normalizer Customizations
 -------------------------
 
@@ -49,7 +52,7 @@ can use to customize what regular expressions are applied to your text.
             {"regex_str": '$[0-9]+', "sub_str": 'MONEYTOKEN'}
         )
 
-2. **Using Python Built-in Types to Write a Custom Set**
+3. **Using Python Built-in Types to Write a Custom Set**
 
     Nothing is stopping you from writing your own set of regular expressions and providing that to the normalizer. ::
 
@@ -68,7 +71,7 @@ can use to customize what regular expressions are applied to your text.
             )
         )
 
-3. **Using the bardi RegexSet Class to Write a Custom Set**
+4. **Using the bardi RegexSet Class to Write a Custom Set**
 
     However, if you would like a more organized approach [than the method shown above] to handle your custom regular expression sets, 
     you could follow our lead by creating a new class and inherit from our RegexSet class. The RegexSet class you are inheriting 
@@ -115,14 +118,50 @@ expect to have provided every possible data pre-processing action you could ever
 something built that you need, but you still would like to use the framework? Create your own custom step! 
 By following these guidelines you can create a step that will run within our pipeline, alongside any of the steps 
 we provide, and have all of your custom step's metadata captured in the standard pipeline metadata file for
-reproducibility. ::
+reproducibility. 
 
-    from bardi import Step
+Let's look at a full example, and then we'll explain what's happening.::
 
-    # initialize a pipeline
+    from typing import Tuple, Optional
+
+    import pandas as pd
+    import polars as pl
+    import pyarrow as pa
+    from bardi import nlp_engineering
+    from bardi.data import data_handlers
+    from bardi.pipeline import Pipeline, Step
+    from bardi.nlp_engineering.splitter import NewSplit
+    from bardi.nlp_engineering.regex_library.pathology_report import PathologyReportRegexSet
+
+    # create some sample data
+    df = pd.DataFrame([
+        {
+            "patient_id_number": 1,
+            "text": "The patient presented with notable changes in behavior, exhibiting increased aggression, impulsivity, and a distinct deviation from the Jedi Code. Preliminary examinations reveal a heightened midichlorian count and an unsettling connection to the dark side of the Force. Further analysis is warranted to explore the extent of exposure to Sith teachings. It is imperative to monitor the individual closely for any worsening symptoms and to engage in therapeutic interventions aimed at preventing further descent into the dark side. Follow-up assessments will be crucial in determining the efficacy of intervention strategies and the overall trajectory of the individual's alignment with the Force.",
+            "dark_side_dx": "positive",
+        },
+        {
+            "patient_id_number": 2,
+            "text": "Patient exhibits no signs of succumbing to the dark side. Preliminary assessments indicate a stable midichlorian count and a continued commitment to Jedi teachings. No deviations from the Jedi Code or indicators of dark side influence were observed. Regular check-ins with the Jedi Council will ensure the sustained well-being and alignment of the individual within the Jedi Order.",
+            "dark_side_dx": "negative",
+        },
+        {
+            "patient_id_number": 3,
+            "text": "The individual manifested heightened aggression, impulsivity, and a palpable deviation from established ethical codes. Initial examinations disclosed an elevated midichlorian count and an unmistakable connection to the dark side of the Force. Further investigation is imperative to ascertain the depth of exposure to Sith doctrines. Close monitoring is essential to track any exacerbation of symptoms, and therapeutic interventions are advised to forestall a deeper embrace of the dark side. Subsequent evaluations will be pivotal in gauging the effectiveness of interventions and the overall trajectory of the individual's allegiance to the Force.",
+            "dark_side_dx": "positive",
+        }
+    ])
+
+    # Register a dataset
+    dataset = data_handlers.from_pandas(df)
+
+    # Initialize a pipeline
     pipeline = Pipeline(dataset=dataset, write_outputs=False)
 
-    # adding a normalizer step to the pipeline
+    # Grabbing a pre-made regex set for normalizing pathology reports
+    pathology_regex_set = PathologyReportRegexSet().get_regex_set()
+
+    # Adding a normalizer step to the pipeline
     pipeline.add_step(
         nlp_engineering.CPUNormalizer(
             fields=['text'],
@@ -131,28 +170,65 @@ reproducibility. ::
         )
     )
 
-    # creating a custom step
+    # Adding the pre-tokenizer step to the pipeline
+    pipeline.add_step(
+        nlp_engineering.CPUPreTokenizer(
+            fields=['text'],
+            split_pattern=' '
+        )
+    )
+
+    # Creating a custom step to count the token length for each record
     class MyCustomStep(Step):
+
+        def __init__(self, field: str):
+            super().__init__()
+            self.field = field
 
         def run(
             self, data: pa.Table, artifacts: Optional[dict] = None
         ) -> Tuple[pa.Table, dict]:
-            
-            df = pl.from_arrow(data)
 
-            
+            df = pl.from_arrow(data).with_columns([
+                pl.col(self.field).list.lengths().alias('token_count')
+            ])
 
             data = df.to_arrow()
 
-            return data
+            return data, None
 
-    # adding the custom step to the pipeline
+    # Adding the new custom step to the pipeline
     pipeline.add_step(
-        MyCustomStep()
+        MyCustomStep(field='text')
     )
 
-    # run the pipeline with the provided step and the custom step
+    # Run the pipeline with the provided step and the custom step
     pipeline.run_pipeline()
                                             
+In this example we initialized a pipeline and added a couple of the bardi provided Steps (CPUNormalizer and CPUPreTokenizer).
+These steps are cleaning the text and splitting on spaces into lists of tokens.
 
+Next, we create a custom Step. We do this by creating a new class and inherit from the bardi Step class. In the constructor
+we take a `field` input so we know which column the user of the Step will want to perform the Step's action on. If we reference 
+bardi's documentation for the Step class, we will see that we need to create a run() method that will accept two parameters:
+a PyArrow.Table and a Python dict. The PyArrow Table is the data being passed from Step to Step in the Pipeline for various
+transformations. The dict is the dictionary of artifacts that can be used to pass artifacts from Step to Step in the Pipeline. 
+If you don't have the need to work with artifacts in the custom Step, you can just ignore it, but it still needs to be listed in 
+run method arguments for the Pipeline to work correctly. 
 
+Similarly, the return from the run method needs to be a Tuple with the first element being data in a PyArrow table and the 
+second element being a dict of artifacts produced in the Step. If data isn't altered in your step, you can place None in the 
+first position of the return Tuple. If artifacts aren't produced in your step, you can place None in the second position of 
+the return Tuple. The example shows that we altered the data and return the new table, but we didn't produce any artifacts so 
+we None in the second position of the return Tuple. 
+
+What happens inbetween the inputs and outputs of the run method are totally up to you. We used Polars in the example because it 
+is built on Arrow, highly performant, and is what the rest of bardi is built with. However, if you don't know how to use Polars, you 
+don't need to use it. If you want to use Pandas, for instance, just create a DataFrame from the PyArrow Table, perform your Pandas 
+operations, and then convert your DataFrame back into a PyArrow Table for the return. 
+
+After defining our custom step, we added it to the Pipeline and then ran it. 
+
+The custom Step we created has some methods automatically provided by the Step class including data writing and getting parameters. 
+These can be customized if needed, but the base implementation will probably be good enough for most uses. If you want to explore 
+this more, refer to the Step documentation.
