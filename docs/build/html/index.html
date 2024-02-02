@@ -48,7 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basic.html">Basic Package Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Package Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bardi.html">bardi.pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.pipeline.html">bardi.pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bardi.data.html">bardi.data package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bardi.nlp_engineering.html">bardi.nlp_engineering package</a></li>
 </ul>
@@ -79,9 +79,22 @@
              
   <section id="welcome-to-bardi-s-documentation">
 <h1>Welcome to bardi’s documentation!<a class="headerlink" href="#welcome-to-bardi-s-documentation" title="Link to this heading"></a></h1>
-<p><strong>bardi</strong> (Batch-processing Abstraction for Raw Data Integration) is a framework for building
-reproducible data pre-processing pipelines for both model training and inference machine
-learning workflows.</p>
+<p>BARDI (Batch-processing Abstraction for Raw Data Integration), is a specialized framework
+engineered to facilitate the development of reproducible data pre-processing pipelines within machine learning workflows.</p>
+<dl class="simple">
+<dt>It emphasizes the following key aspects:</dt><dd><ul class="simple">
+<li><p><strong>Abstraction:</strong> By transforming common data pre-processing operations into modular components, Bardi simplifies both the
+development and upkeep of complex data pipelines.</p></li>
+<li><p><strong>Efficiency:</strong> Utilizing Apache Arrow’s columnar memory model for data storage and Polars for computations, Bardi enhances
+processing speed through multithreading, optimizing the use of available CPU resources.</p></li>
+<li><p><strong>Modularity:</strong> Bardi’s design is based on a component-driven architecture, offering users the flexibility to incorporate
+specific modules tailored to their unique requirements. These modules are crafted to operate seamlessly both as standalone
+units and within the context of a comprehensive pipeline.</p></li>
+<li><p><strong>Extensibility:</strong> Designed with future growth in mind, Bardi allows for the straightforward addition of new custom steps,
+thereby broadening its functionality to encompass unaddressed demands and evolving data processing needs.</p></li>
+</ul>
+</dd>
+</dl>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -106,11 +119,11 @@ learning workflows.</p>
 <li class="toctree-l2"><a class="reference internal" href="advanced.html#creating-a-custom-pipeline-step">Creating a Custom Pipeline Step</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="bardi.html">bardi.pipeline</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="bardi.html#module-bardi.pipeline">bardi.pipeline module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="bardi.html#bardi.pipeline.DataWriteConfig"><code class="docutils literal notranslate"><span class="pre">DataWriteConfig</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="bardi.html#bardi.pipeline.Pipeline"><code class="docutils literal notranslate"><span class="pre">Pipeline</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="bardi.html#bardi.pipeline.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.pipeline.html">bardi.pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bardi.pipeline.html#module-bardi.pipeline">bardi.pipeline module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="bardi.pipeline.html#bardi.pipeline.DataWriteConfig"><code class="docutils literal notranslate"><span class="pre">DataWriteConfig</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.pipeline.html#bardi.pipeline.Pipeline"><code class="docutils literal notranslate"><span class="pre">Pipeline</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bardi.pipeline.html#bardi.pipeline.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
 </ul>
 </li>
 </ul>
