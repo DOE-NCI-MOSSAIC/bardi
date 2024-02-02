@@ -1,4 +1,4 @@
-"""Curated set of regular expressions for cleaning text from pathology reports"""
+"""Curated set of regular expressions for cleaning text from pathology reports."""
 
 from typing import List
 
@@ -7,6 +7,104 @@ from bardi.nlp_engineering.regex_library.regex_set import RegexSet, RegexSubPair
 
 
 class PathologyReportRegexSet(RegexSet):
+    """The PathologyReportRegexSet includes set of standard
+    regular expression to normalize a pathology report.
+
+    Note
+    ----
+    
+    The set of regular expressions tailored for pathology reports
+    was crafted with the understanding that dividing text based
+    on punctuation often results in the loss of crucial information.
+    E.g. terms like "her-2" should not be split. However, to ensure
+    that the number of unique tokens remains manageable we employ a number
+    of regular expression to separate some tokens around punctuation.
+    E.g. :code:`22-years` becomes :code:`22 years`.
+    This consideration is particularly important when 
+    employing the word2vec algorithm, as an excessive number of tokens
+    can impede the model's effectiveness by diluting the representation of key concepts.
+
+    Attributes
+    ----------
+
+    convert_escape_codes: bool
+        Removes escape codes such as \\x0d, \\x0a, etc.
+    handle_whitespaces: bool
+        Removes extra whitespaces: any new line, carriage return tab.
+    remove_urls: bool
+        Removes URLs found in the text that match the pattern. 
+    remove_special_punct: bool 
+        Removes special punctuation like (?,$).
+    remove_multiple_punct: bool
+        Removes duplicated punctuation.
+        E.g. :code:`---`
+    handle_angle_brackets: bool
+        Removes angle brackets.
+        E.g. :code:`<title>` becomes :code:`title`.
+    replace_percent_sign: bool
+        Replaces a percent sign with a 'percent' word.
+    handle_leading_digit_punct: bool
+        Removes punctuation when digit is attached to word.
+        E.g. :code:`22-years` becomes :code:`22 years`.
+    remove_leading_punct: bool
+        Removes leading punctuation from words.
+        E.g. :code:`-result` becomes :code:`result`.    
+    remove_trailing_punct: bool
+        Removes trailing punctuation from words.
+        E.g. :code:`result-` becomes :code:`result`.
+    handle_words_with_punct_spacing: bool
+        Matches words with hyphen, colon or period and splits them.
+    handle_math_spacing: bool 
+        Matches "math operators symbols" like ><=%: and adds spaces aroud them.
+    handle_dimension_spacing: bool
+        Matches digits and x and adds spaces between them.
+    handle_measure_spacing: bool
+        Matches measurements in mm, cm and ml provides proper spacing between the digits and measure.
+    handle_cassettes_spacing: bool
+        Matches patterns like 5e-6f and adds spaces around them.
+    handle_dash_digit_spacing: bool
+        Matches dashes around digits and adds spaces around the dashes.
+    handle_literals_floats_spacing: bool
+        Matches character followed by a float and a word.
+        This is a common formating problem.
+        E.g. :code:`r18.0admission` becomes :code:`r18.0 admission`.
+    fix_pluralization: bool
+        Matches s character after a word and attaches it back to the word.
+        This restores plural nouns demages by removed punctuation.
+    handle_digits_words_spacing: bool
+        Matches digits that are attached to the beginning of a word.
+    remove_phone_numbers: bool
+        Matches any phone number that consists of 10 digits with delimeters.
+    remove_dates: bool
+        Removes dates of prespecified format.
+    remove_times: bool
+        Matches time of format 11:20 am or 1.30pm or 9:52:07AM.
+    remove_addresses: bool
+        Matches any address of format num (street name) in 1 to 6 words 2-letter state
+        and short or long zip code.
+    remove_dimensions: bool
+        Matches 2D or 3D dimension measurements and adds spaces around them.
+    remove_specimen: bool
+        Matches marking of a pathology speciman.
+    remove_decimal_seg_numbers: bool
+        Matches combinations of digits and periods or dashes.
+        E.g. :code:` 1.78.9.87`.
+    remove_large_digits_seq: bool
+        Matches large sequences of digits (3 or more) and replaces it.
+    remove_large_floats_seq: bool
+        Matches large floats and replace them.
+    trunc_decimals: bool = True
+        Matches floats and keeps only first decimal.
+    remove_cassette_names: bool
+        Removes pathology samples' markings.
+        E.g. :code:`1-e`.
+    remove_duration_time: bool
+        Removes duration a speciment was treated.
+        E.g. :code:`32d09090301`.
+    remove_letter_num_seq: bool
+        Removes a character followed directly by 6 to 10 digits.
+      
+    """
     def __init__(
         self,
         convert_escape_codes: bool = True,  # 0
