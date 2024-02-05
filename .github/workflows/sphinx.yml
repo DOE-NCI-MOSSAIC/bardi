@@ -11,7 +11,7 @@ permissions:
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [murdockd/20231205/rename_package]
+    branches: [main]
 
 
   # Allows you to run this workflow manually from the Actions tab
@@ -47,4 +47,4 @@ jobs:
           make html
       - name: Run ghp-import
         run: |
-          ghp-import -n -p -f docs/_build/html
+          ghp-import -n -p -f docs/build/html
