@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='bardi',
-    version='0.3.0',
+    version='0.3.1',
     author='Oak Ridge National Laboratory',
     packages=['bardi',
               'bardi.nlp_engineering',

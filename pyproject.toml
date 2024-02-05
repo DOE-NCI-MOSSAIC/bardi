@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bardi"
-version="0.3.0"
+version="0.3.1"
 authors = [{ name="Oak Ridge National Laboratory" },]
 description = "A flexible machine learning data pre-processing pipeline framework."
 readme = "README.md"
@@ -20,3 +20,7 @@ dependencies = ["duckdb>=0.8.0",
                 "polars>=0.19.8",
                 "pyarrow>=14.0.1",
                 ]
+
+[project.urls]
+Homepage = "https://github.com/DOE-NCI-MOSSAIC/bardi"
+Documentation = "https://doe-nci-mossaic.github.io/bardi/"
