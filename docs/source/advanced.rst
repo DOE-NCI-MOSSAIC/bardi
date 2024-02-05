@@ -1,6 +1,6 @@
-======================
-Advanced Package Usage
-======================
+==================
+Advanced Tutorials
+==================
 
 `Note: all code snippets on this page are based on setup performed in the basic tutorial. As such, code from the snippets may
 not run exactly as-is without adding some of the setup steps such as creating a dataset and pipeline.`

@@ -1,6 +1,6 @@
-===================
-Basic Package Usage
-===================
+==============
+Basic Tutorial
+==============
 
 Preparing a Sample Set of Data
 ------------------------------
