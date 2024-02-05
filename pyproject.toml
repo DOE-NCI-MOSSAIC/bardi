@@ -20,3 +20,7 @@ dependencies = ["duckdb>=0.8.0",
                 "polars>=0.19.8",
                 "pyarrow>=14.0.1",
                 ]
+
+[project.urls]
+Homepage = "https://github.com/DOE-NCI-MOSSAIC/bardi"
+Documentation = "https://doe-nci-mossaic.github.io/bardi/"
