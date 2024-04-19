@@ -11,29 +11,31 @@ from bardi.nlp_engineering.utils.validations import validate_pyarrow_table
 from bardi.pipeline import DataWriteConfig, Step
 
 MapSplit = NamedTuple(
-    "MapSplit", [("unique_record_cols", List[str]), ("split_mapping", Dict[str, str])]
+    "MapSplit",
+    [
+        ("unique_record_cols", List[str]),
+        ("split_mapping", Dict[str, str]),
+        ("default_split_value", str),
+    ],
 )
-MapSplit.__doc__ = (
-    """Specify the requirements for splitting data exactly in line with 
+MapSplit.__doc__ = """Specify the requirements for splitting data exactly in line with
     an existing data split
     """
-)
-MapSplit.unique_record_cols.__doc__ = (
-    """List of column names of which the combination forms a unique identifier in the
-    dataset. This can be a single column name if that creates a unique identifier,
-    but oftentimes in datasets a combination of fields are required.
+MapSplit.unique_record_cols.__doc__ = """List of column names of which the combination forms
+    a unique identifier in the dataset. This can be a single column name if that creates
+    a unique identifier, but oftentimes in datasets a combination of fields are required.
 
     Note: This set of columns MUST create a unique record or the program will crash.
     """
-)
-MapSplit.split_mapping.__doc__ = (
-    """`Only used for map split type.`
+MapSplit.split_mapping.__doc__ = """`Only used for map split type.`
     A dictionary mapping where the keys are the hash of the concatenated values from
     unique_record_cols, or represented by the following pseudocode, ::
         hash(concat(*unique_record_cols))
     The values are the corresponding split value (train, test, val) or (fold1, fold2, fold3), etc.
     """
-)
+MapSplit.default_split_value.__doc__ = """`Only used for map split type.`
+    A value to be used for split when the `unique_record_cols` cannot be found in the mapping. 
+    """
 
 NewSplit = NamedTuple(
     "NewSplit",
@@ -45,38 +47,28 @@ NewSplit = NamedTuple(
         ("random_seed", int),
     ],
 )
-NewSplit.__doc__ = (
-    "Specify the requirements for splitting data with a new split from scratch."
-)
-NewSplit.split_proportions.__doc__ = (
-    """`Only used for new split type.`
+NewSplit.__doc__ = "Specify the requirements for splitting data with a new split from scratch."
+NewSplit.split_proportions.__doc__ = """`Only used for new split type.`
     Mapping of split names to split proportions. i.e., ::
         {'train': 0.75, 'test': 0.15, 'val': 0.15}
         {'fold1': 0.25, 'fold2': 0.25, 'fold3': 0.25, 'fold4': 0.25}
     Note: values must add to 1.0.
     """
-)
-NewSplit.unique_record_cols.__doc__ = (
-    """List of column names of which the combination forms a unique identifier in the
+NewSplit.unique_record_cols.__doc__ = """List of column names of which the combination forms a unique identifier in the
     dataset. This can be a single column name if that creates a unique identifier,
     but oftentimes in datasets a combination of fields are required.
 
     Note: This set of columns MUST create a unique record or the program will crash.
     """
-)
-NewSplit.group_cols.__doc__ = (
-    """List of column names that form a 'group' that you would like to keep in discrete
+NewSplit.group_cols.__doc__ = """List of column names that form a 'group' that you would like to keep in discrete
     splits. E.x., if you had multiple medical notes for a single patient,
     you may desire that all notes for a single patient end up in the same split
     to prevent potential information leakage. In this case you would provide
     something like a patient_id.
     """
-)
-NewSplit.label_cols.__doc__ = (
-    """List of column names containing labels. Efforts are made to balance label
+NewSplit.label_cols.__doc__ = """List of column names containing labels. Efforts are made to balance label
     distribution across splits, but this is not guaranteed.
     """
-)
 NewSplit.random_seed.__doc__ = (
     "Required for reproducibility. If you have no preference, try on 42 for size."
 )
@@ -91,7 +83,7 @@ class Splitter(Step):
 
     Avoid the direct instantiation of the Splitter class
     and instead instantiate one of the child classes.
-    
+
     Attributes
     ----------
 
@@ -114,7 +106,8 @@ class Splitter(Step):
         A dictionary mapping where the keys are the hash of the concatenated values from
         unique_record_cols, or represented by the following pseudocode, ::
             hash(concat(*unique_record_cols))
-        The values are the corresponding split value (train, test, val) or (fold1, fold2, fold3), etc.
+        The values are the corresponding split value (train, test, val) or
+        (fold1, fold2, fold3), etc.
     split_proportions : dict[str, float]
         `Only used for new split type.`
         Mapping of split names to split proportions. i.e., ::
@@ -140,12 +133,12 @@ class Splitter(Step):
         self,
         split_method: Union[MapSplit, NewSplit],
     ):
-        """Constructor method
-        """
+        """Constructor method"""
         if isinstance(split_method, MapSplit):
             self.split_type = "map"
             self.unique_record_cols = split_method.unique_record_cols
             self.split_mapping = split_method.split_mapping
+            self.default_split_value = split_method.default_split_value
         elif isinstance(split_method, NewSplit):
             self.split_type = "new"
             self.split_proportions = split_method.split_proportions
@@ -161,8 +154,7 @@ class Splitter(Step):
 
     @abstractmethod
     def run(self):
-        """Abstract method
-        """
+        """Abstract method"""
         pass
 
 
@@ -179,7 +171,7 @@ class CPUSplitter(Splitter):
     Note
     ----
     This implementation of the LabelProcessor is specific for CPU computation.
-    
+
     To create a splitter, pass the appropriate set of parameters through a defined
     NamedTuple for the type of split you want to create. i.e., ::
 
@@ -201,9 +193,9 @@ class CPUSplitter(Splitter):
             ],
             random_seed=42
         ))
-    
+
     Splitter Method Named Tuples:
-    
+
         *   :mod:`bardi.nlp_engineering.splitter.NewSplit`
         *   :mod:`bardi.nlp_engineering.splitter.MapSplit`
 
@@ -228,7 +220,8 @@ class CPUSplitter(Splitter):
         A dictionary mapping where the keys are the hash of the concatenated values from
         unique_record_cols, or represented by the following pseudocode, ::
             hash(concat(*unique_record_cols))
-        The values are the corresponding split value (train, test, val) or (fold1, fold2, fold3), etc.
+        The values are the corresponding split value (train, test, val) or
+        (fold1, fold2, fold3), etc.
     split_proportions : dict[str, float]
         `Only used for new split type.`
         Mapping of split names to split proportions. i.e., ::
@@ -251,8 +244,7 @@ class CPUSplitter(Splitter):
     """
 
     def __init__(self, *args, **kwargs):
-        """Constructor method
-        """
+        """Constructor method"""
         super().__init__(*args, **kwargs)
 
     def run(self, data: pa.Table, artifacts: dict = None) -> Tuple[pa.Table, dict]:
@@ -299,17 +291,13 @@ class CPUSplitter(Splitter):
             # combination of the columns forming a unique record
             df = (
                 df.with_columns(
-                    [
-                        pl.concat_str([*self.unique_record_cols])
-                        .hash()
-                        .alias("composite_record_id")
-                    ]
+                    [pl.concat_str([*self.unique_record_cols]).hash().alias("composite_record_id")]
                 )
                 .with_columns(
                     [
                         pl.col("composite_record_id")
                         .cast(pl.Utf8())
-                        .map_dict(self.split_mapping)
+                        .replace(self.split_mapping, default=self.default_split_value)
                         .alias("split")
                     ]
                 )
@@ -323,16 +311,18 @@ class CPUSplitter(Splitter):
             # Get the set of distinct groups from the overall data
             distinct_groups = df.select([*self.group_cols]).unique(maintain_order=True)
             group_count = distinct_groups.height
-            # Generate a permutation of indices of distinct groups.
+
+            # Set random seeds for reporducibility
             np.random.seed(self.random_seed)
+            pl.set_random_seed(self.random_seed)
+
+            # Generate a permutation of indices of distinct groups.
             permuted_indices = np.random.permutation(group_count)
 
             # The splits assignment has to be done with a number
             # so a mapping must be created from a number to the
             # desired split name
-            split_name_maps = {
-                i: key for i, key in enumerate(self.split_proportions.keys())
-            }
+            split_name_maps = {i: key for i, key in enumerate(self.split_proportions.keys())}
 
             # Create a numpy array to hold the split labels (digits)
             split_labels = np.empty(group_count, dtype=int)
@@ -354,7 +344,7 @@ class CPUSplitter(Splitter):
             # mapped to assigned value back to the name of
             # the split
             splits = distinct_groups.with_columns(
-                split_labels.map_dict(split_name_maps).alias("split")
+                split_labels.replace(split_name_maps).alias("split")
             )
 
             # Join the split set of distinct groups back to the rest

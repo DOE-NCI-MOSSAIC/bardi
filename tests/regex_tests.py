@@ -2,7 +2,7 @@ import re
 import unittest
 from unittest import TestCase
 
-from bardi.nlp_engineering.regex_library import regex_lib
+from bardi import nlp_engineering as nlp
 
 
 class TestRegexExpressions(TestCase):
@@ -15,7 +15,7 @@ class TestRegexExpressions(TestCase):
         input_str = "\\x0dTesting escape codes\\x0d\\x0a\\x0d \\r30  "
         correct_result = " Testing escape codes     30  "
 
-        regex_sub_pair = regex_lib.get_escape_code_regex()
+        regex_sub_pair = nlp.get_escape_code_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         test_str = re.sub(regex_pattern, sub_str, input_str)
@@ -28,7 +28,7 @@ class TestRegexExpressions(TestCase):
         test_case = "INVASIVE:\nNegative    IN SITU:\nN/A  IN \tThe result \r"
         expected_output = "INVASIVE: Negative IN SITU: N/A IN The result "
 
-        regex_sub_pair = regex_lib.get_whitespace_regex()
+        regex_sub_pair = nlp.get_whitespace_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -49,7 +49,7 @@ class TestRegexExpressions(TestCase):
             },
         ]
 
-        regex_sub_pair = regex_lib.get_urls_regex()
+        regex_sub_pair = nlp.get_urls_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
 
@@ -77,7 +77,7 @@ class TestRegexExpressions(TestCase):
             },
         ]
 
-        regex_sub_pair = regex_lib.get_special_punct_regex()
+        regex_sub_pair = nlp.get_special_punct_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
 
@@ -97,7 +97,7 @@ class TestRegexExpressions(TestCase):
         test_case = "-----this is report ___ signature"
         expected_output = " this is report   signature"
 
-        regex_sub_pair = regex_lib.get_multiple_punct_regex()
+        regex_sub_pair = nlp.get_multiple_punct_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -110,7 +110,7 @@ class TestRegexExpressions(TestCase):
         test_case = "<This should be fixed> But not this >90"
         expected_output = " This should be fixed  But not this >90"
 
-        regex_sub_pair = regex_lib.get_angle_brackets_regex()
+        regex_sub_pair = nlp.get_angle_brackets_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -123,7 +123,7 @@ class TestRegexExpressions(TestCase):
         test_case = "strong intensity >95%"
         expected_output = "strong intensity >95 percent "
 
-        regex_sub_pair = regex_lib.get_percent_sign_regex()
+        regex_sub_pair = nlp.get_percent_sign_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -136,7 +136,7 @@ class TestRegexExpressions(TestCase):
         test_case = " 13-unremarkable 1-e 22-years "
         expected_output = "  13 unremarkable   1 e   22 years  "
 
-        regex_sub_pair = regex_lib.get_leading_digit_punctuation_regex()
+        regex_sub_pair = nlp.get_leading_digit_punctuation_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -151,7 +151,7 @@ class TestRegexExpressions(TestCase):
         test_case = " -3a -anterior -result- :cassette "
         expected_output = " 3a  anterior  result-  cassette  "
 
-        regex_sub_pair = regex_lib.get_leading_punctuation_regex()
+        regex_sub_pair = nlp.get_leading_punctuation_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -164,7 +164,7 @@ class TestRegexExpressions(TestCase):
         test_case = " -3a -anterior -result- :cassette "
         expected_output = " -3a -anterior  -result :cassette "
 
-        regex_sub_pair = regex_lib.get_trailing_punctuation_regex()
+        regex_sub_pair = nlp.get_trailing_punctuation_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -178,7 +178,7 @@ class TestRegexExpressions(TestCase):
         test_case = "this-that her-2 tiff-1k description:gleason "
         expected_output = "this that her-2 tiff-1k description gleason "
 
-        regex_sub_pair = regex_lib.get_words_with_punct_spacing_regex()
+        regex_sub_pair = nlp.get_words_with_punct_spacing_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -195,7 +195,7 @@ class TestRegexExpressions(TestCase):
         test_case = "This is >95% 3+3=8  6/7"
         expected_output = "This is  > 95 %  3 + 3 = 8  6 / 7"
 
-        regex_sub_pair = regex_lib.get_math_spacing_regex()
+        regex_sub_pair = nlp.get_math_spacing_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -210,7 +210,7 @@ class TestRegexExpressions(TestCase):
         test_case = "measuring 1.3x0.7x0.1 cm"
         expected_output = "measuring 1.3 x 0.7 x 0.1 cm"
 
-        regex_sub_pair = regex_lib.get_dimension_spacing_regex()
+        regex_sub_pair = nlp.get_dimension_spacing_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -225,7 +225,7 @@ class TestRegexExpressions(TestCase):
         test_case = "10mm histologic type 2 x 3cm. this is 3.0-cm "
         expected_output = "10 mm  histologic type 2 x 3 cm . this is 3.0 cm  "
 
-        regex_sub_pair = regex_lib.get_measure_spacing_regex()
+        regex_sub_pair = nlp.get_measure_spacing_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -239,7 +239,7 @@ class TestRegexExpressions(TestCase):
 
         fix_spacing_test_list = [{"test": " 3e-3f", "expected_output": " 3e - 3f "}]
 
-        regex_sub_pair = regex_lib.get_cassettes_spacing_regex()
+        regex_sub_pair = nlp.get_cassettes_spacing_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
 
@@ -259,7 +259,7 @@ class TestRegexExpressions(TestCase):
         test_case = "right 1:30-2:30 1.5-2.0 cm 0.9 cm for the 7-6"
         expected_output = "right 1:30 - 2:30 1.5 - 2.0 cm 0.9 cm for the 7 - 6"
 
-        regex_sub_pair = regex_lib.get_dash_digits_spacing_regex()
+        regex_sub_pair = nlp.get_dash_digits_spacing_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -273,7 +273,7 @@ class TestRegexExpressions(TestCase):
         test_case = " r18.0admission diagnosis: bi n13.30admission "
         expected_output = " r18.0 admission diagnosis: bi n13.30 admission "
 
-        regex_sub_pair = regex_lib.get_literals_floats_spacing_regex()
+        regex_sub_pair = nlp.get_literals_floats_spacing_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -287,7 +287,7 @@ class TestRegexExpressions(TestCase):
         test_case = " specimen s code s "
         expected_output = " specimens codes "
 
-        regex_sub_pair = regex_lib.get_fix_pluralization_regex()
+        regex_sub_pair = nlp.get_fix_pluralization_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -301,7 +301,7 @@ class TestRegexExpressions(TestCase):
         test_case = " 9837648admission "
         expected_output = " 9837648 admission "
 
-        regex_sub_pair = regex_lib.get_digits_words_spacing_regex()
+        regex_sub_pair = nlp.get_digits_words_spacing_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -323,7 +323,7 @@ class TestRegexExpressions(TestCase):
             },
         ]
 
-        regex_sub_pair = regex_lib.get_phone_number_regex()
+        regex_sub_pair = nlp.get_phone_number_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
 
@@ -356,7 +356,7 @@ class TestRegexExpressions(TestCase):
             },
         ]
 
-        regex_sub_pair = regex_lib.get_dates_regex()
+        regex_sub_pair = nlp.get_dates_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
 
@@ -383,7 +383,7 @@ class TestRegexExpressions(TestCase):
             },
         ]
 
-        regex_sub_pair = regex_lib.get_time_regex()
+        regex_sub_pair = nlp.get_time_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
 
@@ -416,7 +416,7 @@ class TestRegexExpressions(TestCase):
             {"test": "12 colabcd abcd viejo nc / 12345 ", "expected_output": " ADDRESSTOKEN  "},
         ]
 
-        regex_sub_pair = regex_lib.get_address_regex()
+        regex_sub_pair = nlp.get_address_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
 
@@ -435,7 +435,7 @@ class TestRegexExpressions(TestCase):
         test_case = " 3.5 x 2.5 x 9.0 cm and 33 x 6.5 cm"
         expected_output = "  DIMENSIONTOKEN  cm and  DIMENSIONTOKEN  cm"
 
-        regex_sub_pair = regex_lib.get_dimensions_regex()
+        regex_sub_pair = nlp.get_dimensions_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -457,7 +457,7 @@ class TestRegexExpressions(TestCase):
             },
         ]
 
-        regex_sub_pair = regex_lib.get_specimen_regex()
+        regex_sub_pair = nlp.get_specimen_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
 
@@ -477,7 +477,7 @@ class TestRegexExpressions(TestCase):
         test_case = " 1.78.9.87 "
         expected_output = "  DECIMALSEGMENTEDNUMBERTOKEN  "
 
-        regex_sub_pair = regex_lib.get_decimal_segmented_numbers_regex()
+        regex_sub_pair = nlp.get_decimal_segmented_numbers_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -491,7 +491,7 @@ class TestRegexExpressions(TestCase):
         test_case = " 456123456 "
         expected_output = " DIGITSEQUENCETOKEN "
 
-        regex_sub_pair = regex_lib.get_large_digits_seq_regex()
+        regex_sub_pair = nlp.get_large_digits_seq_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -505,7 +505,7 @@ class TestRegexExpressions(TestCase):
         test_case = " 456 123456.783 "
         expected_output = " 456 LARGEFLOATTOKEN  "
 
-        regex_sub_pair = regex_lib.get_large_float_seq_regex()
+        regex_sub_pair = nlp.get_large_float_seq_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -519,7 +519,7 @@ class TestRegexExpressions(TestCase):
         test_case = " 1.78  9.87 - 8.99 "
         expected_output = " 1.7  9.8 - 8.9 "
 
-        regex_sub_pair = regex_lib.get_trunc_decimals_regex()
+        regex_sub_pair = nlp.get_trunc_decimals_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -536,7 +536,7 @@ class TestRegexExpressions(TestCase):
             {"test": " c2-1  1-ef ", "expected_output": " CASSETTETOKEN  CASSETTETOKEN "},
         ]
 
-        regex_sub_pair = regex_lib.get_cassette_name_regex()
+        regex_sub_pair = nlp.get_cassette_name_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
 
@@ -553,7 +553,7 @@ class TestRegexExpressions(TestCase):
         """Tests the regular expression for remova"""
         test_case = "duration 02d2043058. "
         expected_output = "duration DURATIONTOKEN "
-        regex_sub_pair = regex_lib.get_duration_regex()
+        regex_sub_pair = nlp.get_duration_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -564,7 +564,7 @@ class TestRegexExpressions(TestCase):
         """Tests the regular expression for letter num"""
         test_case = "f1234567  h123456789 "
         expected_output = " LETTERDIGITSTOKEN  LETTERDIGITSTOKEN "
-        regex_sub_pair = regex_lib.get_letter_num_seq_regex()
+        regex_sub_pair = nlp.get_letter_num_seq_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)
@@ -577,7 +577,7 @@ class TestRegexExpressions(TestCase):
         test_case = "located around lower arm specimen   date"
         expected_output = "located around lower arm specimen date"
 
-        regex_sub_pair = regex_lib.get_spaces_regex()
+        regex_sub_pair = nlp.get_spaces_regex()
         regex_pattern = regex_sub_pair["regex_str"]
         sub_str = regex_sub_pair["sub_str"]
         output = re.sub(regex_pattern, sub_str, test_case)

@@ -35,10 +35,10 @@ Register the Sample Data as a Bardi Dataset
 
 Now that we have some sample data in a DataFrame we will register it as a bardi dataset (:mod:`bardi.data.data_handlers.Dataset`). ::
 
-    from bardi.data import data_handlers
+    from bardi import data as bardi_data
 
     # register a dataset
-    dataset = data_handlers.from_pandas(df)
+    dataset = bardi_data.from_pandas(df)
 
 When data is registered as a bardi dataset, the data is converted into a PyArrow Table. This is required to use the steps 
 we have built.
@@ -48,7 +48,7 @@ Initialize a Pre-Processing Pipeline
 
 Now that we have the data registered, let's set up a Pipeline (:mod:`bardi.pipeline.Pipeline`) to pre-process the data. ::
 
-    from bardi.pipeline import Pipeline
+    from bardi import Pipeline
 
     # initialize a pipeline
     pipeline = Pipeline(dataset=dataset, write_outputs=False)
@@ -64,7 +64,7 @@ A common pipeline could involve:
     * cleaning/normalizing the text (Normalizer)
     * splitting text into a list of tokens (PreTokenizer)
     * generating a vocab and training word embeddings with Word2Vec (EmbeddingGenerator)
-    * mapping the list of tokens to a list of ints with the generated vocab (PostProcessor)
+    * mapping the list of tokens to a list of ints with the generated vocab (VocabEncoder)
     * mapping labels to ints (LabelProcessor)
     * splitting the dataset into train/test/val splits (Splitter)
 
@@ -82,16 +82,20 @@ that we want the regular expression substitutions to be applied to. Then, we nee
 substitutions to be performed. For this example we will supply a pre-built set of regular expressions, however a custom set 
 could be created and supplied as well. Finally, we need to specify if we want the text to be lowercased. ::
 
-    from bardi import nlp_engineering
-    from bardi.nlp_engineering.regex_library.pathology_report import PathologyReportRegexSet
+    from bardi import nlp_engineering as nlp
+    from bardi.nlp_engineering import PathologyReportRegexSet
 
     # grabbing a pre-made regex set for normalizing pathology reports
     path_report_regex_set = PathologyReportRegexSet().get_regex_set()
 
     # adding the normalizer step to the pipeline
-    pipeline.add_step(nlp_engineering.CPUNormalizer(fields=['text'],
-                                                    regex_set=pathology_regex_set,
-                                                    lowercase=True))
+    pipeline.add_step(
+        nlp.CPUNormalizer(
+            fields=['text'],
+            regex_set=pathology_regex_set,
+            lowercase=True
+        )
+    )
 
 Adding a PreTokenizer
 ---------------------
@@ -102,8 +106,12 @@ The pre-tokenizer is a pretty simple operation. We just need to specify the fiel
 to in addition to the pattern to split on. ::
 
     # adding the pre-tokenizer step to the pipeline
-    pipeline.add_step(nlp_engineering.CPUPreTokenizer(fields=['text'],
-                                                    split_pattern=' '))
+    pipeline.add_step(
+        nlp.CPUPreTokenizer(
+            fields=['text'],
+            split_pattern=' '
+        )
+    )
 
 Adding an EmbeddingGenerator
 ----------------------------
@@ -118,13 +126,17 @@ min_word_count (simply because our sample data in this tutorial is so small). Re
 of customizations available in the CPUEmbeddingGenerator. ::
 
     # adding the embedding generator step to the pipeline
-    pipeline.add_step(nlp_engineering.CPUEmbeddingGenerator(fields=['text'],
-                                                            min_word_count=2))
+    pipeline.add_step(
+        nlp.CPUEmbeddingGenerator(
+            fields=['text'],
+            min_word_count=2
+        )
+    )
 
-Adding a PostProcessor
-----------------------
+Adding a VocabEncoder
+---------------------
 
-:mod:`bardi.nlp_engineering.post_processor.CPUPostProcessor`
+:mod:`bardi.nlp_engineering.vocab_encoder.CPUVocabEncoder`
 
 This step is a pretty simple one to add. There are more customizations possible if you are working with multiple text 
 fields, but in this example we just have a single one. Reference the documentation if working with multiple text fields.
@@ -132,8 +144,10 @@ fields, but in this example we just have a single one. Reference the documentati
 A key note is that there is an automatic renaming of the text field to 'X'. If you don't desire this behavior, you can set 
 field_rename to a str of your desired column name. ::
 
-    # adding the post processor step to the pipeline
-    pipeline.add_step(nlp_engineering.CPUPostProcessor(fields=['text']))
+    # adding the vocab encoder step to the pipeline
+    pipeline.add_step(
+        nlp.CPUVocabEncoder(fields=['text'])
+    )
 
 Adding a LabelProcessor
 -----------------------
@@ -143,7 +157,9 @@ Adding a LabelProcessor
 Again, a pretty straight-forward step. ::
 
     # adding the label processor step to the pipeline
-    pipeline.add_step(nlp_engineering.CPULabelProcessor(fields=['dark_side_dx']))
+    pipeline.add_step(
+        nlp.CPULabelProcessor(fields=['dark_side_dx'])
+    )
 
 Running the Pipeline
 --------------------
@@ -358,7 +374,7 @@ Result:
                 "w2v_model": "<class 'gensim.models.word2vec.Word2Vec'>",
                 "vocab_size": 46,
             },
-            "<class 'bardi.nlp_engineering.post_processor.CPUPostProcessor'>": {
+            "<class 'bardi.nlp_engineering.vocab_encoder.CPUVocabEncoder'>": {
                 "fields": ["text"],
                 "field_rename": "X",
                 "_data_write_config": {
@@ -393,7 +409,7 @@ Result:
                 "time": "0:00:00.074747",
                 "memory (MB)": "0.531624",
             },
-            "<class 'bardi.nlp_engineering.post_processor.CPUPostProcessor'>": {
+            "<class 'bardi.nlp_engineering.vocab_encoder.CPUVocabEncoder'>": {
                 "time": "0:00:00.003835",
                 "memory (MB)": "0.03622",
             },
@@ -410,11 +426,10 @@ Full Tutorial Script
 ::
 
     import pandas as pd
-    from bardi.data import data_handlers
-    from bardi.pipeline import Pipeline
-    from bardi import nlp_engineering
-    from bardi.nlp_engineering.splitter import NewSplit
-    from bardi.nlp_engineering.regex_library.pathology_report import PathologyReportRegexSet
+    from bardi import data as bardi_data
+    from bardi import Pipeline
+    from bardi import nlp_engineering as nlp
+    from bardi.nlp_engineering import NewSplit, PathologyReportRegexSet
 
     # create some sample data
     df = pd.DataFrame([
@@ -436,7 +451,7 @@ Full Tutorial Script
     ])
 
     # register a dataset
-    dataset = data_handlers.from_pandas(df)
+    dataset = bardi_data.from_pandas(df)
 
     # initialize a pipeline
     pipeline = Pipeline(dataset=dataset, write_outputs=False)
@@ -445,23 +460,35 @@ Full Tutorial Script
     pathology_regex_set = PathologyReportRegexSet().get_regex_set()
 
     # adding the normalizer step to the pipeline
-    pipeline.add_step(nlp_engineering.CPUNormalizer(fields=['text'],
-                                                    regex_set=pathology_regex_set,
-                                                    lowercase=True))
+    pipeline.add_step(
+        nlp.CPUNormalizer(
+            fields=['text'],
+            regex_set=pathology_regex_set,
+            lowercase=True
+        )
+    )
 
     # adding the pre-tokenizer step to the pipeline
-    pipeline.add_step(nlp_engineering.CPUPreTokenizer(fields=['text'],
-                                                    split_pattern=' '))
+    pipeline.add_step(
+        nlp.CPUPreTokenizer(
+            fields=['text'],
+            split_pattern=' '
+        )
+    )
 
     # adding the embedding generator step to the pipeline
-    pipeline.add_step(nlp_engineering.CPUEmbeddingGenerator(fields=['text'],
-                                                            min_word_count=2))
+    pipeline.add_step(
+        nlp.CPUEmbeddingGenerator(
+            fields=['text'],
+            min_word_count=2
+        )
+    )
 
-    # adding the post processor step to the pipeline
-    pipeline.add_step(nlp_engineering.CPUPostProcessor(fields=['text']))
+    # adding the vocab encoder step to the pipeline
+    pipeline.add_step(nlp.CPUVocabEncoder(fields=['text']))
 
     # adding the label processor step to the pipeline
-    pipeline.add_step(nlp_engineering.CPULabelProcessor(fields=['dark_side_dx']))
+    pipeline.add_step(nlp.CPULabelProcessor(fields=['dark_side_dx']))
 
     # run the pipeline
     pipeline.run_pipeline()

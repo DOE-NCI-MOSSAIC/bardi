@@ -7,6 +7,7 @@ import polars as pl
 import pyarrow as pa
 
 from bardi.nlp_engineering.regex_library.regex_lib import RegexSubPair
+from bardi.nlp_engineering.utils.polars_utils import retain_inputs
 from bardi.nlp_engineering.utils.validations import (
     validate_pyarrow_table,
     validate_str_cols,
@@ -20,8 +21,8 @@ class Normalizer(Step):
 
     Note
     ----
-    
-    Avoid the direct instantiation of the Normalizer class and instead instantiate 
+
+    Avoid the direct instantiation of the Normalizer class and instead instantiate
     one of the child classes depending on hardware configuration.
 
     Attributes
@@ -34,6 +35,9 @@ class Normalizer(Step):
     lowercase : Optional[bool]
         If True, lowercasing will be applied during normalization,
         defaults to True.
+    retain_input_fields : Optional[bool]
+        If True, will retain the original contents of the fields specified in
+        `fields` under the new names of: `normalizer__<field>`
     """
 
     def __init__(
@@ -41,11 +45,14 @@ class Normalizer(Step):
         fields: Union[str, List[str]],
         regex_set: List[RegexSubPair],
         lowercase: bool = True,
+        retain_input_fields: bool = False,
     ):
-        """Constructor method
-        """
+        """Constructor method"""
         # Normalizer Configuration
         self.fields = fields
+        if isinstance(fields, str):
+            self.fields = [fields]
+        self.retain_input_fields = retain_input_fields
         self._data_write_config: DataWriteConfig = {
             "data_format": "parquet",
             "data_format_args": {"compression": "snappy", "use_dictionary": False},
@@ -56,13 +63,13 @@ class Normalizer(Step):
 
     @abstractmethod
     def run(self):
-        """Abstract method
-        """
+        """Abstract method"""
         pass
 
 
 class CPUNormalizer(Normalizer):
-    """Normalizer class for cleaning and standardizing text input using regular expression substitutions.
+    """Normalizer class for cleaning and standardizing text input using regular
+    expression substitutions.
 
     Note
     ----
@@ -70,20 +77,22 @@ class CPUNormalizer(Normalizer):
 
     Attributes
     ----------
-    
+
     fields : Union[str, List[str]]
         The name of the column(s) containing text to be normalized.
     regex_set : List[RegexSubPair]
         A list of dictionaries with keys, 'regex_str' and 'sub_str', used to
         perform regular expression substitutions of the text.
-    lowercase : Optional[bool] 
+    lowercase : Optional[bool]
         If True, lowercasing will be applied during normalization.
         Default is True.
+    retain_input_fields : Optional[bool]
+        If True, will retain the original contents of the fields specified in
+        `fields` under the new names of: `normalizer__<field>`
     """
 
     def __init__(self, *args, **kwargs):
-        """Constructor method
-        """
+        """Constructor method"""
         super().__init__(*args, **kwargs)
         # Rust uses a different syntax for regex match groups
         # than standard (uses '$' instead of backslash)
@@ -118,14 +127,14 @@ class CPUNormalizer(Normalizer):
         def implement_regex_substitutions(df: pl.DataFrame) -> pl.DataFrame:
             """Reusable function to apply each regex substitution
             normalization to each string field
-            
+
             Parameters
             ----------
 
             df : pl.DataFrame
                 a DataFrame containing the columns specified in the Normalizer's
                 `fields` attribute
-            
+
             Returns
             -------
             pl.DataFrame
@@ -150,12 +159,9 @@ class CPUNormalizer(Normalizer):
         # to each field of the Table that is specified in self.fields
         df = (
             pl.from_arrow(data)
+            .pipe(retain_inputs, self.retain_input_fields, self.fields, self.__class__.__name__)
             .with_columns(
-                [
-                    pl.col(field).str.to_lowercase()
-                    for field in self.fields
-                    if self.lowercase
-                ]
+                [pl.col(field).str.to_lowercase() for field in self.fields if self.lowercase]
             )
             .pipe(implement_regex_substitutions)
         )

@@ -6,6 +6,7 @@ from typing import List, Tuple, Union, Optional
 import polars as pl
 import pyarrow as pa
 
+from bardi.nlp_engineering.utils.polars_utils import retain_inputs
 from bardi.nlp_engineering.utils.validations import (
     validate_pyarrow_table,
     validate_str_cols,
@@ -33,21 +34,28 @@ class PreTokenizer(Step):
         A specific pattern of characters used to divide a string
         into smaller segments or tokens.
         By default, the split is done on a single space character.
+    retain_input_fields : Optional[bool]
+        If True, will retain the original contents of the fields specified in
+        `fields` under the new names of: `pretokenizer__<field>`
     """
 
-    def __init__(self, fields: Union[str, List[str]], split_pattern: str = " "):
-        """Constructor method
-        """
+    def __init__(
+        self,
+        fields: Union[str, List[str]],
+        split_pattern: str = " ",
+        retain_input_fields: bool = False,
+    ):
+        """Constructor method"""
         if isinstance(fields, str):
             self.fields = [fields]
         else:
             self.fields = fields
+        self.retain_input_fields = retain_input_fields
         self.split_pattern = split_pattern
 
     @abstractmethod
     def run(self):
-        """Abstract method
-        """
+        """Abstract method"""
         pass
 
 
@@ -69,11 +77,13 @@ class CPUPreTokenizer(PreTokenizer):
         A specific pattern of characters used to divide a string
         into smaller segments or tokens.
         By default, the split is done on a single space character.
+    retain_input_fields : Optional[bool]
+        If True, will retain the original contents of the fields specified in
+        `fields` under the new names of: `pretokenizer__<field>`
     """
 
     def __init__(self, *args, **kwargs):
-        """Constructor method
-        """
+        """Constructor method"""
         super().__init__(*args, **kwargs)
 
     def run(
@@ -105,16 +115,20 @@ class CPUPreTokenizer(PreTokenizer):
         validate_str_cols(fields=self.fields, data=data)
 
         # Split text fields into lists of tokens
-        df = pl.from_arrow(data).with_columns(
-            [
-                (
-                    pl.col(field)
-                    .str.split(by=self.split_pattern)
-                    .list.eval(pl.element().filter(pl.element() != ""))
-                    .alias(field)
-                )
-                for field in self.fields
-            ]
+        df = (
+            pl.from_arrow(data)
+            .pipe(retain_inputs, self.retain_input_fields, self.fields, self.__class__.__name__)
+            .with_columns(
+                [
+                    (
+                        pl.col(field)
+                        .str.split(by=self.split_pattern)
+                        .list.eval(pl.element().filter(pl.element() != ""))
+                        .alias(field)
+                    )
+                    for field in self.fields
+                ]
+            )
         )
 
         data = df.to_arrow()

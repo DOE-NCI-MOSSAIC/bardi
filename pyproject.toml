@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bardi"
-version="0.3.1"
+version="0.4.0"
 authors = [{ name="Oak Ridge National Laboratory" },]
 description = "A flexible machine learning data pre-processing pipeline framework."
 readme = "README.md"
@@ -13,12 +13,15 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only",
     "License :: OSI Approved :: MIT License",
 ]
-dependencies = ["duckdb>=0.8.0",
+dependencies = ["duckdb==0.8.0",
                 "gensim>=4.1.2",
                 "numpy>=1.21.5",
                 "pandas>=1.4.4",
                 "polars>=0.19.8",
                 "pyarrow>=14.0.1",
+                "tokenizers==0.13.3",
+                "transformers>=4.29.2",
+                "datasets>=2.12.0"
                 ]
 
 [project.urls]

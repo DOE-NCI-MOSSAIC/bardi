@@ -3,10 +3,19 @@
 BARDI is a specialized framework engineered to facilitate the development of reproducible data pre-processing pipelines within machine learning workflows. 
 
 It emphasizes the following key aspects:
-    - Abstraction: By transforming common data pre-processing operations into modular components, Bardi simplifies both the development and upkeep of complex data pipelines.
-    - Efficiency: Utilizing Apache Arrow's columnar memory model for data storage and Polars for computations, Bardi enhances processing speed through multithreading, optimizing the use of available CPU resources.
-    - Modularity: Bardi's design is based on a component-driven architecture, offering users the flexibility to incorporate specific modules tailored to their unique requirements. These modules are crafted to operate seamlessly both as standalone units and within the context of a comprehensive pipeline.
-    - Extensibility: Designed with future growth in mind, Bardi allows for the straightforward addition of new custom steps, thereby broadening its functionality to encompass unaddressed demands and evolving data processing needs.
+
+ * Abstraction: By transforming common data pre-processing operations into modular components, Bardi simplifies both the
+    development and upkeep of complex data pipelines.
+
+ * Efficiency: Utilizing Apache Arrow's columnar memory model for data storage and Polars for computations, Bardi enhances
+    processing speed through multithreading, optimizing the use of available CPU resources.
+
+ * Modularity: Bardi's design is based on a component-driven architecture, offering users the flexibility to incorporate
+    specific modules tailored to their unique requirements. These modules are crafted to operate seamlessly both as standalone
+    units and within the context of a comprehensive pipeline.
+
+ * Extensibility: Designed with future growth in mind, Bardi allows for the straightforward addition of new custom steps,
+    thereby broadening its functionality to encompass unaddressed demands and evolving data processing needs.
 
 Installation
 ============
@@ -18,7 +27,7 @@ _currently not supported on Windows_
 Documentation
 =============
 
-*  [bardi's docs](https://doe-nci-mossaic.github.io/bardi/)
+*  [bardi's docs](file:///mnt/nci/scratch/docs/bardi/build/html/index.html)
 
 Tutorial
 ========

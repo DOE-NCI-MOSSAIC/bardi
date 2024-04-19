@@ -20,6 +20,14 @@ bardi pre\_tokenizer module
    :undoc-members:
    :show-inheritance:
 
+bardi tokenizer\_trainer module
+```````````````````````````````
+
+.. automodule:: bardi.nlp_engineering.tokenizer_trainer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 bardi embedding\_generator module
 `````````````````````````````````
 
@@ -28,10 +36,18 @@ bardi embedding\_generator module
    :undoc-members:
    :show-inheritance:
 
-bardi post\_processor module
+bardi vocab\_encoder module
 ````````````````````````````
 
-.. automodule:: bardi.nlp_engineering.post_processor
+.. automodule:: bardi.nlp_engineering.vocab_encoder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+bardi tokenizer\_encoder module
+```````````````````````````````
+
+.. automodule:: bardi.nlp_engineering.tokenizer_encoder
    :members:
    :undoc-members:
    :show-inheritance:

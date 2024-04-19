@@ -21,7 +21,7 @@ can use to customize what regular expressions are applied to your text.
     An existing RegexSet is tunable by turning individual regular expressions off and on as desired. By default, all are
     turned on, so you would just need to turn off the ones you don't want to use. ::
 
-        from bardi.nlp_engineering.regex_library.pathology_report import PathologyReportRegexSet
+        from bardi.nlp_engineering import PathologyReportRegexSet
 
         # grabbing a pre-made regex set for normalizing pathology reports
         # turning off 3 of the regular expression substitutions I don't want to use
@@ -37,7 +37,7 @@ can use to customize what regular expressions are applied to your text.
     you would like to add. Because the regular expression set just returns a Python list, you can just append 
     your additional regular expressions to the list. ::
 
-        from bardi.nlp_engineering.regex_library.pathology_report import PathologyReportRegexSet
+        from bardi.nlp_engineering import PathologyReportRegexSet
 
         # grabbing a pre-made regex set for normalizing pathology reports
         # turning off 3 of the regular expression substitutions I don't want to use
@@ -64,7 +64,7 @@ can use to customize what regular expressions are applied to your text.
 
         # Supplying custom regex set to Normalizer
         pipeline.add_step(
-            nlp_engineering.CPUNormalizer(
+            nlp.CPUNormalizer(
                 fields=['text'],
                 regex_set=custom_regex_set,
                 lowercase=True
@@ -78,7 +78,7 @@ can use to customize what regular expressions are applied to your text.
     from gives you an attribute `regex_set`, which is a list of your regular expression substitution pairs, and the method to 
     return this attribute, `get_regex_set()` ::
 
-        from bardi.nlp_engineering.regex_library.regex_set import RegexSet
+        from bardi.nlp_engineering import RegexSet
 
 
         # Creating a custom regex set class inheriting from bardi RegexSet
@@ -100,7 +100,7 @@ can use to customize what regular expressions are applied to your text.
 
         # Supplying custom regex set to Normalizer
         pipeline.add_step(
-            nlp_engineering.CPUNormalizer(
+            nlp.CPUNormalizer(
                 fields=['text'],
                 regex_set=MyCustomRegexSet.get_regex_set(),
                 lowercase=True
@@ -127,11 +127,9 @@ Let's look at a full example, and then we'll explain what's happening.::
     import pandas as pd
     import polars as pl
     import pyarrow as pa
-    from bardi import nlp_engineering
-    from bardi.data import data_handlers
-    from bardi.pipeline import Pipeline, Step
-    from bardi.nlp_engineering.splitter import NewSplit
-    from bardi.nlp_engineering.regex_library.pathology_report import PathologyReportRegexSet
+    from bardi import nlp_engineering as nlp
+    from bardi import data as bardi_data
+    from bardi import Pipeline, Step
 
     # create some sample data
     df = pd.DataFrame([
@@ -153,17 +151,17 @@ Let's look at a full example, and then we'll explain what's happening.::
     ])
 
     # Register a dataset
-    dataset = data_handlers.from_pandas(df)
+    dataset = bardi_data.from_pandas(df)
 
     # Initialize a pipeline
     pipeline = Pipeline(dataset=dataset, write_outputs=False)
 
     # Grabbing a pre-made regex set for normalizing pathology reports
-    pathology_regex_set = PathologyReportRegexSet().get_regex_set()
+    pathology_regex_set = nlp.PathologyReportRegexSet().get_regex_set()
 
     # Adding a normalizer step to the pipeline
     pipeline.add_step(
-        nlp_engineering.CPUNormalizer(
+        nlp.CPUNormalizer(
             fields=['text'],
             regex_set=pathology_regex_set,
             lowercase=True
@@ -172,7 +170,7 @@ Let's look at a full example, and then we'll explain what's happening.::
 
     # Adding the pre-tokenizer step to the pipeline
     pipeline.add_step(
-        nlp_engineering.CPUPreTokenizer(
+        nlp.CPUPreTokenizer(
             fields=['text'],
             split_pattern=' '
         )
