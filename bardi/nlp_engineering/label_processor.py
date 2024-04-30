@@ -8,6 +8,7 @@ import polars as pl
 import pyarrow as pa
 
 from bardi.data import data_handlers
+from bardi.nlp_engineering.utils.polars_utils import retain_inputs
 from bardi.nlp_engineering.utils.validations import validate_pyarrow_table
 from bardi.pipeline import DataWriteConfig, Step
 
@@ -41,16 +42,24 @@ class LabelProcessor(Step):
     method : str
         Currently only a default 'unique' method is
         supported which maps each unique value in the column to an id.
+    retain_input_fields : Optional[bool]
+        If True, will retain the original contents of the fields specified in
+        `fields` under the new names of: `labelprocessor__<field>`
     """
 
-    def __init__(self, fields: Union[str, List[str]], method: str = "unique"):
-        """Constructor method
-        """
+    def __init__(
+        self,
+        fields: Union[str, List[str]],
+        method: str = "unique",
+        retain_input_fields: bool = False,
+    ):
+        """Constructor method"""
         self.fields = fields
         if isinstance(fields, str):
             self.fields = [fields]
         else:
             self.fields = fields
+        self.retain_input_fields = retain_input_fields
         self.method = method
         self.mapping = {}
         self.id_to_label = {}
@@ -76,8 +85,7 @@ class LabelProcessor(Step):
 
     @abstractmethod
     def run(self):
-        """Abstract method
-        """
+        """Abstract method"""
         pass
 
 
@@ -93,20 +101,24 @@ class CPULabelProcessor(LabelProcessor):
     ----------
 
     fields : Union[str, List[str]]
-        The name(s) of label column(s) of which the values 
-        are used to generate a standardized mapping and then that mapping is applied to the column(s).
-    method : str 
-        Currently only a default 'unique' method is supported which maps each unique value in the column to an id.
+        The name(s) of label column(s) of which the values
+        are used to generate a standardized mapping and then that mapping is applied to
+        the column(s).
+    method : str
+        Currently only a default 'unique' method is supported which maps each unique value
+        in the column to an id.
     mapping : dict
         Mapping dict of the form {label: id} used to convert labels in the column to ids.
     id_to_label : dict
-        The reverse of mapping. Of the form {id: label} used downstream to map 
+        The reverse of mapping. Of the form {id: label} used downstream to map
         the ids back to the original label values.
+    retain_input_fields : Optional[bool]
+        If True, will retain the original contents of the fields specified in
+        `fields` under the new names of: `labelprocessor__<field>`
     """
 
     def __init__(self, *args, **kwargs):
-        """Constructor method
-        """
+        """Constructor method"""
         super().__init__(*args, **kwargs)
 
     def run(self, data: pa.Table, artifacts: Optional[dict] = None) -> Tuple[pa.Table, dict]:
@@ -148,9 +160,7 @@ class CPULabelProcessor(LabelProcessor):
             if self.method == "unique":
                 try:
                     # Get the unique labels
-                    vals = (
-                        pl.from_arrow(data).get_column(field).unique().sort()
-                    ).to_list()
+                    vals = (pl.from_arrow(data).get_column(field).unique().sort()).to_list()
 
                     # Create a mapping for the labels
                     field_mapping = {label: id for id, label in enumerate(vals)}
@@ -160,8 +170,15 @@ class CPULabelProcessor(LabelProcessor):
                     }
                     self.id_to_label[field] = field_id_to_label
 
-                    df = pl.from_arrow(data).with_columns(
-                        pl.col(field).map_dict(field_mapping, default=None)
+                    df = (
+                        pl.from_arrow(data)
+                        .pipe(
+                            retain_inputs,
+                            self.retain_input_fields,
+                            [field],
+                            self.__class__.__name__,
+                        )
+                        .with_columns(pl.col(field).map_dict(field_mapping, default=None))
                     )
 
                 except Exception as e:

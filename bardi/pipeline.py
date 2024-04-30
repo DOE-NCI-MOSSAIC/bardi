@@ -8,8 +8,7 @@ from typing import List, Literal, Tuple, TypedDict, Union
 
 import pyarrow as pa
 
-from bardi.data import data_handlers
-from bardi.data.data_handlers import Dataset
+from bardi.data import Dataset, write_file
 
 
 class DataWriteConfig(TypedDict):
@@ -22,8 +21,7 @@ class Step(metaclass=ABCMeta):
 
     @abstractmethod
     def __init__(self):
-        """Constructor method
-        """
+        """Constructor method"""
         self._data_write_config: DataWriteConfig = {
             "data_format": "parquet",
             "data_format_args": {"compression": "snappy", "use_dictionary": False},
@@ -68,7 +66,7 @@ class Step(metaclass=ABCMeta):
         ----------
 
         data_config : DataWriteConfig
-            A typed dictionary defining the data_format (i.e., parquet, csv, etc.) 
+            A typed dictionary defining the data_format (i.e., parquet, csv, etc.)
             and any particular data_format_args available in the pyarrow API.
         """
         self._data_write_config = data_config
@@ -101,7 +99,7 @@ class Step(metaclass=ABCMeta):
         Parameters
         ----------
 
-        write_path : str 
+        write_path : str
             A directory where a file will be written.
         data : Union[pa.Table, None]
             PyArrow Table of data.
@@ -115,7 +113,7 @@ class Step(metaclass=ABCMeta):
             write_path, (f'{data_filename}.{self._data_write_config["data_format"]}')
         )
         # Call the data handler write_file function
-        data_handlers.write_file(
+        write_file(
             data=data,
             path=file_path,
             format=self._data_write_config["data_format"],
@@ -142,7 +140,26 @@ class Step(metaclass=ABCMeta):
 
 
 class Pipeline:
-    """Organize Steps into a pipeline to operate on data from a Dataset"""
+    """Organize Steps into a pipeline to operate on data from a Dataset
+
+    Attributes
+    ----------
+
+    dataset : bardi.data.data_handlers.Dataset
+        A bardi dataset object with data to pre-process.
+    write_path : str
+        Directory in the file system to write outputs to.
+    write_outputs : Literal["pipeline-outputs", "debug", False]
+        Configuration for which outputs to write.
+            *   'pipeline-outputs' will write all artifacts and final data.
+            *   'debug' will write all artifacts and data from each step.
+            *   False will not write any files.
+    data_write_config : DataWriteConfig
+        Supply a custom write configuration specifying
+        file types. Default will save data as parquet files.
+    data_filename : str
+        Supply a filename for the final output data.
+    """
 
     def __init__(
         self,
@@ -152,26 +169,7 @@ class Pipeline:
         data_write_config: DataWriteConfig = None,
         data_filename: str = "bardi_processed_data",
     ):
-        """Create a pipeline for organizing data pre-processing steps.
-
-        Parameters
-        ----------
-
-        dataset : bardi.data.data_handlers.Dataset
-            A bardi dataset object with data to pre-process.
-        write_path : str
-            Directory in the file system to write outputs to.
-        write_outputs : Literal["pipeline-outputs", "debug", False]
-            Configuration for which outputs to write.
-                *   'pipeline-outputs' will write all artifacts and final data.
-                *   'debug' will write all artifacts and data from each step.
-                *   False will not write any files.
-        data_write_config : DataWriteConfig
-            Supply a custom write configuration specifying
-            file types. Default will save data as parquet files.
-        data_filename : str
-            Supply a filename for the final output data.
-        """
+        """Constructor Method"""
         # Reference a bardi dataset object that the pipeline will operate on
         self.dataset: Dataset = dataset
 
@@ -220,9 +218,7 @@ class Pipeline:
             self.steps.append(step)
             self.num_steps += 1
         else:
-            raise TypeError(
-                "Only objects of type Step may be added to " "a bardi pipeline."
-            )
+            raise TypeError("Only objects of type Step may be added to " "a bardi pipeline.")
 
     def run_pipeline(self) -> None:
         """Calls the run and write_outputs method for each respective step
@@ -268,9 +264,7 @@ class Pipeline:
                     # Write the step's data output to a file if pipeline is configured
                     # to do so
                     if self.write_outputs == "debug":
-                        step.write_data(
-                            write_path=self.write_path, data=self.processed_data
-                        )
+                        step.write_data(write_path=self.write_path, data=self.processed_data)
                     elif (
                         step_position == self.num_steps
                         and self.write_outputs == "pipeline-outputs"
@@ -288,9 +282,7 @@ class Pipeline:
                     # Write the step's artifacts to files if pipeline is configured
                     # to do so
                     if self.write_outputs:
-                        step.write_artifacts(
-                            write_path=self.write_path, artifacts=self.artifacts
-                        )
+                        step.write_artifacts(write_path=self.write_path, artifacts=self.artifacts)
             else:
                 raise TypeError(
                     "Pipeline expected step to return a tuple of "

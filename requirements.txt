@@ -7,5 +7,6 @@ pandas>=1.4.4
 polars>=0.19.8
 pyarrow>=14.0.1
 setuptools>=61.0
-
-
+tokenizers==0.13.3
+transformers>=4.29.2
+datasets>=2.12.0

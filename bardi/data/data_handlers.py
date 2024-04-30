@@ -126,9 +126,7 @@ def from_file(
         if min_batches:
             # If a min_batches is specified, data from the file(s) are split
             # into a list of smaller PyArrow Tables
-            tables = chunk_pyarrow_table(
-                data=table, row_count=row_count, min_batches=min_batches
-            )
+            tables = chunk_pyarrow_table(data=table, row_count=row_count, min_batches=min_batches)
 
             # Setting the bardi Dataset object's data references to the list
             # of PyArrow Tables
@@ -183,9 +181,7 @@ def from_duckdb(path: str, query: str, min_batches: int = None) -> Dataset:
     if min_batches:
         # If a min_batches is specified, data from the file(s) are split into a
         # list of smaller PyArrow Tables
-        tables = chunk_pyarrow_table(
-            data=table, row_count=row_count, min_batches=min_batches
-        )
+        tables = chunk_pyarrow_table(data=table, row_count=row_count, min_batches=min_batches)
 
         # Setting the bardi Dataset object's data references to the list of
         # PyArrow Tables
@@ -239,9 +235,7 @@ def from_pandas(df: pd.DataFrame, min_batches: int = None) -> Dataset:
     if min_batches:
         # If a min_batches is specified, data from the file(s) are split into
         # a list of smaller PyArrow Tables
-        tables = chunk_pyarrow_table(
-            data=table, row_count=row_count, min_batches=min_batches
-        )
+        tables = chunk_pyarrow_table(data=table, row_count=row_count, min_batches=min_batches)
 
         # Setting the bardi Dataset object's data references to the list of
         # PyArrow Tables
@@ -288,9 +282,7 @@ def from_pyarrow(table: pa.Table, min_batches: int = None) -> Dataset:
     if min_batches:
         # If a min_batches is specified, data from the file(s) are split into a
         # list of smaller PyArrow Tables
-        tables = chunk_pyarrow_table(
-            data=table, row_count=row_count, min_batches=min_batches
-        )
+        tables = chunk_pyarrow_table(data=table, row_count=row_count, min_batches=min_batches)
 
         # Setting the bardi Dataset object's data references to the list of
         # PyArrow Tables
@@ -354,13 +346,13 @@ def from_json(json_data: Union[str, dict, List(dict)]) -> Dataset:
 
 def to_pandas(table: pa.Table) -> pd.DataFrame:
     """Return data as a pandas DataFrame
-    
+
     Parameters
     ----------
 
     table : PyArrow.Table
         Table of data you want to convert to a Pandas DataFrame
-    
+
     Returns
     -------
 
@@ -373,13 +365,13 @@ def to_pandas(table: pa.Table) -> pd.DataFrame:
 
 def to_polars(table: pa.Table) -> pl.DataFrame:
     """Return data as a polars DataFrame
-    
+
     Parameters
     ----------
 
     table : PyArrow.Table
         Table of data you want to convert to a Pandas DataFrame
-    
+
     Returns
     -------
 
@@ -430,11 +422,11 @@ def write_file(data: pa.Table, path: str, format: str, *args, **kwargs) -> None:
             schema = csv_df.schema
             csv_df = csv_df.with_columns(
                 [
-                    pl.format(
-                        "[{}]", pl.col(field).cast(pl.List(pl.Utf8)).list.join(", ")
-                    ).alias(field)
+                    pl.format("[{}]", pl.col(field).cast(pl.List(pl.Utf8)).list.join(", ")).alias(
+                        field
+                    )
                     for field in schema.keys()
-                    if schema[field] == pl.List()
+                    if (schema[field] == pl.List(pl.Int64)) or (schema[field] == pl.List(pl.Utf8))
                 ]
             )
             data = csv_df.to_arrow()

@@ -11,6 +11,7 @@ import polars as pl
 import pyarrow as pa
 
 from bardi.data.utils.pyarrow_utils import chunk_pyarrow_table
+from bardi.nlp_engineering.utils.polars_utils import retain_inputs
 from bardi.nlp_engineering.utils.validations import (
     validate_list_str_cols,
     validate_pyarrow_table,
@@ -18,13 +19,13 @@ from bardi.nlp_engineering.utils.validations import (
 from bardi.pipeline import DataWriteConfig, Step
 
 
-class PostProcessor(Step):
-    """The post processor maps a vocab to a list of tokens
+class VocabEncoder(Step):
+    """The vocab encoder maps a vocab to a list of tokens
 
     Note
     ----
 
-    Avoid the direct instantiation of the PostProcessor class
+    Avoid the direct instantiation of the VocabEncoder class
     and instead instantiate one of the child classes depending
     on hardware configuration
 
@@ -47,6 +48,9 @@ class PostProcessor(Step):
     concat_fields : bool
         indicate if you would like for fields to be concatenated
         into a single column or left as separate columns
+    retain_input_fields : Optional[bool]
+        If True, will retain the original contents of the fields specified in
+        `fields` under the new names of: `vocabencoder__<field>`
     """
 
     def __init__(
@@ -55,12 +59,15 @@ class PostProcessor(Step):
         field_rename: str = None,
         id_to_token: dict = None,
         concat_fields: bool = False,
+        retain_input_fields: bool = False,
     ):
         """Constructor method
         """
         self.fields = fields
         if isinstance(fields, str):
             self.fields = [fields]
+
+        self.retain_input_fields = retain_input_fields
 
         self.field_rename = "X"
         if field_rename:
@@ -85,13 +92,13 @@ class PostProcessor(Step):
         pass
 
 
-class CPUPostProcessor(PostProcessor):
-    """The post processor maps a vocab to a list of tokens
+class CPUVocabEncoder(VocabEncoder):
+    """The vocab encoder maps a vocab to a list of tokens
 
     Note
     ----
 
-    This implementation of the PostProcessor is specific for CPU computation.
+    This implementation of the VocabEncoder is specific for CPU computation.
 
     Attributes
     ----------
@@ -112,6 +119,9 @@ class CPUPostProcessor(PostProcessor):
     concat_fields : bool
         indicate if you would like for fields to be concatenated
         into a single column or left as separate columns
+    retain_input_fields : Optional[bool]
+        If True, will retain the original contents of the fields specified in
+        `fields` under the new names of: `vocabencoder__<field>`
     """
 
     def __init__(self, *args, **kwargs):
@@ -125,16 +135,16 @@ class CPUPostProcessor(PostProcessor):
         artifacts: dict = None,
         id_to_token: dict = None,
     ) -> pa.Table:
-        """Run a post processor using CPU computation
+        """Run a vocab encoder using CPU computation
 
-        The post processor relies on receiving a vocab to map. The
+        The vocab encoder relies on receiving a vocab to map. The
         vocab can be supplied in multiple ways:
           - id_to_token at object creation
           - contained in the pipeline artifacts dictionary passed
             to the run method referenced by the key, 'id_to_token'
           - id_to_token in the run method
 
-        Attributes
+        Parameters
         ----------
 
         data : PyArrow Table
@@ -154,7 +164,7 @@ class CPUPostProcessor(PostProcessor):
         Tuple(PyArrow Table, dict)
             A tuple with:
                 - the first element holding a PyArrow Table of data
-                processed with the post processor
+                processed with the vocab encoder
                 - the second element of the tuple intended for
                 artifacts is None
 
@@ -172,9 +182,18 @@ class CPUPostProcessor(PostProcessor):
         validate_pyarrow_table(data=data)
         validate_list_str_cols(fields=self.fields, data=data)
 
+        # Retain original columns if needed - doing it here before any PyArrow Table
+        # chunking takes place
+        df = (
+            pl.from_arrow(data)
+            .pipe(retain_inputs, self.retain_input_fields, self.fields, self.__class__.__name__)
+        )
+        data = df.to_arrow()
+
         # Check if vocab was passed through the artifacts dict
-        if "id_to_token" in artifacts.keys():
-            id_to_token = artifacts["id_to_token"]
+        if artifacts:
+            if "id_to_token" in artifacts.keys():
+                id_to_token = artifacts["id_to_token"]
 
         # Check if a vocab was passed directly to the method -
         # the route used if a vocab was created during script execution
@@ -187,7 +206,7 @@ class CPUPostProcessor(PostProcessor):
             # isn't a vocab to use in this run method
             raise AttributeError(
                 "id_to_token must be provided to either "
-                "the PostProcessor object instantiation "
+                "the VocabEncoder object instantiation "
                 "or to the run method"
             )
 
@@ -272,14 +291,14 @@ class CPUPostProcessor(PostProcessor):
         return (data, None)
 
     def get_parameters(self):
-        """Retrive the post-processor object configuration
+        """Retrive the vocab encoder object configuration
         Does not return the mapping (vocab) as it can be large
 
         Returns
         -------
 
         dict
-            a dictionary representation of the post-processor's attributes
+            a dictionary representation of the vocab encoder's attributes
         """
         params = vars(self).copy()
         params.pop("mapping")

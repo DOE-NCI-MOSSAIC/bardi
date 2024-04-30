@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from bardi.nlp_engineering.regex_library import regex_lib
+from bardi import nlp_engineering as nlp
 
 
 class TestRegexMultipleExpreesions(unittest.TestCase):
@@ -61,7 +61,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
         x = random.randint(0, self.max_int)
         test_text = self.data["text_all"][x].lower()
 
-        regex_sub_pair = regex_lib.get_escape_code_regex()
+        regex_sub_pair = nlp.get_escape_code_regex()
         pattern = regex_sub_pair["regex_str"]
         replacement = regex_sub_pair["sub_str"]
         print(f'\n Rule 0: Escape Codes -  pattern: {pattern}'
@@ -71,7 +71,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
         print(test_text)
 
         if self.handle_whitespaces:
-            regex_sub_pair = regex_lib.get_whitespace_regex()
+            regex_sub_pair = nlp.get_whitespace_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 1 White Spaces: pattern: {pattern} replacement:'
@@ -80,7 +80,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.remove_urls:
-            regex_sub_pair = regex_lib.get_urls_regex()
+            regex_sub_pair = nlp.get_urls_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 2 URLs Replacement: pattern: {pattern}'
@@ -89,7 +89,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.remove_special_punct:
-            regex_sub_pair = regex_lib.get_special_punct_regex()
+            regex_sub_pair = nlp.get_special_punct_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 3 Chosen Punctuation Removal: pattern: {pattern}'
@@ -98,7 +98,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.remove_multiple_punct:
-            regex_sub_pair = regex_lib.get_multiple_punct_regex()
+            regex_sub_pair = nlp.get_multiple_punct_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 4 Multiple Punctuation: pattern: {pattern}'
@@ -107,7 +107,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.handle_angle_brackets:
-            regex_sub_pair = regex_lib.get_angle_brackets_regex()
+            regex_sub_pair = nlp.get_angle_brackets_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 5 Angle Brackets Removal: pattern: {pattern}'
@@ -116,7 +116,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.replace_percent_sign:
-            regex_sub_pair = regex_lib.get_percent_sign_regex()
+            regex_sub_pair = nlp.get_percent_sign_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 6 Replace Percent Sign: pattern: {pattern}'
@@ -125,7 +125,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.handle_leading_digit_punct:
-            regex_sub_pair = regex_lib.get_leading_digit_punctuation_regex()
+            regex_sub_pair = nlp.get_leading_digit_punctuation_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 7 Leading Digit Punctuation: pattern: {pattern}'
@@ -134,7 +134,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.remove_leading_punct:
-            regex_sub_pair = regex_lib.get_leading_punctuation_regex()
+            regex_sub_pair = nlp.get_leading_punctuation_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 8 Leading Punctuation: pattern: {pattern}'
@@ -143,7 +143,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.remove_trailing_punct:
-            regex_sub_pair = regex_lib.get_trailing_punctuation_regex()
+            regex_sub_pair = nlp.get_trailing_punctuation_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 9 Trailing Punctuation: pattern: {pattern}'
@@ -152,7 +152,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.handle_words_with_punct_spacing:
-            regex_sub_pair = regex_lib.get_words_with_punct_spacing_regex()
+            regex_sub_pair = nlp.get_words_with_punct_spacing_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 10 Words with Punctuation: pattern: {pattern}'
@@ -161,7 +161,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.handle_math_spacing:
-            regex_sub_pair = regex_lib.get_math_spacing_regex()
+            regex_sub_pair = nlp.get_math_spacing_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 11 Math Operator Spacing: pattern: {pattern}'
@@ -170,7 +170,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.handle_dimension_spacing:
-            regex_sub_pair = regex_lib.get_dimension_spacing_regex()
+            regex_sub_pair = nlp.get_dimension_spacing_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 12 Dimension spacing: pattern: {pattern}'
@@ -179,7 +179,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.handle_measure_spacing:
-            regex_sub_pair = regex_lib.get_measure_spacing_regex()
+            regex_sub_pair = nlp.get_measure_spacing_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 13 Measure spacing: pattern: {pattern}'
@@ -188,7 +188,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.handle_cassettes_spacing:
-            regex_sub_pair = regex_lib.get_cassettes_spacing_regex()
+            regex_sub_pair = nlp.get_cassettes_spacing_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 14 Special Specing: pattern: {pattern}'
@@ -197,7 +197,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.handle_dash_digits_spacing:
-            regex_sub_pair = regex_lib.get_dash_digits_spacing_regex()
+            regex_sub_pair = nlp.get_dash_digits_spacing_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 15 Dash Spacing: pattern: {pattern}'
@@ -206,7 +206,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.handle_literals_floats_spacing:
-            regex_sub_pair = regex_lib.get_literals_floats_spacing_regex()
+            regex_sub_pair = nlp.get_literals_floats_spacing_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 16 Literal Floats: pattern: {pattern}'
@@ -215,7 +215,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.fix_pluralization:
-            regex_sub_pair = regex_lib.get_fix_pluralization_regex()
+            regex_sub_pair = nlp.get_fix_pluralization_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 17 Plurals Attach: pattern: {pattern}'
@@ -224,7 +224,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.handle_digits_words_spacing:
-            regex_sub_pair = regex_lib.get_digits_words_spacing_regex()
+            regex_sub_pair = nlp.get_digits_words_spacing_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 18 Digits Words Spacing: pattern: {pattern}'
@@ -233,7 +233,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.remove_phone_numbers:
-            regex_sub_pair = regex_lib.get_phone_number_regex()
+            regex_sub_pair = nlp.get_phone_number_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 19 Phone Number Removal: pattern: {pattern}'
@@ -242,7 +242,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.remove_dates:
-            regex_sub_pair = regex_lib.get_dates_regex()
+            regex_sub_pair = nlp.get_dates_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 20 Dates Removal: pattern: {pattern}'
@@ -251,7 +251,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.remove_time:
-            regex_sub_pair = regex_lib.get_time_regex()
+            regex_sub_pair = nlp.get_time_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 21 Time Removal: pattern: {pattern}'
@@ -260,7 +260,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.remove_addresses:
-            regex_sub_pair = regex_lib.get_address_regex()
+            regex_sub_pair = nlp.get_address_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 22 Address Removal: pattern: {pattern}'
@@ -269,7 +269,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.remove_dimensions:
-            regex_sub_pair = regex_lib.get_dimensions_regex()
+            regex_sub_pair = nlp.get_dimensions_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 23 Dimension Removal: pattern: {pattern}'
@@ -278,7 +278,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.remove_specimen:
-            regex_sub_pair = regex_lib.get_specimen_regex()
+            regex_sub_pair = nlp.get_specimen_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 24 Specimen Removal: pattern: {pattern}'
@@ -287,7 +287,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.remove_decimal_seg_numbers:
-            regex_sub_pair = regex_lib.get_decimal_segmented_numbers_regex()
+            regex_sub_pair = nlp.get_decimal_segmented_numbers_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 25 Decimal Segmented Numbers: pattern: {pattern}'
@@ -296,7 +296,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.remove_large_digits_seq:
-            regex_sub_pair = regex_lib.get_large_digits_seq_regex()
+            regex_sub_pair = nlp.get_large_digits_seq_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 26 Large Digits: pattern: {pattern}'
@@ -305,7 +305,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.remove_large_floats_seq:
-            regex_sub_pair = regex_lib.get_large_float_seq_regex()
+            regex_sub_pair = nlp.get_large_float_seq_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 27 Large Floats: pattern: {pattern}'
@@ -314,7 +314,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.trunc_decimals:
-            regex_sub_pair = regex_lib.get_trunc_decimals_regex()
+            regex_sub_pair = nlp.get_trunc_decimals_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 28 Truncate Decimal: pattern: {pattern}'
@@ -323,7 +323,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             print(test_text)
 
         if self.remove_cassette_names:
-            regex_sub_pair = regex_lib.get_cassette_name_regex()
+            regex_sub_pair = nlp.get_cassette_name_regex()
             pattern = regex_sub_pair["regex_str"]
             replacement = regex_sub_pair["sub_str"]
             print(f'\n Rule 29 Cassette Names Removal: pattern: {pattern}'
@@ -331,7 +331,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
             test_text = re.sub(pattern, replacement, test_text)
             print(test_text)
 
-        regex_sub_pair = regex_lib.get_spaces_regex()
+        regex_sub_pair = nlp.get_spaces_regex()
         pattern = regex_sub_pair["regex_str"]
         replacement = regex_sub_pair["sub_str"]
         print(f'\n Rule 18 Additional Spaces: pattern: {pattern}'

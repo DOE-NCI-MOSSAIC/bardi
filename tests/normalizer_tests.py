@@ -5,9 +5,9 @@ import unittest
 from pathlib import Path
 
 import polars as pl
+from polars.testing import assert_series_equal, assert_series_not_equal
 
-from bardi.nlp_engineering.normalizer import CPUNormalizer
-from bardi.nlp_engineering.regex_library.pathology_report import PathologyReportRegexSet
+from bardi.nlp_engineering import CPUNormalizer, PathologyReportRegexSet
 
 
 class TestNormalizer(unittest.TestCase):
@@ -21,11 +21,12 @@ class TestNormalizer(unittest.TestCase):
         # Mock polars DataFrame to test the correct behaviour.
         self.df = pl.DataFrame(
             {
-                "text_1": "At 1234 north 500 west provo ca 12345.\n The speciment: sh-22-0011300 3.89 x4.56cm. Or 4.3 km. ",
+                "text_1": "At 1234 north 500 west provo ca 12345.\n The speciment:"
+                "sh-22-0011300 3.89 x4.56cm. Or 4.3 km. ",
                 "text_2": "Call  123 456 7890 .This is: 0.8943",
             }
         )
-        regex_set = PathologyReportRegexSet(
+        self.path_regex_set = PathologyReportRegexSet(
             handle_whitespaces=True,
             remove_special_punct=True,
             handle_angle_brackets=True,
@@ -33,18 +34,28 @@ class TestNormalizer(unittest.TestCase):
             remove_phone_numbers=True,
             remove_dates=True,
             remove_addresses=True,
-        ).get_regex_set()
-        self.normalizer = CPUNormalizer(
+        )
+
+        self.regex_set = self.path_regex_set.get_regex_set()
+
+        self.standard_normalizer = CPUNormalizer(
             fields=["text_1", "text_2"],
-            regex_set=regex_set,
+            regex_set=self.regex_set,
             lowercase=True,
+        )
+
+        self.retain_normalizer = CPUNormalizer(
+            fields=["text_1", "text_2"],
+            regex_set=self.regex_set,
+            lowercase=True,
+            retain_input_fields=True,
         )
 
     def test_cpu_normalizer(self):
         """Do a full test of the CPU normalizer class ensuring
         the overall output is what is expected"""
 
-        data, artifacts = self.normalizer.run(self.df.to_arrow(), None)
+        data, artifacts = self.standard_normalizer.run(self.df.to_arrow(), None)
 
         # Compare expected output table to the test table that
         # has been processed with the normalizer
@@ -63,6 +74,77 @@ class TestNormalizer(unittest.TestCase):
             correct_2,
             ("The overall result of" " the normalizer does not match" "the expected output."),
         )
+
+    def test_lowercase_subsitution(self):
+        """Test lowercase_substitution option for the regex set"""
+        lowercase_set = self.path_regex_set.get_regex_set(lowercase_substitution=True)
+
+        ans1 = {"regex_str": "\\b[a-z]\\d{6,10}[.\\s]*", "sub_str": " letterdigitstoken "}
+
+        self.assertEqual(
+            lowercase_set[31],
+            ans1,
+            ("The lowercase_substitution option does not return the expected output."),
+        )
+
+        ans2 = {"regex_str": " \\d{1,2}d\\d{6,9}[.\\s]*", "sub_str": " durationtoken "}
+
+        self.assertEqual(
+            lowercase_set[30],
+            ans2,
+            ("The lowercase_substitution option does not return the expected output."),
+        )
+
+    def test_no_subsitution(self):
+        """Test no_substitution option for the regex set"""
+        no_substitution_set = self.path_regex_set.get_regex_set(no_substitution=True)
+
+        ans1 = {"regex_str": "\\b[a-z]\\d{6,10}[.\\s]*", "sub_str": " "}
+
+        self.assertEqual(
+            no_substitution_set[31],
+            ans1,
+            ("The no_substitution option does not return the expected output."),
+        )
+
+        ans2 = {"regex_str": " \\d{1,2}d\\d{6,9}[.\\s]*", "sub_str": " "}
+
+        self.assertEqual(
+            no_substitution_set[30],
+            ans2,
+            ("The no_substitution option does not return the expected output."),
+        )
+
+    def test_column_retention(self):
+        """Do a full test of the CPU normalizer class with column retention
+        testing that the columns were retained and renamed as expected"""
+
+        data, artifacts = self.retain_normalizer.run(self.df.to_arrow(), None)
+
+        df = pl.from_arrow(data)
+        actual_cols = df.columns
+        expected_cols = [
+            "CPUNormalizer_input__text_1",
+            "CPUNormalizer_input__text_2",
+            "text_1",
+            "text_2",
+        ]
+
+        # Test that all of the columns are there
+        for col in actual_cols:
+            self.assertIn(col, expected_cols)
+
+        # Test for expected column contents
+        for col in self.df.columns:
+            actual_retained_series = df.get_column(f"CPUNormalizer_input__{col}")
+            original_series = self.df.get_column(col)
+            cleaned_series = df.get_column(col)
+
+            # retained series content should match original content
+            assert_series_equal(actual_retained_series, original_series, check_names=False)
+
+            # the new data in the column should not equal the original data (it was cleaned!)
+            assert_series_not_equal(cleaned_series, original_series, check_names=False)
 
     def test_write_data(self):
         """A test to ensure that the normalizer's write function
@@ -85,9 +167,9 @@ class TestNormalizer(unittest.TestCase):
             elif test_format == "csv":
                 write_config = {"data_format": "csv", "data_format_args": {}}
 
-            self.normalizer.set_write_config(write_config)
-            data, artifacts = self.normalizer.run(data=self.df.to_arrow(), artifacts=None)
-            self.normalizer.write_data(write_path=test_data_dir, data=data)
+            self.standard_normalizer.set_write_config(write_config)
+            data, artifacts = self.standard_normalizer.run(data=self.df.to_arrow(), artifacts=None)
+            self.standard_normalizer.write_data(write_path=test_data_dir, data=data)
 
             test_data_contents = os.listdir(test_data_dir)
             result = False

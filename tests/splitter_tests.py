@@ -7,8 +7,8 @@ from pathlib import Path
 import pandas as pd
 import pyarrow as pa
 
-from bardi.data.data_handlers import from_pandas
-from bardi.nlp_engineering.splitter import CPUSplitter, NewSplit
+from bardi.data import from_pandas
+from bardi.nlp_engineering import CPUSplitter, NewSplit
 
 
 class TestSplitter(unittest.TestCase):
