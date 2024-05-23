@@ -43,4 +43,5 @@ jobs:
           make html
       - name: Run ghp-import
         run: |
+          pwd
           ghp-import -n -p -f /build/html/*
