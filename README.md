@@ -27,7 +27,7 @@ _currently not supported on Windows_
 Documentation
 =============
 
-*  [bardi's docs](https://doe-nci-mossaic.github.io/bardi/)
+*  [bardi's docs](file:///mnt/nci/scratch/docs/bardi/build/html/index.html)
 
 Tutorial
 ========

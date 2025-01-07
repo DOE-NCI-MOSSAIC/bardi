@@ -184,7 +184,7 @@ class TestPipeline(unittest.TestCase):
 
         # create pipeline
         self.pipeline = Pipeline(
-            dataset=self.dataset, write_path=self.write_dir, write_outputs=False
+            dataset=self.dataset, write_path=self.write_dir, write_outputs="debug"
         )
 
         regex_set = PathologyReportRegexSet().get_regex_set()
@@ -214,6 +214,11 @@ class TestPipeline(unittest.TestCase):
 
         # test condensed params
         pipeline_params = self.pipeline.get_parameters(condensed=True)
+        print(pipeline_params)
+
+        # clean up
+        if os.path.exists(self.write_dir):
+            shutil.rmtree(self.write_dir)
 
 
 if __name__ == "__main__":

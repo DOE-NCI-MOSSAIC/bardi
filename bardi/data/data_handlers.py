@@ -6,11 +6,13 @@ import json
 from datetime import datetime
 from typing import List, Union
 
+import datasets
 import duckdb
 import numpy as np
 import pandas as pd
 import polars as pl
 import pyarrow as pa
+import pyarrow.compute as pc
 import pyarrow.csv as csv
 import pyarrow.dataset as ds
 import pyarrow.feather as feather
@@ -403,7 +405,8 @@ def write_file(data: pa.Table, path: str, format: str, *args, **kwargs) -> None:
     """
 
     format = format.lower()
-    accepted_formats = ["parquet", "feather", "csv", "orc", "json", "npy"]
+    accepted_formats = ["parquet", "feather", "csv", "orc", "json", "npy",
+                        "hf-dataset", "hf-dataset-parquet"]
 
     if format not in accepted_formats:
         raise ValueError(
@@ -438,3 +441,30 @@ def write_file(data: pa.Table, path: str, format: str, *args, **kwargs) -> None:
         elif format == "npy":
             with open(path, "wb") as f:
                 np.save(file=f, arr=data, *args, **kwargs)
+        elif (format == "hf-dataset") or (format == "hf-dataset-parquet"):
+
+            # if the split column is present
+            # each split will be saved in its own file
+            if "split" in data.schema.names:
+                unique_values = pc.unique(data['split']).to_pylist()
+                data_splits = {}
+
+                # find all the unique values and use arrow to
+                # filter the subset of PyArrow Table using mask
+                for val in unique_values:
+                    mask = pc.equal(data["split"], val)
+                    data_splits[val] = datasets.Dataset(data.filter(mask))
+                    if format == "hf-dataset-parquet":
+                        data_splits[val].to_parquet(f"{path}_{val}.parquet")
+
+                # save the dataset as HF DatasetDict
+                if format == "hf-dataset":
+                    dataset_dict = datasets.DatasetDict(data_splits)
+                    dataset_dict.save_to_disk(f"{path}")
+
+            else:
+                dataset = datasets.Dataset(data)
+                if format == "hf-dataset-parquet":
+                    dataset.to_parquet(f"{path}_all.parquet")
+                else:
+                    dataset.save_to_disk(f"{path}")

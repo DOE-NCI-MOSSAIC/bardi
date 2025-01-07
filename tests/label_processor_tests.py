@@ -72,6 +72,42 @@ class TestLabelProcessor(unittest.TestCase):
         # label_processor = CPULabelProcessor(fields='task_4')
         # data, artifacts = label_processor.run(self.df.to_arrow(), None)
 
+        # ======== Test when existing id_to_label passed at object creation  ========
+        test_id_to_label = {
+            "task_1": {"0": "A", "1": "B", "2": "C"},
+            "task_2": {"0": "-1", "1": "0", "2": "1", "3": "2"}
+        }
+        label_processor = CPULabelProcessor(
+            fields=["task_1", "task_2"], id_to_label=test_id_to_label
+        )
+        data, artifacts = label_processor.run(self.df.to_arrow(), None)
+        df = pl.from_arrow(data)
+
+        correct_answer_1 = pl.Series(name="task_1", values=[0, 1, 1, 0, 2, 0, 2])
+        assert_series_equal(df.get_column("task_1"), correct_answer_1)
+
+        correct_answer_2 = pl.Series(name="task_2", values=[1, 0, 1, 2, 3, 0, 1])
+        assert_series_equal(df.get_column("task_2"), correct_answer_2)
+
+        # ======== Test when existing id_to_label passed to run method  ========
+        test_id_to_label = {
+            "task_1": {"0": "A", "1": "B", "2": "C"},
+            "task_2": {"0": "-1", "1": "0", "2": "1", "3": "2"}
+        }
+        label_processor = CPULabelProcessor(fields=["task_1", "task_2"])
+        data, artifacts = label_processor.run(
+            self.df.to_arrow(),
+            None,
+            id_to_label=test_id_to_label
+        )
+        df = pl.from_arrow(data)
+
+        correct_answer_1 = pl.Series(name="task_1", values=[0, 1, 1, 0, 2, 0, 2])
+        assert_series_equal(df.get_column("task_1"), correct_answer_1)
+
+        correct_answer_2 = pl.Series(name="task_2", values=[1, 0, 1, 2, 3, 0, 1])
+        assert_series_equal(df.get_column("task_2"), correct_answer_2)
+
     def test_column_retention(self):
         label_processor = CPULabelProcessor(fields="task_1", retain_input_fields=True)
         data, _ = label_processor.run(self.df.to_arrow(), None)

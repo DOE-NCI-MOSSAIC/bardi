@@ -246,7 +246,7 @@ class CPUVocabEncoder(VocabEncoder):
                     chunk_df.select(["unique_id", field])
                     .explode(field)
                     .with_columns(
-                        pl.col(field).map_dict(
+                        pl.col(field).replace(
                             self.mapping, default=self.unk_id, return_dtype=pl.Int64()
                         )
                     )

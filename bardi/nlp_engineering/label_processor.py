@@ -45,6 +45,9 @@ class LabelProcessor(Step):
     retain_input_fields : Optional[bool]
         If True, will retain the original contents of the fields specified in
         `fields` under the new names of: `labelprocessor__<field>`
+    id_to_label : Optional[dict]
+        If an id_to_label already exists, it can be directly applied.
+        id_to_label is a dict of the form {field: {id: label}}
     """
 
     def __init__(
@@ -52,6 +55,7 @@ class LabelProcessor(Step):
         fields: Union[str, List[str]],
         method: str = "unique",
         retain_input_fields: bool = False,
+        id_to_label: dict = None,
     ):
         """Constructor method"""
         self.fields = fields
@@ -61,8 +65,14 @@ class LabelProcessor(Step):
             self.fields = fields
         self.retain_input_fields = retain_input_fields
         self.method = method
+
         self.mapping = {}
         self.id_to_label = {}
+        if id_to_label:
+            self.id_to_label = id_to_label
+            for field in id_to_label.keys():
+                self.mapping[field] = {label: int(id) for id, label in id_to_label[field].items()}
+
         self._data_write_config: DataWriteConfig = {
             "data_format": "parquet",
             "data_format_args": {"compression": "snappy", "use_dictionary": False},
@@ -115,13 +125,18 @@ class CPULabelProcessor(LabelProcessor):
     retain_input_fields : Optional[bool]
         If True, will retain the original contents of the fields specified in
         `fields` under the new names of: `labelprocessor__<field>`
+    id_to_label : Optional[dict]
+        If an id_to_label already exists, it can be directly applied.
+        id_to_label is a dict of the form {field: {id: label}}
     """
 
     def __init__(self, *args, **kwargs):
         """Constructor method"""
         super().__init__(*args, **kwargs)
 
-    def run(self, data: pa.Table, artifacts: Optional[dict] = None) -> Tuple[pa.Table, dict]:
+    def run(
+        self, data: pa.Table, artifacts: Optional[dict] = None, id_to_label: Optional[dict] = None
+    ) -> Tuple[pa.Table, dict]:
         """Run a label processor using CPU computation
 
         Parameters
@@ -133,6 +148,9 @@ class CPULabelProcessor(LabelProcessor):
         artifacts : dict
             artifacts are not used in this run method, but must be received
             to operate correctly in the pipeline run method
+        id_to_label : Optional[dict]
+            If an id_to_label already exists, it can be directly applied.
+            id_to_label is a dict of the form {field: {id: label}}
 
         Returns
         -------
@@ -154,42 +172,40 @@ class CPULabelProcessor(LabelProcessor):
         # Perform validations
         validate_pyarrow_table(data=data)
 
-        # Confirm that the method is passed a PyArrow Table
         produced_artifacts = {}
+
+        # if id_to_label was passed as an argument to the run method
+        if id_to_label:
+            self.id_to_label = id_to_label
+            for field in id_to_label.keys():
+                self.mapping[field] = {label: int(id) for id, label in id_to_label[field].items()}
+
+        # If id_to_label wasn't passed, then it needs to be created
+        if not self.mapping:
+            for field in self.fields:
+                # Get the unique labels
+                vals = (pl.from_arrow(data).get_column(field).unique().sort()).to_list()
+                # Create a mapping for the labels
+                self.mapping[field] = {label: id for id, label in enumerate(vals)}
+                # id_to_label is flipped vs what is needed for mapping
+                field_id_to_label = {
+                    str(id): str(label) for label, id in self.mapping[field].items()
+                }
+                self.id_to_label[field] = field_id_to_label
+
         for field in self.fields:
             if self.method == "unique":
-                try:
-                    # Get the unique labels
-                    vals = (pl.from_arrow(data).get_column(field).unique().sort()).to_list()
-
-                    # Create a mapping for the labels
-                    field_mapping = {label: id for id, label in enumerate(vals)}
-                    # id_to_label is flipped vs what is needed for mapping
-                    field_id_to_label = {
-                        str(id): str(label) for label, id in field_mapping.items()
-                    }
-                    self.id_to_label[field] = field_id_to_label
-
-                    df = (
-                        pl.from_arrow(data)
-                        .pipe(
-                            retain_inputs,
-                            self.retain_input_fields,
-                            [field],
-                            self.__class__.__name__,
-                        )
-                        .with_columns(pl.col(field).map_dict(field_mapping, default=None))
+                # Replace the values in the data with ids
+                df = (
+                    pl.from_arrow(data)
+                    .pipe(
+                        retain_inputs,
+                        self.retain_input_fields,
+                        [field],
+                        self.__class__.__name__,
                     )
-
-                except Exception as e:
-                    print(
-                        f"An error occured: {e} "
-                        "Processing without creating the label "
-                        f"mapping for {field}"
-                    )
-                    artifact = {"id_to_label": {field: None}}
-                    return (data, artifact)
-
+                    .with_columns(pl.col(field).replace(self.mapping[field], default=None))
+                )
             else:
                 raise NotImplementedError("Only unique mapping is currently supported")
 
