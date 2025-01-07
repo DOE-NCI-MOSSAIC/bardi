@@ -464,7 +464,7 @@ pipeline.add_step(nlp_engineering.CPUEmbeddingGenerator(fields=['text'],
                                                         min_word_count=2))
 
 # adding the post processor step to the pipeline
-pipeline.add_step(nlp_engineering.CPUPostProcessor(fields=['text']))
+pipeline.add_step(nlp_engineering.CPUVocabEncoder(fields=['text']))
 
 # adding the label processor step to the pipeline
 pipeline.add_step(nlp_engineering.CPULabelProcessor(fields=['dark_side_dx']))

@@ -322,7 +322,7 @@ class CPUSplitter(Splitter):
             # The splits assignment has to be done with a number
             # so a mapping must be created from a number to the
             # desired split name
-            split_name_maps = {i: key for i, key in enumerate(self.split_proportions.keys())}
+            split_name_maps = {str(i): key for i, key in enumerate(self.split_proportions.keys())}
 
             # Create a numpy array to hold the split labels (digits)
             split_labels = np.empty(group_count, dtype=int)
@@ -338,7 +338,7 @@ class CPUSplitter(Splitter):
                 start = end
             # In case some of incides are left out due to divisibility.
             split_labels[permuted_indices[end:]] = i
-            split_labels = pl.Series(split_labels)
+            split_labels = pl.Series(split_labels).cast(pl.Utf8)
 
             # Add split labels as a column to distince groups
             # mapped to assigned value back to the name of

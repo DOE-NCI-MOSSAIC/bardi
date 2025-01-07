@@ -240,21 +240,23 @@ class Pipeline:
         for step_position, step in enumerate(self.steps, start=1):
             # Call the run method and time the execution
             step_start_time = datetime.now()
-            tracemalloc.start()
+            if self.write_outputs == "debug":
+                tracemalloc.start()
             results = step.run(data=self.processed_data, artifacts=self.artifacts)
-            step_max_mem = tracemalloc.get_traced_memory()[1] / 1000000
-            tracemalloc.stop()
+            if self.write_outputs == "debug":
+                step_max_mem = tracemalloc.get_traced_memory()[1] / 1000000
+                tracemalloc.stop()
             step_end_time = datetime.now()
             step_run_time = step_end_time - step_start_time
 
             # Record the performance
-            if self.write_outputs == "debug":
-                print(f"{str(type(step))} run time: {step_run_time}")
-                print(f"{str(type(step))} max memory (MB): {step_max_mem}")
             self.performance[str(type(step))] = {
                 "time": str(step_run_time),
-                "memory (MB)": str(step_max_mem),
             }
+            if self.write_outputs == "debug":
+                self.performance[str(type(step))]["memory (MB)"] = str(step_max_mem)
+                print(f"{str(type(step))} run time: {step_run_time}")
+                print(f"{str(type(step))} max memory (MB): {step_max_mem}")
 
             if isinstance(results, tuple):
                 if isinstance(results[0], pa.Table):
