@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advanced Tutorials &mdash; bardi 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=6c02275b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="bardi.pipeline" href="bardi.pipeline.html" />
+    <link rel="prev" title="Basic Tutorial" href="basic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bardi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic.html">Basic Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#normalizer-customizations">Normalizer Customizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-custom-pipeline-step">Creating a Custom Pipeline Step</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.pipeline.html">bardi.pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.data.html">bardi.data package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.nlp_engineering.html">bardi.nlp_engineering package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bardi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Advanced Tutorials</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/advanced.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="advanced-tutorials">
+<h1>Advanced Tutorials<a class="headerlink" href="#advanced-tutorials" title="Link to this heading"></a></h1>
+<p><cite>Note: all code snippets on this page are based on setup performed in the basic tutorial. As such, code from the snippets may
+not run exactly as-is without adding some of the setup steps such as creating a dataset and pipeline.</cite></p>
+<section id="normalizer-customizations">
+<h2>Normalizer Customizations<a class="headerlink" href="#normalizer-customizations" title="Link to this heading"></a></h2>
+<p>Documentation References:
+<a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.normalizer.CPUNormalizer" title="bardi.nlp_engineering.normalizer.CPUNormalizer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bardi.nlp_engineering.normalizer.CPUNormalizer</span></code></a>
+<a class="reference internal" href="bardi.nlp_engineering.html#bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet" title="bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bardi.nlp_engineering.regex_library.pathology_report.PathologyReportRegexSet</span></code></a></p>
+<p>The normalizer needs a regular expression set (regex_set) to apply to the text. A regex_set is just a Python list of dictionaries
+containing a key for the regular expression, <cite>regex_str</cite>, and a key for the substitution string, <cite>sub_str</cite>. There are a few methods you
+can use to customize what regular expressions are applied to your text.</p>
+<ol class="arabic">
+<li><p><strong>Tuning a Provided bardi RegexSet</strong></p>
+<blockquote>
+<div><p>An existing RegexSet is tunable by turning individual regular expressions off and on as desired. By default, all are
+turned on, so you would just need to turn off the ones you don’t want to use.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bardi.nlp_engineering</span> <span class="kn">import</span> <span class="n">PathologyReportRegexSet</span>
+
+<span class="c1"># grabbing a pre-made regex set for normalizing pathology reports</span>
+<span class="c1"># turning off 3 of the regular expression substitutions I don&#39;t want to use</span>
+<span class="n">path_report_regex_set</span> <span class="o">=</span> <span class="n">PathologyReportRegexSet</span><span class="p">()</span><span class="o">.</span><span class="n">get_regex_set</span><span class="p">(</span>
+    <span class="n">remove_dimensions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">remove_specimen</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">remove_decimal_seg_number</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Append to a Provided bardi RegexSet</strong></p>
+<blockquote>
+<div><p>Suppose you want to use a provided regular expression set, but you have some additional regular expressions
+you would like to add. Because the regular expression set just returns a Python list, you can just append
+your additional regular expressions to the list.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bardi.nlp_engineering</span> <span class="kn">import</span> <span class="n">PathologyReportRegexSet</span>
+
+<span class="c1"># grabbing a pre-made regex set for normalizing pathology reports</span>
+<span class="c1"># turning off 3 of the regular expression substitutions I don&#39;t want to use</span>
+<span class="n">path_report_regex_set</span> <span class="o">=</span> <span class="n">PathologyReportRegexSet</span><span class="p">()</span><span class="o">.</span><span class="n">get_regex_set</span><span class="p">(</span>
+    <span class="n">remove_dimensions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">remove_specimen</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">remove_decimal_seg_number</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="c1"># Adding a custom regular expression substitution pair</span>
+<span class="n">path_report_regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="s1">&#39;$[0-9]+&#39;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s1">&#39;MONEYTOKEN&#39;</span><span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Using Python Built-in Types to Write a Custom Set</strong></p>
+<blockquote>
+<div><p>Nothing is stopping you from writing your own set of regular expressions and providing that to the normalizer.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creating custom regular expression set</span>
+<span class="n">custom_regex_set</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="s1">&#39;\s&#39;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="s1">&#39;http[s]?\://\S+&#39;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s1">&#39;URLTOKEN&#39;</span><span class="p">}</span>
+<span class="p">]</span>
+
+<span class="c1"># Supplying custom regex set to Normalizer</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+    <span class="n">nlp</span><span class="o">.</span><span class="n">CPUNormalizer</span><span class="p">(</span>
+        <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">],</span>
+        <span class="n">regex_set</span><span class="o">=</span><span class="n">custom_regex_set</span><span class="p">,</span>
+        <span class="n">lowercase</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Using the bardi RegexSet Class to Write a Custom Set</strong></p>
+<blockquote>
+<div><p>However, if you would like a more organized approach [than the method shown above] to handle your custom regular expression sets,
+you could follow our lead by creating a new class and inherit from our RegexSet class. The RegexSet class you are inheriting
+from gives you an attribute <cite>regex_set</cite>, which is a list of your regular expression substitution pairs, and the method to
+return this attribute, <cite>get_regex_set()</cite></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bardi.nlp_engineering</span> <span class="kn">import</span> <span class="n">RegexSet</span>
+
+
+<span class="c1"># Creating a custom regex set class inheriting from bardi RegexSet</span>
+<span class="k">class</span> <span class="nc">MyCustomRegexSet</span><span class="p">(</span><span class="n">RegexSet</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">handle_whitespace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">convert_urls</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">handle_whitespace</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="s1">&#39;\s&#39;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">convert_urls</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regex_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;regex_str&quot;</span><span class="p">:</span> <span class="s1">&#39;http[s]?\://\S+&#39;</span><span class="p">,</span> <span class="s2">&quot;sub_str&quot;</span><span class="p">:</span> <span class="s1">&#39;URLTOKEN&#39;</span><span class="p">}</span>
+            <span class="p">)</span>
+
+
+<span class="c1"># Supplying custom regex set to Normalizer</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+    <span class="n">nlp</span><span class="o">.</span><span class="n">CPUNormalizer</span><span class="p">(</span>
+        <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">],</span>
+        <span class="n">regex_set</span><span class="o">=</span><span class="n">MyCustomRegexSet</span><span class="o">.</span><span class="n">get_regex_set</span><span class="p">(),</span>
+        <span class="n">lowercase</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+</section>
+<section id="creating-a-custom-pipeline-step">
+<h2>Creating a Custom Pipeline Step<a class="headerlink" href="#creating-a-custom-pipeline-step" title="Link to this heading"></a></h2>
+<p>Documentation References:
+<a class="reference internal" href="bardi.pipeline.html#bardi.pipeline.Step" title="bardi.pipeline.Step"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bardi.pipeline.Step</span></code></a></p>
+<p>We have provided some out-of-the-box pipeline steps, and hope to continue adding more helpful steps, but we don’t
+expect to have provided every possible data pre-processing action you could ever need. So, what if we don’t have
+something built that you need, but you still would like to use the framework? Create your own custom step!
+By following these guidelines you can create a step that will run within our pipeline, alongside any of the steps
+we provide, and have all of your custom step’s metadata captured in the standard pipeline metadata file for
+reproducibility.</p>
+<p>Let’s look at a full example, and then we’ll explain what’s happening.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">polars</span> <span class="k">as</span> <span class="nn">pl</span>
+<span class="kn">import</span> <span class="nn">pyarrow</span> <span class="k">as</span> <span class="nn">pa</span>
+<span class="kn">from</span> <span class="nn">bardi</span> <span class="kn">import</span> <span class="n">nlp_engineering</span> <span class="k">as</span> <span class="n">nlp</span>
+<span class="kn">from</span> <span class="nn">bardi</span> <span class="kn">import</span> <span class="n">data</span> <span class="k">as</span> <span class="n">bardi_data</span>
+<span class="kn">from</span> <span class="nn">bardi</span> <span class="kn">import</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">Step</span>
+
+<span class="c1"># create some sample data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;patient_id_number&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;The patient presented with notable changes in behavior, exhibiting increased aggression, impulsivity, and a distinct deviation from the Jedi Code. Preliminary examinations reveal a heightened midichlorian count and an unsettling connection to the dark side of the Force. Further analysis is warranted to explore the extent of exposure to Sith teachings. It is imperative to monitor the individual closely for any worsening symptoms and to engage in therapeutic interventions aimed at preventing further descent into the dark side. Follow-up assessments will be crucial in determining the efficacy of intervention strategies and the overall trajectory of the individual&#39;s alignment with the Force.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dark_side_dx&quot;</span><span class="p">:</span> <span class="s2">&quot;positive&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;patient_id_number&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Patient exhibits no signs of succumbing to the dark side. Preliminary assessments indicate a stable midichlorian count and a continued commitment to Jedi teachings. No deviations from the Jedi Code or indicators of dark side influence were observed. Regular check-ins with the Jedi Council will ensure the sustained well-being and alignment of the individual within the Jedi Order.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dark_side_dx&quot;</span><span class="p">:</span> <span class="s2">&quot;negative&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;patient_id_number&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;The individual manifested heightened aggression, impulsivity, and a palpable deviation from established ethical codes. Initial examinations disclosed an elevated midichlorian count and an unmistakable connection to the dark side of the Force. Further investigation is imperative to ascertain the depth of exposure to Sith doctrines. Close monitoring is essential to track any exacerbation of symptoms, and therapeutic interventions are advised to forestall a deeper embrace of the dark side. Subsequent evaluations will be pivotal in gauging the effectiveness of interventions and the overall trajectory of the individual&#39;s allegiance to the Force.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dark_side_dx&quot;</span><span class="p">:</span> <span class="s2">&quot;positive&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">])</span>
+
+<span class="c1"># Register a dataset</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">bardi_data</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Initialize a pipeline</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">write_outputs</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Grabbing a pre-made regex set for normalizing pathology reports</span>
+<span class="n">pathology_regex_set</span> <span class="o">=</span> <span class="n">nlp</span><span class="o">.</span><span class="n">PathologyReportRegexSet</span><span class="p">()</span><span class="o">.</span><span class="n">get_regex_set</span><span class="p">()</span>
+
+<span class="c1"># Adding a normalizer step to the pipeline</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+    <span class="n">nlp</span><span class="o">.</span><span class="n">CPUNormalizer</span><span class="p">(</span>
+        <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">],</span>
+        <span class="n">regex_set</span><span class="o">=</span><span class="n">pathology_regex_set</span><span class="p">,</span>
+        <span class="n">lowercase</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Adding the pre-tokenizer step to the pipeline</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+    <span class="n">nlp</span><span class="o">.</span><span class="n">CPUPreTokenizer</span><span class="p">(</span>
+        <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">],</span>
+        <span class="n">split_pattern</span><span class="o">=</span><span class="s1">&#39; &#39;</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Creating a custom step to count the token length for each record</span>
+<span class="k">class</span> <span class="nc">MyCustomStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">field</span> <span class="o">=</span> <span class="n">field</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">,</span> <span class="n">artifacts</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">from_arrow</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">with_columns</span><span class="p">([</span>
+            <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="p">)</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">lengths</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;token_count&#39;</span><span class="p">)</span>
+        <span class="p">])</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">to_arrow</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="kc">None</span>
+
+<span class="c1"># Adding the new custom step to the pipeline</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+    <span class="n">MyCustomStep</span><span class="p">(</span><span class="n">field</span><span class="o">=</span><span class="s1">&#39;text&#39;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Run the pipeline with the provided step and the custom step</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">run_pipeline</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In this example we initialized a pipeline and added a couple of the bardi provided Steps (CPUNormalizer and CPUPreTokenizer).
+These steps are cleaning the text and splitting on spaces into lists of tokens.</p>
+<p>Next, we create a custom Step. We do this by creating a new class and inherit from the bardi Step class. In the constructor
+we take a <cite>field</cite> input so we know which column the user of the Step will want to perform the Step’s action on. If we reference
+bardi’s documentation for the Step class, we will see that we need to create a run() method that will accept two parameters:
+a PyArrow.Table and a Python dict. The PyArrow Table is the data being passed from Step to Step in the Pipeline for various
+transformations. The dict is the dictionary of artifacts that can be used to pass artifacts from Step to Step in the Pipeline.
+If you don’t have the need to work with artifacts in the custom Step, you can just ignore it, but it still needs to be listed in
+run method arguments for the Pipeline to work correctly.</p>
+<p>Similarly, the return from the run method needs to be a Tuple with the first element being data in a PyArrow table and the
+second element being a dict of artifacts produced in the Step. If data isn’t altered in your step, you can place None in the
+first position of the return Tuple. If artifacts aren’t produced in your step, you can place None in the second position of
+the return Tuple. The example shows that we altered the data and return the new table, but we didn’t produce any artifacts so
+we None in the second position of the return Tuple.</p>
+<p>What happens inbetween the inputs and outputs of the run method are totally up to you. We used Polars in the example because it
+is built on Arrow, highly performant, and is what the rest of bardi is built with. However, if you don’t know how to use Polars, you
+don’t need to use it. If you want to use Pandas, for instance, just create a DataFrame from the PyArrow Table, perform your Pandas
+operations, and then convert your DataFrame back into a PyArrow Table for the return.</p>
+<p>After defining our custom step, we added it to the Pipeline and then ran it.</p>
+<p>The custom Step we created has some methods automatically provided by the Step class including data writing and getting parameters.
+These can be customized if needed, but the base implementation will probably be good enough for most uses. If you want to explore
+this more, refer to the Step documentation.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="basic.html" class="btn btn-neutral float-left" title="Basic Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="bardi.pipeline.html" class="btn btn-neutral float-right" title="bardi.pipeline" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Dakota Murdock, Patrycja Krawczuk - Oak Ridge National Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

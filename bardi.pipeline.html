@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bardi.pipeline &mdash; bardi 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=6c02275b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="bardi.data package" href="bardi.data.html" />
+    <link rel="prev" title="Advanced Tutorials" href="advanced.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bardi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic.html">Basic Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Tutorials</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">bardi.pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-bardi.pipeline">bardi.pipeline module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.pipeline.DataWriteConfig"><code class="docutils literal notranslate"><span class="pre">DataWriteConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.pipeline.DataWriteConfig.data_format"><code class="docutils literal notranslate"><span class="pre">DataWriteConfig.data_format</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.pipeline.DataWriteConfig.data_format_args"><code class="docutils literal notranslate"><span class="pre">DataWriteConfig.data_format_args</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.pipeline.Pipeline"><code class="docutils literal notranslate"><span class="pre">Pipeline</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.pipeline.Pipeline.dataset"><code class="docutils literal notranslate"><span class="pre">Pipeline.dataset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.pipeline.Pipeline.write_path"><code class="docutils literal notranslate"><span class="pre">Pipeline.write_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.pipeline.Pipeline.write_outputs"><code class="docutils literal notranslate"><span class="pre">Pipeline.write_outputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.pipeline.Pipeline.data_write_config"><code class="docutils literal notranslate"><span class="pre">Pipeline.data_write_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.pipeline.Pipeline.data_filename"><code class="docutils literal notranslate"><span class="pre">Pipeline.data_filename</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.pipeline.Pipeline.add_step"><code class="docutils literal notranslate"><span class="pre">Pipeline.add_step()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.pipeline.Pipeline.get_parameters"><code class="docutils literal notranslate"><span class="pre">Pipeline.get_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.pipeline.Pipeline.run_pipeline"><code class="docutils literal notranslate"><span class="pre">Pipeline.run_pipeline()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bardi.pipeline.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.pipeline.Step.get_parameters"><code class="docutils literal notranslate"><span class="pre">Step.get_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.pipeline.Step.run"><code class="docutils literal notranslate"><span class="pre">Step.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.pipeline.Step.set_write_config"><code class="docutils literal notranslate"><span class="pre">Step.set_write_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.pipeline.Step.write_artifacts"><code class="docutils literal notranslate"><span class="pre">Step.write_artifacts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bardi.pipeline.Step.write_data"><code class="docutils literal notranslate"><span class="pre">Step.write_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.data.html">bardi.data package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bardi.nlp_engineering.html">bardi.nlp_engineering package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bardi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">bardi.pipeline</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/bardi.pipeline.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="bardi-pipeline">
+<h1>bardi.pipeline<a class="headerlink" href="#bardi-pipeline" title="Link to this heading"></a></h1>
+<section id="module-bardi.pipeline">
+<span id="bardi-pipeline-module"></span><h2>bardi.pipeline module<a class="headerlink" href="#module-bardi.pipeline" title="Link to this heading"></a></h2>
+<p>Defines a pipeline and a framework for steps to run in it</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.pipeline.DataWriteConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.pipeline.</span></span><span class="sig-name descname"><span class="pre">DataWriteConfig</span></span><a class="reference internal" href="_modules/bardi/pipeline.html#DataWriteConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.pipeline.DataWriteConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.pipeline.DataWriteConfig.data_format">
+<span class="sig-name descname"><span class="pre">data_format</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#bardi.pipeline.DataWriteConfig.data_format" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.pipeline.DataWriteConfig.data_format_args">
+<span class="sig-name descname"><span class="pre">data_format_args</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#bardi.pipeline.DataWriteConfig.data_format_args" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.pipeline.Pipeline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.pipeline.</span></span><span class="sig-name descname"><span class="pre">Pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="bardi.data.html#bardi.data.data_handlers.Dataset" title="bardi.data.data_handlers.Dataset"><span class="pre">Dataset</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'pipeline-outputs'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'debug'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">False</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pipeline-outputs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_write_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bardi.pipeline.DataWriteConfig" title="bardi.pipeline.DataWriteConfig"><span class="pre">DataWriteConfig</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'bardi_processed_data'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/pipeline.html#Pipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.pipeline.Pipeline" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Organize Steps into a pipeline to operate on data from a Dataset</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.pipeline.Pipeline.dataset">
+<span class="sig-name descname"><span class="pre">dataset</span></span><a class="headerlink" href="#bardi.pipeline.Pipeline.dataset" title="Link to this definition"></a></dt>
+<dd><p>A bardi dataset object with data to pre-process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="bardi.data.html#bardi.data.data_handlers.Dataset" title="bardi.data.data_handlers.Dataset">bardi.data.data_handlers.Dataset</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.pipeline.Pipeline.write_path">
+<span class="sig-name descname"><span class="pre">write_path</span></span><a class="headerlink" href="#bardi.pipeline.Pipeline.write_path" title="Link to this definition"></a></dt>
+<dd><p>Directory in the file system to write outputs to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.pipeline.Pipeline.write_outputs">
+<span class="sig-name descname"><span class="pre">write_outputs</span></span><a class="headerlink" href="#bardi.pipeline.Pipeline.write_outputs" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Configuration for which outputs to write.</dt><dd><ul class="simple">
+<li><p>‘pipeline-outputs’ will write all artifacts and final data.</p></li>
+<li><p>‘debug’ will write all artifacts and data from each step.</p></li>
+<li><p>False will not write any files.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Literal[“pipeline-outputs”, “debug”, False]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.pipeline.Pipeline.data_write_config">
+<span class="sig-name descname"><span class="pre">data_write_config</span></span><a class="headerlink" href="#bardi.pipeline.Pipeline.data_write_config" title="Link to this definition"></a></dt>
+<dd><p>Supply a custom write configuration specifying
+file types. Default will save data as parquet files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#bardi.pipeline.DataWriteConfig" title="bardi.pipeline.DataWriteConfig">DataWriteConfig</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="bardi.pipeline.Pipeline.data_filename">
+<span class="sig-name descname"><span class="pre">data_filename</span></span><a class="headerlink" href="#bardi.pipeline.Pipeline.data_filename" title="Link to this definition"></a></dt>
+<dd><p>Supply a filename for the final output data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.pipeline.Pipeline.add_step">
+<span class="sig-name descname"><span class="pre">add_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bardi.pipeline.Step" title="bardi.pipeline.Step"><span class="pre">Step</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/bardi/pipeline.html#Pipeline.add_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.pipeline.Pipeline.add_step" title="Link to this definition"></a></dt>
+<dd><p>Adds a step object to the list of pipeline execution steps.</p>
+<p>Also overwrites the step’s data write configuration with a consistent
+pipeline data write configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>step</strong> (<a class="reference internal" href="#bardi.pipeline.Step" title="bardi.pipeline.Step"><em>bardi.pipeline.Step</em></a>) – A bardi Step object to be added to the list of pipeline execution steps.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.pipeline.Pipeline.get_parameters">
+<span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condensed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/bardi/pipeline.html#Pipeline.get_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.pipeline.Pipeline.get_parameters" title="Link to this definition"></a></dt>
+<dd><p>Returns the parameters of the pipeline’s dataset and parameters of each step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>condensed</strong> (<em>bool</em>) – If True, the step configuration dictionary will exclude any
+attributes set to None or False.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary of parameters used to configure each pipeline step object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.pipeline.Pipeline.run_pipeline">
+<span class="sig-name descname"><span class="pre">run_pipeline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/bardi/pipeline.html#Pipeline.run_pipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.pipeline.Pipeline.run_pipeline" title="Link to this definition"></a></dt>
+<dd><p>Calls the run and write_outputs method for each respective step
+object added to the pipeline.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bardi.pipeline.Step">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bardi.pipeline.</span></span><span class="sig-name descname"><span class="pre">Step</span></span><a class="reference internal" href="_modules/bardi/pipeline.html#Step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.pipeline.Step" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Blueprint for creating new steps for data pre-processing pipelines</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.pipeline.Step.get_parameters">
+<span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/bardi/pipeline.html#Step.get_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.pipeline.Step.get_parameters" title="Link to this definition"></a></dt>
+<dd><p>Default implementation of the get_parameters method.</p>
+<p>Called by the pipeline’s get_parameters method. Implement a custom
+method if needed, such as removing large items from the dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary copy of the object’s configuration.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.pipeline.Step.run">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artifacts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Table</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/bardi/pipeline.html#Step.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.pipeline.Step.run" title="Link to this definition"></a></dt>
+<dd><p>Implement a run method in the step that will be called by the
+pipeline’s run_pipeline method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>PyArrow.Table</em>) – Expect to receive a PyArrow table of data</p></li>
+<li><p><strong>artifacts</strong> (<em>dict</em>) – Expect to receive a dict of artifacts from preceding steps,
+but artifacts can be ignored in the method if values are not needed from it</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the method performs a transformation of data then return
+the data as a PyArrow table. This will replace the pipeline
+object’s processed_data attribute. If the method creates new artifacts
+besides the data, return a dictionary with keys corresponding to the name of
+the artifact and the values being the artifact’s data or value</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[Union[pa.Table, None], Union[dict, None]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.pipeline.Step.set_write_config">
+<span class="sig-name descname"><span class="pre">set_write_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#bardi.pipeline.DataWriteConfig" title="bardi.pipeline.DataWriteConfig"><span class="pre">DataWriteConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/bardi/pipeline.html#Step.set_write_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.pipeline.Step.set_write_config" title="Link to this definition"></a></dt>
+<dd><p>Default implementation of the set_write_config method.</p>
+<p>Provide a method to customize the write configuration
+used by the step’s write_outputs method if desired.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_config</strong> (<a class="reference internal" href="#bardi.pipeline.DataWriteConfig" title="bardi.pipeline.DataWriteConfig"><em>DataWriteConfig</em></a>) – A typed dictionary defining the data_format (i.e., parquet, csv, etc.)
+and any particular data_format_args available in the pyarrow API.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.pipeline.Step.write_artifacts">
+<span class="sig-name descname"><span class="pre">write_artifacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">write_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artifacts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bardi/pipeline.html#Step.write_artifacts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.pipeline.Step.write_artifacts" title="Link to this definition"></a></dt>
+<dd><p>Default implementation of the write_artifacts method.</p>
+<p>Since only some steps require this method, the default behavior is ‘pass’.</p>
+<p>Implement a custom method to write the specific artifacts produced
+in the step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>write_path</strong> (<em>str</em>) – A directory where a file should be written.</p></li>
+<li><p><strong>artifacts</strong> (<em>Union</em><em>[</em><em>dict</em><em>, </em><em>None</em><em>]</em>) – A dictionary of artifacts from the step that should be written to a file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bardi.pipeline.Step.write_data">
+<span class="sig-name descname"><span class="pre">write_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">write_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Table</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/bardi/pipeline.html#Step.write_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bardi.pipeline.Step.write_data" title="Link to this definition"></a></dt>
+<dd><p>Default implementation of the write_data method.</p>
+<p>Reuse existing write patterns that exist in the data handlers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>write_path</strong> (<em>str</em>) – A directory where a file will be written.</p></li>
+<li><p><strong>data</strong> (<em>Union</em><em>[</em><em>pa.Table</em><em>, </em><em>None</em><em>]</em>) – PyArrow Table of data.</p></li>
+<li><p><strong>data_filename</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>None</em><em>]</em>) – Overwrite default file name (no filetype extension).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="advanced.html" class="btn btn-neutral float-left" title="Advanced Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="bardi.data.html" class="btn btn-neutral float-right" title="bardi.data package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Dakota Murdock, Patrycja Krawczuk - Oak Ridge National Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
