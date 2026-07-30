@@ -1,26 +1,54 @@
-import unittest
-import re
+"""Applies the regex library rule-by-rule to a real ORNL pathology report
+sample, printing each intermediate result (visible via ``pytest -s``), and
+asserts invariants on the final text.
+
+The sample fixture is not distributed with the repository. The test is
+skipped unless the pickle exists at the default location
+(``tests/test_data/recurrence_raw_data_sample.pkl``) or at the path given in
+the ``BARDI_RECURRENCE_SAMPLE`` environment variable. Row selection is
+deterministic; override with ``BARDI_SAMPLE_ROW_SEED`` to inspect other rows.
+"""
+
+import os
 import random
+import re
+import unittest
 from pathlib import Path
 
 import pandas as pd
+import pyarrow as pa
 
 from bardi import nlp_engineering as nlp
+from bardi.nlp_engineering import CPUNormalizer, PathologyReportRegexSet
+
+from tests.regex_vectors import KNOWN_TOKENS
+
+RECURRENCE_SAMPLE_PATH = os.environ.get(
+    "BARDI_RECURRENCE_SAMPLE",
+    str(Path(__file__).parent / "test_data" / "recurrence_raw_data_sample.pkl"),
+)
+RECURRENCE_SAMPLE_AVAILABLE = os.path.isfile(RECURRENCE_SAMPLE_PATH)
+requires_recurrence_sample = unittest.skipUnless(
+    RECURRENCE_SAMPLE_AVAILABLE,
+    "recurrence raw data sample unavailable; set BARDI_RECURRENCE_SAMPLE",
+)
+
+SAMPLE_ROW_SEED = int(os.environ.get("BARDI_SAMPLE_ROW_SEED", "0"))
 
 
-class TestRegexMultipleExpreesions(unittest.TestCase):
+@requires_recurrence_sample
+class TestRegexMultipleExpressions(unittest.TestCase):
     """Tests the regex library by applying the regex method
-    in sequence and printing the results to screen.."""
-    def setUp(self):
-        # Set up paths
-        repo_path = Path().resolve()
-        self.data_path = (f'{repo_path}/tests/test_data/'
-                          f'recurrence_raw_data_sample.pkl')
+    in sequence and printing the results to screen."""
 
+    def setUp(self):
         # Get data
-        self.data = pd.read_pickle(self.data_path)
+        self.data = pd.read_pickle(RECURRENCE_SAMPLE_PATH)
         self.data.reset_index(inplace=True)
         self.max_int = self.data.shape[0]
+
+        # Deterministic row selection (seed overridable via env var)
+        self.row = random.Random(SAMPLE_ROW_SEED).randrange(self.max_int)
 
         self.lowercase = True
         self.handle_whitespaces = True  # 1
@@ -57,9 +85,24 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
         self.trunc_decimals = True  # 28
         self.remove_cassette_names = True  # 29
 
+    def assert_normalized_invariants(self, text):
+        """Invariants any fully normalized report must satisfy."""
+        self.assertIsNotNone(text)
+        for escape_char in ("\r", "\n", "\t"):
+            self.assertNotIn(escape_char, text)
+        self.assertIsNone(
+            re.search(r"\s\s", text), "found consecutive whitespace in normalized text"
+        )
+        self.assertNotIn("\\", text)
+        for uppercase_run in re.findall(r"[A-Z]+", text):
+            self.assertIn(
+                uppercase_run,
+                KNOWN_TOKENS,
+                "unexpected uppercase run in normalized text",
+            )
+
     def test_single(self):
-        x = random.randint(0, self.max_int)
-        test_text = self.data["text_all"][x].lower()
+        test_text = self.data["text_all"][self.row].lower()
 
         regex_sub_pair = nlp.get_escape_code_regex()
         pattern = regex_sub_pair["regex_str"]
@@ -334,7 +377,7 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
         regex_sub_pair = nlp.get_spaces_regex()
         pattern = regex_sub_pair["regex_str"]
         replacement = regex_sub_pair["sub_str"]
-        print(f'\n Rule 18 Additional Spaces: pattern: {pattern}'
+        print(f'\n Final Rule Additional Spaces: pattern: {pattern}'
               f'replacement: {replacement}\n')
         test_text = re.sub(pattern, replacement, test_text)
         print(test_text)
@@ -343,7 +386,39 @@ class TestRegexMultipleExpreesions(unittest.TestCase):
         print(original_text)
         print("********   AFTER   ********")
         print(test_text)
-        print(f'INDEX : {x}')
+        print(f'INDEX : {self.row}')
+
+        self.assert_normalized_invariants(test_text)
+
+    def test_full_chain_normalizer(self):
+        """Run the same row through the production CPUNormalizer full chain
+        and assert the normalization invariants plus determinism.
+
+        Note: the re.sub chain above and the polars chain here may
+        legitimately differ (different regex engines), so their outputs are
+        not compared to each other.
+        """
+        raw_text = self.data["text_all"][self.row]
+        table = pa.table({"text": [raw_text]})
+
+        outputs = []
+        for _ in range(2):
+            # Fresh regex set and normalizer per run: both mutate the
+            # substitution pairs in place.
+            normalizer = CPUNormalizer(
+                fields=["text"],
+                regex_set=PathologyReportRegexSet().get_regex_set(),
+                lowercase=True,
+            )
+            result, _ = normalizer.run(table)
+            outputs.append(result.column("text").to_pylist()[0])
+
+        print("********   FULL CHAIN (CPUNormalizer)   ********")
+        print(outputs[0])
+        print(f'INDEX : {self.row}')
+
+        self.assert_normalized_invariants(outputs[0])
+        self.assertEqual(outputs[0], outputs[1], "full chain is not deterministic")
 
 
 if __name__ == '__main__':
