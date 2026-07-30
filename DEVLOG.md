@@ -14,6 +14,61 @@ package mirror before pulling the change.
 
 ---
 
+## 2026-07-30 — Regex test hardening: production-engine parity, gated sample test, hypothesis
+
+**Change**
+
+- `tests/regex_vectors.py` (new, data-only): the 51 vectors from
+  `tests/regex_tests.py` copied verbatim (that file is frozen for enclave
+  comparison), each annotated with the production polars-engine output, plus
+  new edge vectors (empty/unicode/must-not-match/near-miss) with empirically
+  captured expected values.
+- `tests/regex_polars_tests.py` (new): drives every vector through the
+  production path (`CPUNormalizer.run`, polars' Rust regex engine) — the
+  frozen tests only prove behavior under Python `re.sub`, which production
+  never uses. Includes null-passthrough and full-default-chain smoke tests.
+- `tests/regex_multi_test.py` → `tests/regex_multi_tests.py`: now collected
+  (pytest matches `*_tests.py`), skips unless the ORNL sample pickle exists
+  (`BARDI_RECURRENCE_SAMPLE`, like the `BARDI_HF_CACHE` gate), deterministic
+  row selection (`BARDI_SAMPLE_ROW_SEED`), and real invariant assertions
+  including a production full-chain run. Previously it was never collected,
+  used a random row, and asserted nothing.
+- `tests/regex_property_tests.py` (new): hypothesis property tests of the
+  full default `PathologyReportRegexSet` chain through `CPUNormalizer` —
+  never raises; schema/row count preserved; no `\r`/`\n`/`\t`; no consecutive
+  whitespace; no backslashes; uppercase runs limited to the 13 `*TOKEN`
+  substitution strings; deterministic; null in → null out. Derandomized CI
+  profile (`max_examples=75`), so runs are reproducible.
+- `pyproject.toml`: `hypothesis>=6` added to the `dev` group; re-locked.
+- `.gitignore`: added `.hypothesis/` (local example database).
+
+**Findings (characterization, no library/pattern changes)**
+
+- **No re-vs-polars divergence** on any of the 51 frozen vectors: both
+  engines produce byte-identical output for every one (captured 2026-07-30
+  with polars-u64-idx 1.33.1). The suspected hotspots behave identically,
+  including unset-group expansion in the cassette-spacing alternation
+  (both engines expand unset `$1-$3`/`\1-\3` groups to empty strings — which
+  silently *erases* second-branch matches like `c2-c3`).
+- Edge vectors document current over-/under-matching (e.g.
+  `12 to 15 percent of ca 12345` → `ADDRESSTOKEN`; `2 x 4` prose →
+  `DIMENSIONTOKEN`; `\test` → ` est`; 4-digit-middle specimen IDs unmatched)
+  and an order dependence (`block: 1-e` ends as `block 1 e`, not
+  `CASSETTETOKEN`, because rule 7 rewrites it before rule 29 runs). These are
+  recorded as-is; fixing them is future work now protected by this net.
+
+**Air-gap impact** (deltas in `uv.lock`)
+
+| Package | Old | New | Note |
+|---|---|---|---|
+| hypothesis | — | **6.164.0** | new, dev group only (3.10+; universal lock also pins **6.141.1** for 3.9) |
+| sortedcontainers | — | **2.4.0** | new, hypothesis dependency |
+
+hypothesis' remaining dependencies (`attrs` 26.1.0, `exceptiongroup` 1.3.1
+for <3.11) were already in the lock.
+
+---
+
 ## 2026-07-30 — CI: run the test suite on GitHub Actions with uv
 
 **Change**

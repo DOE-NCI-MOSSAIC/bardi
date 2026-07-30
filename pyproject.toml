@@ -35,6 +35,7 @@ Documentation = "https://doe-nci-mossaic.github.io/bardi/"
 dev = [
     "black>=23.11.0",
     "flake8>=6.1.0",
+    "hypothesis>=6",
     "pytest>=8",
 ]
 
