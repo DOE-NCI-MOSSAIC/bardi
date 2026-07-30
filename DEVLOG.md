@@ -14,6 +14,98 @@ package mirror before pulling the change.
 
 ---
 
+## 2026-07-30 — Enclave pull checklist (branch ada/20260730/dev-env-uv → enclave)
+
+Consolidated pre-pull review of the whole branch (16 commits vs `main`). The
+entries below this one carry the per-change details and delta tables; this is
+the walk-down list for the engineer doing the enclave pull. **Air-gap impact:
+the checklist itself** — no code or dependency changes in this entry.
+
+### A. Environment / mirror prerequisites
+
+- [ ] **Mirror the entire `uv.lock`** (2,515 lines, brand-new file on this
+  branch) — not deltas. It is a universal 3.9–3.11 lock, so some packages pin
+  **multiple versions**: hypothesis 6.164.0 + 6.141.1, transformers 5.14.1 +
+  4.57.6, duckdb 1.5.5 + 1.4.5, pytest 9.1.1 + 8.4.2, pandas 3.0.5 + 2.3.3,
+  pyarrow 25.0.0 + 21.0.0, and *three* numpy (2.4.6/2.2.6/2.0.2) and scipy
+  streams. Primary 3.11 resolution:
+  duckdb 1.5.5, polars-u64-idx 1.33.1, pyarrow 25.0.0, pandas 3.0.5,
+  numpy 2.4.6, gensim 4.4.0, transformers 5.14.1, tokenizers 0.22.2,
+  hypothesis 6.164.0, pytest 9.1.1.
+- [ ] **uv itself**: proven with **0.11.26** (the version pinned in CI).
+  Offline operation needs either a configured internal index
+  (`UV_INDEX_URL`/`UV_DEFAULT_INDEX`) or a pre-populated uv cache plus
+  `--offline`.
+- [ ] **Interpreter (hard blocker)**: `.python-version` = 3.11, and `uv sync`
+  by default downloads python-build-standalone **from GitHub** — blocked in
+  the enclave. Either mirror the archive and set
+  `UV_PYTHON_INSTALL_MIRROR`, or use a system CPython 3.11 with
+  `UV_PYTHON_DOWNLOADS=never`.
+- [ ] Ignore inside the enclave: `.github/workflows/tests.yml` (Actions don't
+  run there) and `flake.nix` (NixOS-only convenience).
+
+### B. Behavior changes that touch real data
+
+- [ ] **duckdb 0.8.0 → 1.5.5 (breaking unpin; highest-risk change)**:
+  - **Storage format (hard blocker)**: 1.x **cannot open** `.db`/`.duckdb`
+    files created by 0.8-era releases. Migrate existing enclave database
+    files (`EXPORT DATABASE` under 0.8 → `IMPORT DATABASE` under 1.x) or
+    regenerate from source data. Stale files fail hard on open — no silent
+    upgrade. (Also noted in the unpin entry below.)
+  - `from_duckdb()` executes caller SQL verbatim, and the 0.8→1.5 SQL
+    dialect changed (stricter casts, division semantics, new reserved
+    words) — enclave queries written for 0.8 may error or silently differ.
+- [ ] **Deprecation migrations are drop-in** (verified value- *and*
+  dtype-identical on polars 1.33.1): `replace`→`replace_strict` in
+  label_processor/vocab_encoder/splitter; duckdb `to_arrow_table()`.
+  Caveat: the splitter `split_type="map"` path has **no test coverage** —
+  if enclave pipelines use it, watch it.
+- [ ] **Regex library: zero pattern changes.** Only a docstring escape fix in
+  `regex_lib.py`; `git diff main..HEAD -- tests/regex_tests.py` is empty
+  (frozen file intact for the planned enclave comparison). The 51 vectors
+  are duplicated verbatim in `tests/regex_vectors.py` with
+  production-engine (polars) outputs — all byte-identical.
+- [ ] **Lock resolves far newer libs than the code was written against**
+  (pandas 3.0.5, numpy 2.4.6, transformers 5.14.1). The suite is green
+  off-cluster, but the enclave-only paths in section C are untested outside.
+
+### C. Tests that will activate for the FIRST time inside the enclave
+
+- [ ] **`tests/regex_multi_tests.py`** (was `regex_multi_test.py`; never
+  collected before this branch):
+  - Needs the real pickle: default
+    `tests/test_data/recurrence_raw_data_sample.pkl`, or set
+    `BARDI_RECURRENCE_SAMPLE=/path/to/it`. Row selection is deterministic
+    via `BARDI_SAMPLE_ROW_SEED` (default 0); expects a `text_all` column.
+  - **Pickle-compat risk**: `pd.read_pickle` under pandas 3.0.5 of a pickle
+    presumably written by pandas 1.x. If it fails to load, that is an
+    environment finding, not a bardi bug (workaround: re-pickle/convert
+    with the old enclave environment).
+  - It now **asserts invariants** on real text (no `\r`/`\n`/`\t`, no
+    double spaces, no backslashes, uppercase runs ⊆ the 13 `*TOKEN`
+    strings, determinism). A failure is a *regex-chain finding* to record,
+    not necessarily a regression. Stepwise output:
+    `uv run pytest tests/regex_multi_tests.py -s`; sweep rows by varying
+    the seed.
+- [ ] **8 tokenizer tests** (gated on `BARDI_HF_CACHE`, default
+  `/mnt/nci/scratch/hf_shared_cache`) will unskip on-cluster. Risk:
+  transformers **5.x** reading a shared HF cache populated by an older
+  transformers (cache-layout / `from_pretrained` compat; no re-download
+  possible in the enclave). Failures there → suspect transformers 5 vs the
+  cache before suspecting bardi changes.
+- [ ] All other tests self-generate fixtures in setup (`tests/test_data/` is
+  gitignored); no enclave data needed for them.
+
+### D. Runner expectations
+
+- [ ] Runner is `uv run pytest -ra`. Off-cluster baseline: **102 passed,
+  10 skipped** (8 tokenizer + 2 multi-expression). Inside the enclave with
+  both gates satisfied, expect **0 skips** (~112 passed).
+- [ ] `python -m tests.main_test` still exists but **always exits 0** — do
+  not use it for pass/fail in enclave scripting.
+
+---
+
 ## 2026-07-30 — Resolve all DeprecationWarnings surfaced by the test suite
 
 **Change**
