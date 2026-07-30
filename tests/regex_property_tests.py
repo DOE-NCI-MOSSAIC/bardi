@@ -64,8 +64,22 @@ texts_focused = st.lists(
 
 
 def run_default_chain(texts: List[Optional[str]]) -> List[Optional[str]]:
-    """Normalize texts through the production path with a fresh regex set
-    (get_regex_set and CPUNormalizer both mutate sub_strs in place)."""
+    """Normalize texts through the production path with a fresh regex set.
+
+    A fresh ``PathologyReportRegexSet`` and ``CPUNormalizer`` are built per
+    call because ``get_regex_set`` and ``CPUNormalizer.__init__`` both
+    mutate the substitution pairs in place.
+
+    Args:
+        texts: Input strings (``None`` entries allowed) that become one
+            single-column pyarrow table, so an entire hypothesis example is
+            normalized in a single production run.
+
+    Returns:
+        The normalized column values, in input order, as produced by the
+        full default ``PathologyReportRegexSet`` chain with
+        ``lowercase=True``.
+    """
     normalizer = CPUNormalizer(
         fields=["text"],
         regex_set=PathologyReportRegexSet().get_regex_set(),
@@ -80,6 +94,19 @@ class TestRegexChainProperties(unittest.TestCase):
     """Invariants of the full default chain over generated inputs."""
 
     def check_invariants(self, texts: List[Optional[str]]) -> None:
+        """Assert the full-chain invariants for one generated example.
+
+        Runs ``texts`` through the production chain twice and asserts, per
+        the reasoning in the module docstring: row count preserved,
+        determinism, null in -> null out, and for each non-null output no
+        ``\\r``/``\\n``/``\\t``, no backslash, no two consecutive Unicode
+        ``White_Space`` characters, and no uppercase run outside
+        ``KNOWN_TOKENS``.
+
+        Args:
+            texts: One hypothesis-generated example — a list of input
+                strings and/or ``None`` entries, normalized as one table.
+        """
         outputs = run_default_chain(texts)
 
         # Row count preserved, and the chain is deterministic
@@ -107,15 +134,38 @@ class TestRegexChainProperties(unittest.TestCase):
                 )
 
     @given(texts=texts_unconstrained)
-    def test_invariants_unconstrained_text(self, texts):
+    def test_invariants_unconstrained_text(self, texts: List[Optional[str]]) -> None:
+        """Tests the chain invariants over unconstrained unicode text.
+
+        Exercises arbitrary codepoints (accents, CJK, symbols, unusual
+        whitespace) to catch unicode-semantics surprises in the Rust
+        engine's character classes.
+
+        Args:
+            texts: Hypothesis-generated example (see ``check_invariants``).
+        """
         self.check_invariants(texts)
 
     @given(texts=texts_focused)
-    def test_invariants_focused_alphabet(self, texts):
+    def test_invariants_focused_alphabet(self, texts: List[Optional[str]]) -> None:
+        """Tests the chain invariants over a regex-triggering alphabet.
+
+        Restricts generation to ``FOCUSED_ALPHABET`` so examples hit the
+        patterns' trigger characters (digits, ``x``, punctuation, math
+        symbols, backslash, control whitespace) far more often than
+        unconstrained text would.
+
+        Args:
+            texts: Hypothesis-generated example (see ``check_invariants``).
+        """
         self.check_invariants(texts)
 
-    def test_schema_preserved(self):
-        """Extra columns and field names survive normalization untouched."""
+    def test_schema_preserved(self) -> None:
+        """Tests that extra columns and field names survive normalization.
+
+        Non-``fields`` columns must pass through ``CPUNormalizer.run``
+        untouched, and column order and row count must be preserved.
+        """
         table = pa.table(
             {"text": ["Report 03/10/01: 1.3x0.7 cm."], "id": [42]}
         )

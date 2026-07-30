@@ -41,7 +41,15 @@ class TestRegexMultipleExpressions(unittest.TestCase):
     """Tests the regex library by applying the regex method
     in sequence and printing the results to screen."""
 
-    def setUp(self):
+    def setUp(self) -> None:
+        """Load the sample pickle and select the row under test.
+
+        Reads the DataFrame from ``RECURRENCE_SAMPLE_PATH`` (the class is
+        skipped when the file is absent, so this only runs when it exists),
+        picks a deterministic row index from ``SAMPLE_ROW_SEED``, and sets
+        the per-rule enable flags mirroring ``PathologyReportRegexSet``'s
+        constructor arguments.
+        """
         # Get data
         self.data = pd.read_pickle(RECURRENCE_SAMPLE_PATH)
         self.data.reset_index(inplace=True)
@@ -85,8 +93,18 @@ class TestRegexMultipleExpressions(unittest.TestCase):
         self.trunc_decimals = True  # 28
         self.remove_cassette_names = True  # 29
 
-    def assert_normalized_invariants(self, text):
-        """Invariants any fully normalized report must satisfy."""
+    def assert_normalized_invariants(self, text: str) -> None:
+        """Assert the invariants any fully normalized report must satisfy.
+
+        Checks that ``text`` is non-null, contains no ``\\r``/``\\n``/``\\t``
+        (removed by rule 1), no consecutive whitespace (collapsed by the
+        unconditional final spaces rule), no backslashes (removed by rules
+        0/3), and no uppercase run other than the known ``*TOKEN``
+        substitution strings (input is lowercased before the rules run).
+
+        Args:
+            text: The fully normalized report text to check.
+        """
         self.assertIsNotNone(text)
         for escape_char in ("\r", "\n", "\t"):
             self.assertNotIn(escape_char, text)
@@ -101,7 +119,20 @@ class TestRegexMultipleExpressions(unittest.TestCase):
                 "unexpected uppercase run in normalized text",
             )
 
-    def test_single(self):
+    def test_single(self) -> None:
+        """Applies each enabled regex rule in library order to one report.
+
+        Lowercases the selected row's ``text_all``, applies the rules with
+        Python ``re.sub`` one at a time, and prints the pattern and
+        intermediate text after every rule (run with ``pytest -s`` to
+        inspect them — the stepwise trace is this test's purpose). Finally
+        asserts the normalization invariants on the resulting text.
+
+        Note:
+            This chain intentionally uses Python's ``re`` engine (like the
+            frozen ``tests/regex_tests.py``); the production polars engine
+            is exercised by ``test_full_chain_normalizer``.
+        """
         test_text = self.data["text_all"][self.row].lower()
 
         regex_sub_pair = nlp.get_escape_code_regex()
@@ -390,13 +421,19 @@ class TestRegexMultipleExpressions(unittest.TestCase):
 
         self.assert_normalized_invariants(test_text)
 
-    def test_full_chain_normalizer(self):
-        """Run the same row through the production CPUNormalizer full chain
-        and assert the normalization invariants plus determinism.
+    def test_full_chain_normalizer(self) -> None:
+        """Runs the same row through the production CPUNormalizer chain.
 
-        Note: the re.sub chain above and the polars chain here may
-        legitimately differ (different regex engines), so their outputs are
-        not compared to each other.
+        Normalizes the selected row with the full default
+        ``PathologyReportRegexSet`` (``lowercase=True``) twice — building a
+        fresh regex set and normalizer per run, since both mutate the
+        substitution pairs in place — then asserts the normalization
+        invariants on the output and that the two runs are identical.
+
+        Note:
+            The ``re.sub`` chain in ``test_single`` and the polars chain
+            here may legitimately differ (different regex engines), so
+            their outputs are not compared to each other.
         """
         raw_text = self.data["text_all"][self.row]
         table = pa.table({"text": [raw_text]})
