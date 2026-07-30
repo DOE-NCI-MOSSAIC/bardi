@@ -17,7 +17,9 @@ class TestSplitter(unittest.TestCase):
     Splitter class. The Splitter has two options MapSplit, NewSplit """
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
+        """Generate the gitignored test fixture if it does not exist,
+        so the suite is self-contained on a fresh checkout."""
         ensure_split_fixture()
 
     def setUp(self):

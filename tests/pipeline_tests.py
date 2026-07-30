@@ -24,7 +24,9 @@ class TestPipeline(unittest.TestCase):
     """Tests the functionality of the Pipeline class"""
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
+        """Generate the gitignored test fixture if it does not exist,
+        so the suite is self-contained on a fresh checkout."""
         ensure_pipeline_fixture()
 
     def setUp(self):

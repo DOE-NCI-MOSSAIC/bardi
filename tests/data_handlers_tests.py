@@ -14,14 +14,18 @@ class TestDataHandlers(unittest.TestCase):
     """Tests the functionality of the functions in bardi.data.data_handlers
     that create bardi Dataset objects from various sources"""
 
-    def setUp(self):
-        # These tests write scratch files into tests/test_data/, which is
-        # gitignored and may not exist on a fresh checkout
+    def setUp(self) -> None:
+        """Prepare a clean ``tests/test_data/`` scratch directory.
+
+        These tests write scratch files into ``tests/test_data/``, which
+        is gitignored and may not exist on a fresh checkout. duckdb 1.x
+        cannot open database files created by duckdb 0.8, so any
+        leftover db/WAL files from previous runs are removed before
+        connecting.
+        """
         test_data_dir = Path().resolve() / "tests" / "test_data"
         test_data_dir.mkdir(parents=True, exist_ok=True)
 
-        # duckdb 1.x cannot open database files created by duckdb 0.8, so
-        # remove any leftover db/WAL from previous runs before connecting
         for leftover in ("test_db.duckdb", "test_db.duckdb.wal"):
             leftover_path = test_data_dir / leftover
             if leftover_path.exists():

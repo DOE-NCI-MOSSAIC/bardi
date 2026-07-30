@@ -17,7 +17,9 @@ class TestEmbeddingGenerator(unittest.TestCase):
     Embedding Generetor class."""
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
+        """Generate the gitignored test fixture if it does not exist,
+        so the suite is self-contained on a fresh checkout."""
         ensure_embed_gen_fixture()
 
     def setUp(self):
