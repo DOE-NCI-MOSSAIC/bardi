@@ -44,6 +44,49 @@ the checklist itself** — no code or dependency changes in this entry.
 - [ ] Ignore inside the enclave: `.github/workflows/tests.yml` (Actions don't
   run there) and `flake.nix` (NixOS-only convenience).
 
+#### Mirror build procedure (for the enclave admins)
+
+`uv.lock` records the **exact artifact URL and SHA256 hash of every wheel and
+sdist** — reproducibility means mirroring exactly those files. `uv sync
+--locked` then refuses to re-resolve, fails on any drift from
+`pyproject.toml`, and hash-checks every install, so the enclave build is
+bit-for-bit auditable against the committed lock.
+
+1. **Extract the artifact set** (connected host). Either parse `uv.lock`
+   directly (TOML; each `[[package]]` lists `wheels`/`sdist` with `url` +
+   `hash`) and fetch exactly those URLs, or:
+
+   ```
+   uv export --frozen --all-groups --no-emit-project -o requirements-enclave.txt
+   pip download -r requirements-enclave.txt --require-hashes -d wheelhouse/ \
+       --python-version 311 --platform manylinux2014_x86_64 --only-binary=:all:
+   ```
+
+   `--require-hashes` enforces the lock's hashes at download time. Repeat per
+   target platform/python if the enclave runs more than 3.11-on-linux-x86_64.
+   Prune only by *platform/python slice*, never by hand-picking versions
+   (see the multi-version pins above).
+2. **Serve it inside**: a PEP 503 simple index (pypiserver/devpi/Nexus) via
+   `UV_DEFAULT_INDEX`, or a flat wheelhouse directory via `UV_FIND_LINKS`.
+3. **Mirror the two non-PyPI artifacts**: the standalone **uv 0.11.26**
+   binary, and the CPython 3.11 python-build-standalone archive
+   (`UV_PYTHON_INSTALL_MIRROR`) — or use system CPython 3.11 with
+   `UV_PYTHON_DOWNLOADS=never` (the hard-blocker item above).
+4. **Reproduce and verify in the enclave**:
+
+   ```
+   uv sync --locked --offline
+   uv run pytest -ra
+   ```
+
+- Caveat — **sdist-only packages**: `--only-binary=:all:` in step 1 fails
+  fast if any locked package lacks a wheel for the enclave platform; if so,
+  pre-build the wheel outside rather than mirroring build backends.
+- Ongoing: CI runs `uv sync --locked`, so no dependency change can merge
+  without re-locking — future entries' delta tables are the mirror update
+  list. The full mirror is a one-time cost for this branch (first `uv.lock`);
+  afterwards it's deltas.
+
 ### B. Behavior changes that touch real data
 
 - [ ] **duckdb 0.8.0 → 1.5.5 (breaking unpin; highest-risk change)**:
