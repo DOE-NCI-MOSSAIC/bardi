@@ -1,0 +1,40 @@
+# Runs the test suite with the exact same commands a developer uses locally:
+# uv provisions the interpreter from .python-version, installs the locked
+# environment, and runs pytest. A green run proves the documented onboarding
+# path works from a clean machine — no conda, no manual environment handling.
+
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v9
+        with:
+          # Pinned to the version the dev environment was proven with
+          version: "0.11.26"
+          enable-cache: true
+
+      # --locked fails if uv.lock is out of sync with pyproject.toml,
+      # so dependency changes cannot merge without re-locking (and the
+      # air-gap mirror instructions in DEVLOG.md stay trustworthy).
+      - name: Sync environment
+        run: uv sync --locked
+
+      # 8 HF tokenizer tests skip off-cluster (BARDI_HF_CACHE unset);
+      # -ra lists the skips and their reasons in the summary.
+      - name: Run tests
+        run: uv run pytest -ra

@@ -7,6 +7,32 @@ package mirror before pulling the change.
 
 ---
 
+## 2026-07-30 — CI: run the test suite on GitHub Actions with uv
+
+**Change**
+
+- `.github/workflows/tests.yml` (new): on pull requests, pushes to `main`,
+  and manual dispatch — `actions/checkout@v7`, `astral-sh/setup-uv@v9` with
+  uv pinned to **0.11.26** (the version the dev environment was proven with),
+  then `uv sync --locked` and `uv run pytest -ra` on `ubuntu-latest`.
+- `README.md`: status badge and a Development quickstart documenting the same
+  two commands (plus the `BARDI_HF_CACHE` note for on-cluster tokenizer tests).
+
+**Rationale**
+
+- CI executes *exactly* the documented local setup — uv provisions the
+  interpreter from `.python-version`, installs from `uv.lock` — so a green
+  badge is continuous proof the onboarding path works from a clean machine.
+- `uv sync --locked` fails if `uv.lock` drifts from `pyproject.toml`, so no
+  dependency change can merge without re-locking. This keeps this log's
+  air-gap deltas trustworthy.
+
+**Air-gap impact**: none — no changes to `uv.lock`. GitHub Actions do not run
+inside the enclave; the workflow is upstream-only. The enclave's equivalent of
+this proof is the same two commands against the internal mirror index.
+
+---
+
 ## 2026-07-30 — Unpin duckdb (0.8.0 → 1.x); pytest as test runner; self-contained tests
 
 **Change**
