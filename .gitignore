@@ -1,4 +1,5 @@
 .DS_Store
+.hypothesis/
 .venv/
 .vscode/
 __pycache__/
