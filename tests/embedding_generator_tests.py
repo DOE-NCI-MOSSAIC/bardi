@@ -9,11 +9,16 @@ import pyarrow as pa
 
 from bardi.data import from_pandas
 from bardi.nlp_engineering.embedding_generator import CPUEmbeddingGenerator
+from tests.utils.generate_mock_data import ensure_embed_gen_fixture
 
 
 class TestEmbeddingGenerator(unittest.TestCase):
     """Tests the functionality of the functions in bardi.nlp_engineering
     Embedding Generetor class."""
+
+    @classmethod
+    def setUpClass(cls):
+        ensure_embed_gen_fixture()
 
     def setUp(self):
         repo_path = Path().resolve()

@@ -12,6 +12,16 @@ package mirror before pulling the change.
 **Change**
 
 - `pyproject.toml`: `duckdb==0.8.0` → `duckdb>=1.0,<2`.
+- `tests/utils/generate_mock_data.py`: deterministic fixture generation
+  (seeds both `random` and `numpy.random`; disjoint, collision-free vocabs of
+  200/100/300 = 600 unique words). Added idempotent `ensure_*` helpers that
+  create `tests/test_data/{pipeline,embed_gen,split}_test_df.pkl` on demand,
+  anchored to the repo (not CWD). Tests call these from `setUpClass`, so the
+  suite is self-contained on a fresh checkout.
+  - *Snapshot semantics*: the `split_correct` golden column in
+    `split_test_df.pkl` is produced by running `CPUSplitter(NewSplit(...))`
+    itself, so the splitter test validates determinism/regressions, not
+    first-time correctness of the split algorithm.
 - `tests/data_handlers_tests.py`: setup now creates `tests/test_data/` and
   removes any leftover `test_db.duckdb`/`.wal` before connecting (duckdb 1.x
   cannot open 0.8-format files).

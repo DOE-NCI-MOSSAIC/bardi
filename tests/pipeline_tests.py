@@ -17,10 +17,15 @@ from bardi.nlp_engineering import (
     NewSplit,
 )
 from bardi import Pipeline
+from tests.utils.generate_mock_data import ensure_pipeline_fixture
 
 
 class TestPipeline(unittest.TestCase):
     """Tests the functionality of the Pipeline class"""
+
+    @classmethod
+    def setUpClass(cls):
+        ensure_pipeline_fixture()
 
     def setUp(self):
         test_data_dir = os.path.join(Path().resolve(), "tests", "test_data")
