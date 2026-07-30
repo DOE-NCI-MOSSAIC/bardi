@@ -1,3 +1,4 @@
+import os
 import unittest
 from unittest import TestCase
 
@@ -6,7 +7,12 @@ from polars.testing import assert_series_equal
 
 from bardi import nlp_engineering as nlp
 
-HF_SHARED_CACHE = "/mnt/nci/scratch/hf_shared_cache"
+HF_SHARED_CACHE = os.environ.get("BARDI_HF_CACHE",
+                                 "/mnt/nci/scratch/hf_shared_cache")
+HF_CACHE_AVAILABLE = os.path.isdir(HF_SHARED_CACHE)
+requires_hf_cache = unittest.skipUnless(
+    HF_CACHE_AVAILABLE, "HF model cache unavailable; set BARDI_HF_CACHE"
+)
 
 
 class TestTokenizers(TestCase):
@@ -31,6 +37,7 @@ class TestTokenizers(TestCase):
         )
         self.fields = ["text_1", "text_2"]
 
+    @requires_hf_cache
     def test_loading_hf_tokenizers(self):
         """Tests correctness of loading the supported tokenizers"""
 
@@ -59,6 +66,7 @@ class TestTokenizers(TestCase):
                 "input_ids", model_inputs.keys(), f"Incorrect tokenizer loading: {checkpoint_path}"
             )
 
+    @requires_hf_cache
     def test_apply_clinical_bigbird_each_field(self):
 
         # Set up and run the Tokenizer Encoder
@@ -127,6 +135,7 @@ class TestTokenizers(TestCase):
             check_names=False,
         )
 
+    @requires_hf_cache
     def test_apply_clinical_bigbird_concat_fields(self):
 
         tokenizer_encoder = nlp.CPUTokenizerEncoder(
@@ -179,6 +188,7 @@ class TestTokenizers(TestCase):
             check_names=False,
         )
 
+    @requires_hf_cache
     def test_apply_clinical_bigbird_retain_concat_fields(self):
         tokenizer_encoder = nlp.CPUTokenizerEncoder(
             fields=self.fields,
@@ -194,6 +204,7 @@ class TestTokenizers(TestCase):
         self.assertIn("input_ids", df.columns)
         self.assertIn("attention_mask", df.columns)
 
+    @requires_hf_cache
     def test_apply_clinical_bigbird_retain_input_fields(self):
         tokenizer_encoder = nlp.CPUTokenizerEncoder(
             fields=self.fields,
@@ -221,6 +232,7 @@ class TestTokenizers(TestCase):
             # retained series content should match original content
             assert_series_equal(actual_retained_series, original_series, check_names=False)
 
+    @requires_hf_cache
     def test_loading_tokenizer_from_artifacts(self):
         model_name = f"{self.hf_cache_dir}/UFNLP/gatortron-base"
         tokenizer = nlp.load_hf_tokenizer(model_name)
@@ -241,6 +253,7 @@ class TestTokenizers(TestCase):
         with self.assertRaises(AttributeError):
             tokenizer_encoder.run(data=self.df.to_arrow())
 
+    @requires_hf_cache
     def test_apply_tokenizer_w_params(self):
         tokenizer_encoder = nlp.CPUTokenizerEncoder(
             fields=self.fields,
@@ -261,6 +274,7 @@ class TestTokenizers(TestCase):
             check_names=False,
         )
 
+    @requires_hf_cache
     def test_default_setting_model_max_length(self):
         tokenizer_encoder = nlp.CPUTokenizerEncoder(
             fields=self.fields,

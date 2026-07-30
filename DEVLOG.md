@@ -22,6 +22,9 @@ package mirror before pulling the change.
     `split_test_df.pkl` is produced by running `CPUSplitter(NewSplit(...))`
     itself, so the splitter test validates determinism/regressions, not
     first-time correctness of the split algorithm.
+- `tests/tokenizer_tests.py`: HF model cache path is now read from
+  `BARDI_HF_CACHE` (default remains the ORNL cluster path); the 8
+  cache-dependent tests skip when the cache directory is absent.
 - `tests/data_handlers_tests.py`: setup now creates `tests/test_data/` and
   removes any leftover `test_db.duckdb`/`.wal` before connecting (duckdb 1.x
   cannot open 0.8-format files).
