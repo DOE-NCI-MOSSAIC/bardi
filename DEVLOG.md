@@ -5,6 +5,13 @@ mirrored into an air-gapped enclave, **every entry records the exact package
 and version deltas** (from `uv.lock`) so enclave engineers can update their
 package mirror before pulling the change.
 
+> **Note on version tables**: `uv.lock` is a universal lockfile covering the
+> full `requires-python` range (3.9–3.11), so some packages resolve to
+> *multiple* versions (e.g. one for 3.9/3.10, another for 3.11). The tables
+> below list the versions resolved for the primary dev interpreter
+> (Python 3.11, per `.python-version`). The enclave mirror must carry
+> **everything in `uv.lock`**, not just the versions tabled here.
+
 ---
 
 ## 2026-07-30 — CI: run the test suite on GitHub Actions with uv

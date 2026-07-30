@@ -14,8 +14,8 @@
         default = pkgs.mkShell {
           packages = [
             pkgs.uv
-            # bardi is pinned to 3.11 until duckdb==0.8.0 is unpinned (no cp312+ wheels).
-            # Keep in sync with .python-version.
+            # bardi caps requires-python at <3.12 until setup.py's distutils
+            # usage is removed. Keep in sync with .python-version.
             pkgs.python311
           ];
 
