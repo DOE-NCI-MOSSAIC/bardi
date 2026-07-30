@@ -14,6 +14,35 @@ package mirror before pulling the change.
 
 ---
 
+## 2026-07-30 — Resolve all DeprecationWarnings surfaced by the test suite
+
+**Change**
+
+- `bardi/nlp_engineering/{label_processor,vocab_encoder,splitter}.py`: polars
+  `.replace(..., default=...)` / `return_dtype=...` (deprecated since polars
+  1.0 — the deprecation shim already redirected to `replace_strict`) →
+  `.replace_strict(...)` with identical arguments. Verified drop-in
+  equivalent (same values *and* dtypes) on polars 1.33.1 before switching.
+  The splitter's `split_type="map"` path didn't warn in CI only because no
+  test exercises it; it used the same deprecated parameter and was migrated
+  too.
+- `bardi/data/data_handlers.py`: duckdb `fetch_arrow_table()` (deprecated in
+  duckdb 1.x) → `to_arrow_table()`.
+- `bardi/nlp_engineering/regex_library/regex_lib.py`: docstring-only fix for
+  `DeprecationWarning: invalid escape sequence '\ '` (a future SyntaxError) —
+  `The result\ \r` → `The result\\ \\r` in the `get_whitespace_regex`
+  example, matching the `\\n`/`\\t` escaping already used on the same line.
+  **No regex pattern strings were touched**; the polars-engine parity suite
+  (51 frozen vectors, byte-identical) passes unchanged.
+- Verified with `uv run pytest -W error::DeprecationWarning`: 102 passed,
+  10 skipped — any remaining deprecation in an exercised path would now fail.
+
+**Air-gap impact** (deltas in `uv.lock`)
+
+None — no dependency changes.
+
+---
+
 ## 2026-07-30 — Regex test hardening: production-engine parity, gated sample test, hypothesis
 
 **Change**

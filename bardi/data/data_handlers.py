@@ -169,7 +169,7 @@ def from_duckdb(path: str, query: str, min_batches: int = None) -> Dataset:
     # Create a read-only connection to DuckDB database file and execute the
     # query returning a PyArrow Table
     conn = duckdb.connect(path, read_only=True)
-    table = conn.execute(query).fetch_arrow_table()
+    table = conn.execute(query).to_arrow_table()
     row_count = table.num_rows
 
     # Create a bardi Dataset object which will reference the data and

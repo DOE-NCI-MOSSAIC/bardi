@@ -44,7 +44,7 @@ def get_whitespace_regex() -> RegexSubPair:
 
     Input string: ::
     
-        INVASIVE:\\nNegative    IN SITU:\\nN/A  IN \\tThe result\ \r 
+        INVASIVE:\\nNegative    IN SITU:\\nN/A  IN \\tThe result\\ \\r
 
     Output string: ::
     
