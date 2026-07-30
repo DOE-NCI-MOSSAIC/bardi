@@ -14,6 +14,19 @@ class TestDataHandlers(unittest.TestCase):
     """Tests the functionality of the functions in bardi.data.data_handlers
     that create bardi Dataset objects from various sources"""
 
+    def setUp(self):
+        # These tests write scratch files into tests/test_data/, which is
+        # gitignored and may not exist on a fresh checkout
+        test_data_dir = Path().resolve() / "tests" / "test_data"
+        test_data_dir.mkdir(parents=True, exist_ok=True)
+
+        # duckdb 1.x cannot open database files created by duckdb 0.8, so
+        # remove any leftover db/WAL from previous runs before connecting
+        for leftover in ("test_db.duckdb", "test_db.duckdb.wal"):
+            leftover_path = test_data_dir / leftover
+            if leftover_path.exists():
+                leftover_path.unlink()
+
     def test_dataset_from_file(self):
         """Set of tests to ensure that the data_handlers.from_file
         function is correctly loading data and creating
