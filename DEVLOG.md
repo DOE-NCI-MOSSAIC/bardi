@@ -7,11 +7,16 @@ package mirror before pulling the change.
 
 ---
 
-## 2026-07-30 — Unpin duckdb (0.8.0 → 1.x)
+## 2026-07-30 — Unpin duckdb (0.8.0 → 1.x); pytest as test runner; self-contained tests
 
 **Change**
 
 - `pyproject.toml`: `duckdb==0.8.0` → `duckdb>=1.0,<2`.
+- `pyproject.toml`: added `pytest>=8` to the `dev` dependency group and
+  `[tool.pytest.ini_options]` (`testpaths = ["tests"]`,
+  `python_files = ["*_tests.py"]` — test files use nonstandard naming).
+  `uv run pytest` is now the documented test runner;
+  `python -m tests.main_test` is kept for compatibility.
 - `tests/utils/generate_mock_data.py`: deterministic fixture generation
   (seeds both `random` and `numpy.random`; disjoint, collision-free vocabs of
   200/100/300 = 600 unique words). Added idempotent `ensure_*` helpers that
@@ -35,12 +40,18 @@ package mirror before pulling the change.
   to Arrow (`fetch_arrow_table`) segfaults, killing the whole test run
   (`tests/data_handlers_tests.py`, `from_duckdb`).
 - 0.8.0 ships no wheels past cp311, blocking any future Python upgrade.
+- Test suite previously required manually generated, gitignored fixtures and
+  an ORNL cluster mount; it now runs green anywhere:
+  `uv run pytest` → 62 passed, 8 skipped (tokenizer tests, off-cluster).
 
 **Air-gap impact** (deltas in `uv.lock`)
 
 | Package | Old | New | Note |
 |---|---|---|---|
 | duckdb | 0.8.0 | **1.5.5** | runtime dependency; constraint `>=1.0,<2` |
+| pytest | — | **9.1.1** | new, dev group only |
+| pluggy | — | **1.6.0** | new, pytest dependency |
+| iniconfig | — | **2.3.0** | new, pytest dependency |
 
 **Enclave note — DuckDB storage format**: DuckDB 1.x cannot open `.db`/
 `.duckdb` files created by 0.8-era releases. Any existing database files in
@@ -58,7 +69,7 @@ the enclave must be migrated (`EXPORT DATABASE` with the old version →
 - `.python-version` → 3.11 (duckdb 0.8.0 wheel ceiling at the time) and
   `requires-python = ">=3.9,<3.12"` cap in `pyproject.toml` (also because
   `setup.py` still uses distutils, removed in Python 3.12).
-- `[dependency-groups] dev`: black, flake8,
+- `[dependency-groups] dev`: black, flake8 (pytest added by the change above),
   replacing the loose `requirements.txt` workflow.
 - `flake.nix` devShell for NixOS hosts (provides `uv`; nix-ld hosts can also
   just use uv directly).

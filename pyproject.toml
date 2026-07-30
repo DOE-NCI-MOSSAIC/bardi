@@ -35,4 +35,9 @@ Documentation = "https://doe-nci-mossaic.github.io/bardi/"
 dev = [
     "black>=23.11.0",
     "flake8>=6.1.0",
+    "pytest>=8",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["*_tests.py"]
