@@ -8,7 +8,9 @@ version="0.5.0"
 authors = [{ name="Oak Ridge National Laboratory" },]
 description = "A flexible machine learning data pre-processing pipeline framework."
 readme = "README.md"
-requires-python = ">=3.9"
+# TODO: re-widen to <3.13+ once duckdb is unpinned (0.8.0 has no wheels past cp311)
+# and setup.py's distutils usage is removed (distutils is gone in 3.12)
+requires-python = ">=3.9,<3.12"
 classifiers = [
     "Programming Language :: Python :: 3 :: Only",
     "License :: OSI Approved :: MIT License",
@@ -28,3 +30,9 @@ dependencies = ["duckdb==0.8.0",
 [project.urls]
 Homepage = "https://github.com/DOE-NCI-MOSSAIC/bardi"
 Documentation = "https://doe-nci-mossaic.github.io/bardi/"
+
+[dependency-groups]
+dev = [
+    "black>=23.11.0",
+    "flake8>=6.1.0",
+]
