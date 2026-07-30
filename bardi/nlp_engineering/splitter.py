@@ -297,7 +297,7 @@ class CPUSplitter(Splitter):
                     [
                         pl.col("composite_record_id")
                         .cast(pl.Utf8())
-                        .replace(self.split_mapping, default=self.default_split_value)
+                        .replace_strict(self.split_mapping, default=self.default_split_value)
                         .alias("split")
                     ]
                 )

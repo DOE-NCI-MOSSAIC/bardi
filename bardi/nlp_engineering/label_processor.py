@@ -204,7 +204,9 @@ class CPULabelProcessor(LabelProcessor):
                         [field],
                         self.__class__.__name__,
                     )
-                    .with_columns(pl.col(field).replace(self.mapping[field], default=None))
+                    .with_columns(
+                        pl.col(field).replace_strict(self.mapping[field], default=None)
+                    )
                 )
             else:
                 raise NotImplementedError("Only unique mapping is currently supported")

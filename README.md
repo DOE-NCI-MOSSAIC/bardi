@@ -1,5 +1,8 @@
 
 # BARDI (Batch-processing Abstraction for Raw Data Integration)
+
+[![Tests](https://github.com/DOE-NCI-MOSSAIC/bardi/actions/workflows/tests.yml/badge.svg)](https://github.com/DOE-NCI-MOSSAIC/bardi/actions/workflows/tests.yml)
+
 BARDI is a specialized framework engineered to facilitate the development of reproducible data pre-processing pipelines within machine learning workflows. 
 
 It emphasizes the following key aspects:
@@ -28,6 +31,28 @@ Documentation
 =============
 
 *  [bardi's docs](https://doe-nci-mossaic.github.io/bardi/)
+
+Development
+===========
+
+The development environment is managed with [uv](https://docs.astral.sh/uv/) —
+no conda and no manual virtualenv handling. Setting up and testing is two
+commands:
+
+```bash
+uv sync --locked   # provisions Python 3.11 (.python-version) + exact locked deps
+uv run pytest      # run the test suite
+```
+
+CI ([tests workflow](.github/workflows/tests.yml)) runs these same two commands
+on every pull request, so a green badge is proof that this setup path works
+from a clean machine. Notes:
+
+* 8 HuggingFace tokenizer tests are skipped unless `BARDI_HF_CACHE` points at
+  a directory containing the required model checkpoints.
+* Dependency changes must be re-locked (`uv lock`) — CI fails if `uv.lock`
+  drifts from `pyproject.toml` — and recorded in [DEVLOG.md](DEVLOG.md) so the
+  air-gapped mirror can be updated.
 
 Tutorial
 ========

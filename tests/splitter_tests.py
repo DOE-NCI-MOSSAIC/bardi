@@ -9,11 +9,18 @@ import pyarrow as pa
 
 from bardi.data import from_pandas
 from bardi.nlp_engineering import CPUSplitter, NewSplit
+from tests.utils.generate_mock_data import ensure_split_fixture
 
 
 class TestSplitter(unittest.TestCase):
     """Tests the functionality of the functions in bardi.nlp_engineering
     Splitter class. The Splitter has two options MapSplit, NewSplit """
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        """Generate the gitignored test fixture if it does not exist,
+        so the suite is self-contained on a fresh checkout."""
+        ensure_split_fixture()
 
     def setUp(self):
         repo_path = Path().resolve()
