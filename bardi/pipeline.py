@@ -1,14 +1,26 @@
 """Defines a pipeline and a framework for steps to run in it"""
 
+import hashlib
+import json
 import os
+import sys
 import tracemalloc
 from abc import ABCMeta, abstractmethod
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Literal, Tuple, TypedDict, Union
 
 import pyarrow as pa
 
+import bardi
 from bardi.data import Dataset, write_file
+
+
+def _sha256_file(path: str) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 class DataWriteConfig(TypedDict):
@@ -236,6 +248,7 @@ class Pipeline:
             )
 
         # For each step of the pipeline, call its run method
+        self._run_start_utc = datetime.now(timezone.utc).isoformat()
         pipeline_start_time = datetime.now()
         for step_position, step in enumerate(self.steps, start=1):
             # Call the run method and time the execution
@@ -300,6 +313,50 @@ class Pipeline:
         if self.write_outputs == "debug":
             print(f"Pipeline run time: {pipeline_run_time}")
         self.performance[str(type(self))] = str(pipeline_run_time)
+
+        # Write provenance manifest
+        if self.write_outputs:
+            self._write_manifest()
+
+    def _write_manifest(self) -> None:
+        """Write a bardi_manifest.json file to the write_path."""
+        manifest = {
+            "bardi_version": bardi.__version__,
+            "python_version": sys.version,
+            "timestamp_utc": self._run_start_utc,
+            "completed_utc": datetime.now(timezone.utc).isoformat(),
+            "parameters": self.get_parameters(),
+            "output_schema": {
+                field.name: str(field.type)
+                for field in self.processed_data.schema
+            },
+            "output_row_count": self.processed_data.num_rows,
+            "input_checksums": {},
+            "output_checksums": {},
+        }
+
+        # Input checksums — best-effort from dataset origin_file_path
+        if self.dataset and getattr(self.dataset, "origin_file_path", None):
+            origin = self.dataset.origin_file_path
+            if isinstance(origin, (list, tuple)):
+                for p in origin:
+                    if os.path.isfile(p):
+                        manifest["input_checksums"][p] = _sha256_file(p)
+            elif isinstance(origin, str) and os.path.isfile(origin):
+                manifest["input_checksums"][origin] = _sha256_file(origin)
+
+        # Output checksums — all files in write_path except the manifest itself
+        manifest_filename = "bardi_manifest.json"
+        for entry in os.listdir(self.write_path):
+            if entry == manifest_filename:
+                continue
+            full = os.path.join(self.write_path, entry)
+            if os.path.isfile(full):
+                manifest["output_checksums"][entry] = _sha256_file(full)
+
+        manifest_path = os.path.join(self.write_path, manifest_filename)
+        with open(manifest_path, "w") as f:
+            json.dump(manifest, f, indent=2, default=str)
 
     def get_parameters(self, condensed: bool = True) -> dict:
         """Returns the parameters of the pipeline's dataset and parameters of each step.

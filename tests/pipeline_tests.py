@@ -1,3 +1,4 @@
+import json
 import os
 import shutil
 import unittest
@@ -123,6 +124,7 @@ class TestPipeline(unittest.TestCase):
             "CPUVocabEncoderData.csv",
             "CPULabelProcessorData.csv",
             "CPUSplitterData.csv",
+            "bardi_manifest.json",
         ]
         self.assertTrue(set(expected_files).issubset(set(test_data_contents)))
 
@@ -171,8 +173,92 @@ class TestPipeline(unittest.TestCase):
             "id_to_label.json",
             "embedding_matrix.npy",
             "bardi_processed_data.parquet",
+            "bardi_manifest.json",
         ]
         self.assertTrue(set(expected_files).issubset(set(test_data_contents)))
+
+        # clean up
+        if os.path.exists(self.write_dir):
+            shutil.rmtree(self.write_dir)
+
+    def test_manifest_contents(self):
+        """Test that the manifest file contains the expected structure and values"""
+        self.pipeline = Pipeline(
+            dataset=self.dataset, write_path=self.write_dir, write_outputs="pipeline-outputs"
+        )
+
+        fields = ["text_1", "text_2", "text_3"]
+        new_field_name = "text"
+        regex_set = PathologyReportRegexSet().get_regex_set()
+
+        self.pipeline.add_step(CPUNormalizer(fields=fields, regex_set=regex_set))
+        self.pipeline.add_step(CPUPreTokenizer(fields=fields))
+        self.pipeline.add_step(CPUEmbeddingGenerator(fields=fields))
+        self.pipeline.add_step(
+            CPUVocabEncoder(fields=fields, field_rename=new_field_name, concat_fields=True)
+        )
+        self.pipeline.add_step(CPULabelProcessor(fields=["state", "feature_1"]))
+        self.pipeline.add_step(
+            CPUSplitter(
+                NewSplit(
+                    split_proportions={"train": 0.7, "test": 0.15, "val": 0.15},
+                    unique_record_cols=["id"],
+                    group_cols=["id"],
+                    label_cols=None,
+                    random_seed=42,
+                )
+            )
+        )
+
+        # prepare test directory
+        if os.path.exists(self.write_dir):
+            shutil.rmtree(self.write_dir)
+        os.makedirs(self.write_dir)
+
+        self.pipeline.run_pipeline()
+
+        # Load and validate the manifest
+        manifest_path = os.path.join(self.write_dir, "bardi_manifest.json")
+        self.assertTrue(os.path.isfile(manifest_path), "bardi_manifest.json was not created")
+
+        with open(manifest_path) as f:
+            manifest = json.load(f)
+
+        # Check top-level keys exist
+        expected_keys = {
+            "bardi_version",
+            "python_version",
+            "timestamp_utc",
+            "completed_utc",
+            "parameters",
+            "output_schema",
+            "output_row_count",
+            "input_checksums",
+            "output_checksums",
+        }
+        self.assertEqual(set(manifest.keys()), expected_keys)
+
+        # output_checksums should contain entries for the expected output files
+        expected_output_files = [
+            "id_to_token.json",
+            "id_to_label.json",
+            "embedding_matrix.npy",
+            "bardi_processed_data.parquet",
+        ]
+        for fname in expected_output_files:
+            self.assertIn(fname, manifest["output_checksums"])
+
+        # output_schema keys should match processed_data schema field names
+        schema_field_names = [field.name for field in self.pipeline.processed_data.schema]
+        self.assertEqual(list(manifest["output_schema"].keys()), schema_field_names)
+
+        # output_row_count should match processed_data
+        self.assertEqual(manifest["output_row_count"], self.pipeline.processed_data.num_rows)
+
+        # parameters should have dataset, steps, performance sub-dicts
+        self.assertIn("dataset", manifest["parameters"])
+        self.assertIn("steps", manifest["parameters"])
+        self.assertIn("performance", manifest["parameters"])
 
         # clean up
         if os.path.exists(self.write_dir):
