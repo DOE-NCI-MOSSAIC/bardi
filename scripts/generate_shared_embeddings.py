@@ -14,10 +14,14 @@ Workflow:
 
 import hashlib
 import json
+import logging
+import logging.config
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+import structlog
 
 import numpy as np
 import polars as pl
@@ -62,7 +66,6 @@ class Manifest(BaseModel):
     input_checksums: Dict[str, str] = {}
     output_checksums: Dict[str, str] = {}
     per_config: Dict[str, ConfigRecord] = {}
-    log: List[str] = []
     total_training_sequences: Optional[int] = None
     shared_vocab_size: Optional[int] = None
     shared_token_count: Optional[int] = None
@@ -104,14 +107,6 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
-def log(msg: str, manifest: Manifest):
-    """Print a message and append it to the manifest log."""
-    timestamp = datetime.now(timezone.utc).isoformat()
-    entry = f"[{timestamp}] {msg}"
-    print(entry)
-    manifest.log.append(entry)
-
-
 # ── Helper: decode X column from integers to token strings ─────────────────
 
 def decode_x_column(df: pl.DataFrame, id_to_token: dict) -> pl.DataFrame:
@@ -140,10 +135,80 @@ def decode_x_column(df: pl.DataFrame, id_to_token: dict) -> pl.DataFrame:
     )
 
 
+# ── Logging setup ─────────────────────────────────────────────────────────
+
+
+def setup_logging(log_path: Path) -> None:
+    """Configure structlog: JSON to file, human-readable to console."""
+    shared_processors = [
+        structlog.stdlib.add_log_level,
+        structlog.processors.TimeStamper(fmt="iso", utc=True),
+    ]
+
+    logging.config.dictConfig(
+        {
+            "version": 1,
+            "disable_existing_loggers": False,
+            "formatters": {
+                "json": {
+                    "()": structlog.stdlib.ProcessorFormatter,
+                    "processors": [
+                        structlog.stdlib.ProcessorFormatter.remove_processors_meta,
+                        structlog.processors.JSONRenderer(),
+                    ],
+                    "foreign_pre_chain": shared_processors,
+                },
+                "console": {
+                    "()": structlog.stdlib.ProcessorFormatter,
+                    "processors": [
+                        structlog.stdlib.ProcessorFormatter.remove_processors_meta,
+                        structlog.dev.ConsoleRenderer(),
+                    ],
+                    "foreign_pre_chain": shared_processors,
+                },
+            },
+            "handlers": {
+                "console": {
+                    "class": "logging.StreamHandler",
+                    "formatter": "console",
+                },
+                "file": {
+                    "class": "logging.FileHandler",
+                    "filename": str(log_path),
+                    "formatter": "json",
+                },
+            },
+            "loggers": {
+                "": {
+                    "handlers": ["console", "file"],
+                    "level": "INFO",
+                },
+            },
+        }
+    )
+
+    structlog.configure(
+        processors=[
+            structlog.stdlib.add_log_level,
+            structlog.processors.TimeStamper(fmt="iso", utc=True),
+            structlog.processors.StackInfoRenderer(),
+            structlog.processors.format_exc_info,
+            structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
+        ],
+        logger_factory=structlog.stdlib.LoggerFactory(),
+        wrapper_class=structlog.stdlib.BoundLogger,
+        cache_logger_on_first_use=True,
+    )
+
+
 # ── Main ───────────────────────────────────────────────────────────────────
 
 def main():
     OUTPUT_DIR.mkdir(exist_ok=True)
+
+    log_path = OUTPUT_DIR / "generate_shared_embeddings.log"
+    setup_logging(log_path)
+    logger = structlog.get_logger()
 
     # Provenance record — written to manifest.json at the end
     manifest = Manifest(
@@ -164,7 +229,7 @@ def main():
     for subdir in SUBDIRS:
         dir_path = BASE_PATH / subdir
 
-        log(f"Processing: {subdir}", manifest)
+        logger.info("Processing", subdir=subdir)
 
         # Checksum input files
         parquet_path = dir_path / "bardi_processed_data.parquet"
@@ -183,13 +248,13 @@ def main():
         }
         original_vocab_size = len(id_to_token)
         original_token_count = len(original_tokens)
-        log(f"  Original vocab size (with special tokens): {original_vocab_size}", manifest)
+        logger.info("Original vocab size", size=original_vocab_size, includes_special=True)
 
         # Load parquet
         table = pq.read_table(parquet_path)
         df = pl.from_arrow(table)
         rows_before_filter = df.height
-        log(f"  Rows before NJ filter: {rows_before_filter}", manifest)
+        logger.info("Rows before NJ filter", count=rows_before_filter)
 
         # Check for duplicate record_document_id (Ada noted 82 dupes in one config)
         duplicate_record_document_ids = None
@@ -197,7 +262,7 @@ def main():
             n_dupes = df.height - df["record_document_id"].n_unique()
             duplicate_record_document_ids = n_dupes
             if n_dupes > 0:
-                log(f"  WARNING: {n_dupes} duplicate record_document_id values", manifest)
+                logger.warning("Duplicate record_document_id values", count=n_dupes)
 
         # Filter out NJ rows
         rows_after_filter = None
@@ -205,7 +270,7 @@ def main():
         if "_meta_registry" in df.columns:
             df = df.filter(pl.col("_meta_registry") != "NJ")
             rows_after_filter = df.height
-            log(f"  Rows after NJ filter:  {df.height}", manifest)
+            logger.info("Rows after NJ filter", count=df.height)
 
             # Record registry breakdown
             rc = (
@@ -226,7 +291,7 @@ def main():
         text_lists = df["text"].drop_nulls().to_list()
         all_text_lists.extend(text_lists)
         token_lists_contributed = len(text_lists)
-        log(f"  Token lists collected:  {token_lists_contributed}", manifest)
+        logger.info("Token lists collected", count=token_lists_contributed)
 
         # Build ConfigRecord and store
         manifest.per_config[subdir] = ConfigRecord(
@@ -240,7 +305,7 @@ def main():
         )
         original_tokens_map[subdir] = original_tokens
 
-    log(f"Total token lists for Word2Vec training: {len(all_text_lists)}", manifest)
+    logger.info("Total token lists for Word2Vec training", count=len(all_text_lists))
     manifest.total_training_sequences = len(all_text_lists)
 
     # ── Step 3: Train shared embeddings via Bardi ──────────────────────
@@ -250,7 +315,7 @@ def main():
     combined_df = pl.DataFrame({"text": all_text_lists})
     combined_table = combined_df.to_arrow()
 
-    log("Training Word2Vec on combined data...", manifest)
+    logger.info("Training Word2Vec on combined data")
     embedding_generator = CPUEmbeddingGenerator(
         fields=["text"],
         **W2V_PARAMS,
@@ -270,8 +335,11 @@ def main():
     manifest.shared_vocab_size = len(shared_id_to_token)
     manifest.shared_token_count = len(shared_tokens)
     manifest.embedding_matrix_shape = list(shared_embedding_matrix.shape)
-    log(f"Shared vocab size (with special tokens): {len(shared_id_to_token)}", manifest)
-    log(f"Embedding matrix shape: {shared_embedding_matrix.shape}", manifest)
+    logger.info(
+        "Shared vocab",
+        size=len(shared_id_to_token),
+        shape=list(shared_embedding_matrix.shape),
+    )
 
     # Record Word2Vec model parameters from Bardi
     manifest.w2v_model_params = embedding_generator.get_parameters()
@@ -294,19 +362,20 @@ def main():
         if tokens_dropped:
             dropped_path = OUTPUT_DIR / f"dropped_tokens_{subdir}.json"
             dropped_path.write_text(json.dumps(sorted(tokens_dropped), indent=2))
-            log(f"  {subdir}: {len(tokens_dropped)} tokens dropped (see dropped_tokens_{subdir}.json)", manifest)
+            logger.info("Tokens dropped", subdir=subdir, count=len(tokens_dropped))
 
-        log(
-            f"  {subdir}: {record.original_token_count} original -> "
-            f"{record.tokens_in_shared_vocab} kept, "
-            f"{record.tokens_new_from_other_configs} new from other configs",
-            manifest,
+        logger.info(
+            "Vocab diff",
+            subdir=subdir,
+            original=record.original_token_count,
+            kept=record.tokens_in_shared_vocab,
+            new=record.tokens_new_from_other_configs,
         )
 
     # ── Step 4: Save shared artifacts ──────────────────────────────────
 
     embedding_generator.write_artifacts(write_path=str(OUTPUT_DIR), artifacts=artifacts)  # str(): Bardi API expects str
-    log(f"Shared id_to_token.json and embedding_matrix.npy written to: {OUTPUT_DIR}", manifest)
+    logger.info("Shared artifacts written", output_dir=str(OUTPUT_DIR))
 
     # Checksum shared artifacts
     manifest.output_checksums["id_to_token.json"] = sha256_file(
@@ -321,7 +390,7 @@ def main():
     vocab_encoder = CPUVocabEncoder(fields=["text"])
 
     for subdir, df in decoded_datasets.items():
-        log(f"Re-encoding: {subdir}", manifest)
+        logger.info("Re-encoding", subdir=subdir)
 
         table = df.to_arrow()
 
@@ -344,7 +413,7 @@ def main():
 
         # Checksum output parquet
         manifest.output_checksums[f"{subdir}/bardi_processed_data.parquet"] = sha256_file(output_path)
-        log(f"  Written to: {output_path}", manifest)
+        logger.info("Re-encoded parquet written", path=str(output_path))
 
     # ── Step 6: Copy shared artifacts into each subdir ─────────────────
     #    (so each config dir is self-contained for FrESCO)
@@ -380,8 +449,8 @@ def main():
     manifest_path = OUTPUT_DIR / "manifest.json"
     manifest_path.write_text(manifest.model_dump_json(indent=2))
 
-    log(f"Provenance manifest written to: {manifest_path}", manifest)
-    log("Done.", manifest)
+    logger.info("Provenance manifest written", path=str(manifest_path))
+    logger.info("Done")
 
     # Print summary
     print("\n" + "=" * 60)
