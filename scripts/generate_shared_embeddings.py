@@ -55,9 +55,9 @@ class Manifest(BaseModel):
     timestamp_utc: str
     completed_utc: Optional[str] = None
     python_version: str
-    base_path: str
+    base_path: Path
     subdirs: List[str]
-    output_dir: str
+    output_dir: Path
     w2v_params: W2VParams
     input_checksums: Dict[str, str] = {}
     output_checksums: Dict[str, str] = {}
@@ -98,7 +98,7 @@ W2V_PARAMS = {
 def sha256_file(path: Path) -> str:
     """Compute SHA-256 hex digest of a file."""
     h = hashlib.sha256()
-    with open(path, "rb") as f:
+    with path.open("rb") as f:
         for chunk in iter(lambda: f.read(8192), b""):
             h.update(chunk)
     return h.hexdigest()
@@ -149,9 +149,9 @@ def main():
     manifest = Manifest(
         timestamp_utc=datetime.now(timezone.utc).isoformat(),
         python_version=sys.version,
-        base_path=str(BASE_PATH),
+        base_path=BASE_PATH,
         subdirs=SUBDIRS,
-        output_dir=str(OUTPUT_DIR.resolve()),
+        output_dir=OUTPUT_DIR.resolve(),
         w2v_params=W2VParams(**W2V_PARAMS),
     )
 
@@ -173,8 +173,7 @@ def main():
         manifest.input_checksums[f"{subdir}/id_to_token.json"] = sha256_file(vocab_path)
 
         # Load id_to_token.json
-        with open(vocab_path, "r") as f:
-            id_to_token = json.load(f)
+        id_to_token = json.loads(vocab_path.read_text())
         # JSON keys are strings — convert to int
         id_to_token = {int(k): v for k, v in id_to_token.items()}
 
@@ -294,8 +293,7 @@ def main():
         # Write the dropped tokens list for audit (if any)
         if tokens_dropped:
             dropped_path = OUTPUT_DIR / f"dropped_tokens_{subdir}.json"
-            with open(dropped_path, "w") as f:
-                json.dump(sorted(tokens_dropped), f, indent=2)
+            dropped_path.write_text(json.dumps(sorted(tokens_dropped), indent=2))
             log(f"  {subdir}: {len(tokens_dropped)} tokens dropped (see dropped_tokens_{subdir}.json)", manifest)
 
         log(
@@ -307,7 +305,7 @@ def main():
 
     # ── Step 4: Save shared artifacts ──────────────────────────────────
 
-    embedding_generator.write_artifacts(write_path=str(OUTPUT_DIR), artifacts=artifacts)
+    embedding_generator.write_artifacts(write_path=str(OUTPUT_DIR), artifacts=artifacts)  # str(): Bardi API expects str
     log(f"Shared id_to_token.json and embedding_matrix.npy written to: {OUTPUT_DIR}", manifest)
 
     # Checksum shared artifacts
@@ -355,8 +353,9 @@ def main():
         subdir_output = OUTPUT_DIR / subdir
 
         # Copy id_to_token.json
-        with open(subdir_output / "id_to_token.json", "w") as f:
-            json.dump(shared_id_to_token, f, indent=4)
+        (subdir_output / "id_to_token.json").write_text(
+            json.dumps(shared_id_to_token, indent=4)
+        )
 
         # Copy embedding_matrix.npy
         np.save(
@@ -367,10 +366,10 @@ def main():
         # Copy the original id_to_label.json (consistent across all 4)
         orig_label_path = BASE_PATH / subdir / "id_to_label.json"
         if orig_label_path.exists():
-            with open(orig_label_path, "r") as f:
-                id_to_label = json.load(f)
-            with open(subdir_output / "id_to_label.json", "w") as f:
-                json.dump(id_to_label, f, indent=4)
+            id_to_label = json.loads(orig_label_path.read_text())
+            (subdir_output / "id_to_label.json").write_text(
+                json.dumps(id_to_label, indent=4)
+            )
 
             manifest.input_checksums[f"{subdir}/id_to_label.json"] = sha256_file(orig_label_path)
 
@@ -379,8 +378,7 @@ def main():
     manifest.completed_utc = datetime.now(timezone.utc).isoformat()
 
     manifest_path = OUTPUT_DIR / "manifest.json"
-    with open(manifest_path, "w") as f:
-        f.write(manifest.model_dump_json(indent=2))
+    manifest_path.write_text(manifest.model_dump_json(indent=2))
 
     log(f"Provenance manifest written to: {manifest_path}", manifest)
     log("Done.", manifest)
